@@ -68,5 +68,8 @@ target/
 /.settings
 /.project
 /.pydevproject
-/flask_session
+/tmp
 /db/*.db
+
+/browser
+
