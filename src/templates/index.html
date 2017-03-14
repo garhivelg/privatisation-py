@@ -1,4 +1,27 @@
 {% extends "rpa.html" %}
 {% block content %}
-<h1>Welcome!</h1>
+<table>
+  <thead>
+    <tr>
+      <td>Дело</td>
+      <td>Регистрационный №</td>
+      <td>Адрес</td>
+      <td>Владелец</td>
+      <td>Основание для регистрации</td>
+      <td>Дата регистрации</td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.book_id }}</td>
+      <td>{{ r.get_reg() }}</td>
+      <td>{{ r.get_addr() }}</td>
+      <td>{{ r.get_owner() }}</td>
+      <td>{{ r.base_id }}</td>
+      <td>{{ r.base_date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

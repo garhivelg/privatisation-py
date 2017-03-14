@@ -10,9 +10,12 @@ app.config.from_object('config')
 
 Session(app)
 
-from views import *
-# import models
 
 # from db import db_session
 db = SQLAlchemy(app)
+db.create_all()
+
+# import models
+from views import *
+
 # migrate = Migrate(app, db)

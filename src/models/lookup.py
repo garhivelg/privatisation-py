@@ -1,4 +1,5 @@
 STREETS = [
+    "",
     "ул.",
     "кв.",
     "пер.",
@@ -13,6 +14,7 @@ STREETS = [
 
 CITIES = [
     "г. Луганск",
+    "г. Луганск",
     "г. Александровск",
     "пос. Юбилейный",
     "пос. Дзержинского",
@@ -20,3 +22,21 @@ CITIES = [
 ]
 
 BOOKS = range(1, 25)
+
+
+def get_street(street_id=None):
+    if street_id not in range(1, len(STREETS) + 1):
+        street_id = 0
+    return STREETS[street_id]
+
+
+def get_city(city_id=None):
+    if city_id not in range(1, len(CITIES) + 1):
+        city_id = 0
+    return STREETS[city_id]
+
+
+def get_book(book_id=None):
+    if book_id not in range(1, len(BOOKS) + 1):
+        book_id = 0
+    return BOOKS[book_id]
