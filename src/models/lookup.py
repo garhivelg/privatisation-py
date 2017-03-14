@@ -33,7 +33,7 @@ def get_street(street_id=None):
 def get_city(city_id=None):
     if city_id not in range(1, len(CITIES) + 1):
         city_id = 0
-    return STREETS[city_id]
+    return CITIES[city_id]
 
 
 def get_book(book_id=None):

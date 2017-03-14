@@ -8,18 +8,20 @@
       <td>Адрес</td>
       <td>Владелец</td>
       <td>Основание для регистрации</td>
-      <td>Дата регистрации</td>
     </tr>
   </thead>
   <tbody>
     {% for r in records %}
     <tr>
-      <td>{{ r.book_id }}</td>
+      <td>{{ r.get_book() }}</td>
       <td>{{ r.get_reg() }}</td>
-      <td>{{ r.get_addr() }}</td>
-      <td>{{ r.get_owner() }}</td>
-      <td>{{ r.base_id }}</td>
-      <td>{{ r.base_date }}</td>
+      <td><a href="#">{{ r.get_addr() }}</a></td>
+      <td><a href="#">{{ r.get_owner() }}</a></td>
+      {% if r.base_date %}
+      <td>№{{ r.base_id }} от {{ r.base_date }}</td>
+      {% else %}
+      <td>№{{ r.base_id }}</td>
+      {% endif %}
     </tr>
     {% endfor %}
   </tbody>
