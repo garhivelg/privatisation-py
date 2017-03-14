@@ -17,9 +17,7 @@ def index():
 @app.route("/random")
 @app.route("/random/<int:records>")
 def random(records=1):
-    from models.lookup import BOOKS, CITIES, STREETS
     from models import Record
-    import random
 
     for i in range(records):
         r = Record()

@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from app import db
 from models.lookup import get_street, get_city, get_book
 
@@ -46,6 +47,8 @@ class Record(db.Model):
         )
 
     def generate_random(self):
+        from models.lookup import BOOKS, CITIES, STREETS
+        import random
         self.book_id = random.randrange(len(BOOKS))
         self.reg_id = str(random.randrange(0, 4000))
         if random.randint(0, 10) == 0:
