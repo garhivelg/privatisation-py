@@ -11,7 +11,7 @@ app.config.from_object('config')
 Session(app)
 
 from views import *
-# from web import models
+# import models
 
 # from db import db_session
 db = SQLAlchemy(app)
