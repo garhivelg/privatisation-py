@@ -44,13 +44,11 @@ def add_record():
     record.book_id = book_id
     record.reg_id = reg_id
     record.reg_num = reg_id
-    db.session.add(record)
-    db.session.commit()
+    # db.session.add(record)
+    # db.session.commit()
 
-    return redirect(url_for("edit_record", record_id=record.id))
-    # from models import Record
-    # record = Record.query.get(record_id)
-    # return render_template("record.html", record=record)
+    return render_template("record.html", record=record)
+    # return redirect(url_for("edit_record", record_id=record.id))
 
 
 @app.route("/random")
