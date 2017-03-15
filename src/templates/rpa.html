@@ -21,55 +21,30 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Список</a></li>
-    	  <li><a href="#">Картотека</a></li>
+        <li class="active"><a href="{{ url_for('list_records') }}">Список</a></li>
+        <li><a href="{{ url_for('add_record') }}">Добавить</a></li>
 	  	<li class="dropdown">
 	  	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Справочники <span class="caret"></span></a>
 	  	  <ul class="dropdown-menu">
-	  	    <li>Copy PC to group</li>
-	  	    <li>Select/Create group</li>
+	  	    <li>Дела</li>
+	  	    <li>Населенные пункты</li>
+	  	    <li>Адреса</li>
 	  	  </ul>
 	  	</li>
 	  	<li class="dropdown">
 	  	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Совмещение <span class="caret"></span></a>
 	  	  <ul class="dropdown-menu">
-	  	    <li class="dropdown-header">Dice Rollers</li>
-	  	    <li>Party dice roller</li>
-	  	    <li>Advanced dice roller</li>
-	  	    <li>Single dice roller</li>
-            <li role="separator" class="divider"></li>
-	  	    <li>Time Tracker/Countdown</li>
-            <li role="separator" class="divider"></li>
-	  	    <li>Name Generator</li>
-	  	    <li>Treasure Generator</li>
-	  	    <li>Weather Generator</li>
-	  	    <li>Randomizer</li>
-	  	    <li>Fractal World Generator</li>
-	  	    <li>Dungeon Map Generator</li>
-	  	    <li>Encounters/Monsters</li>
+	  	    <li>Импорт</li>
+	  	    <li>Экспорт</li>
 	  	  </ul>
 	  	</li>
 	  	<li class="dropdown">
 	  	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сервис <span class="caret"></span></a>
 	  	  <ul class="dropdown-menu">
-	  	    <li>Generate a complete character</li>
-	  	    <li>Generate a party</li>
-	  	    <li>Generate only selected options</li>
-            <li role="separator" class="divider"></li>
-	  	    <li>New Character</li>
-	  	    <li>Delete Character</li>
-	  	    <li>Experience history</li>
-	  	    <li>Party status window</li>
-            <li role="separator" class="divider"></li>
-	  	    <li>Export character</li>
-	  	    <li>Email exported character</li>
-	  	    <li>Export and Email current character</li>
-	  	    <li>Backup my characters</li>
-            <li role="separator" class="divider"></li>
-	  	    <li>Import character</li>
-	  	    <li>Import emailed characters</li>
-	  	    <li>Restore a character backup</li>
-	  	    <li>See export database</li>
+	  	    <li>Переиндексировать</li>
+	  	    <li>Переместить в дело</li>
+	  	    <li>Сохранить</li>
+	  	    <li>Найти пропущенные</li>
 	  	  </ul>
 	  	</li>
       </ul>

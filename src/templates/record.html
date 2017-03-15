@@ -1,0 +1,36 @@
+{% extends "rpa.html" %}
+{% block content %}
+<h1>Запись № {{ record.get_reg() }}</h1>
+<div class="row">
+<div class="col-md-6">
+  <p>Дело № {{ record.get_book() }}</p>  
+  <p>Регистрационный № {{ record.get_reg() }}<br>
+  <small>Например: 1/1</small>
+  </p>  
+  <div>
+    <h4>Адрес</h4>
+    <p><small>ул. Советская 85/25</small></p>  
+    <p>{{ record.get_addr() }}</p>  
+    <p>{{ record.get_city() }}</p>  
+    <p>{{ record.get_street() }} {{ record.addr_name }} д. {{ record.addr_build }} кв. {{ record.addr_flat }}</p>  
+  </div>
+  <div>
+    <h4>Владелец</h4>
+    <p><small>Фамилия И.О.</small></p>  
+    <p>{{ record.get_owner() }}</p>  
+    <p>{{ record.owner }} {{ record.owner_init }}</p>  
+  </div>
+  <div>
+    <h4>Основание</h4>
+    <p>Распоряжение № {{ record.base_id }} от {{ record.base_date }}</p>  
+  </div>
+  <p>Дата регистрации {{ record.reg_date }}</p>  
+  <p>
+    <input type="submit" \>
+  </p>
+</div>
+<div class="col-md-6">
+  {{ record.description }}
+</div>
+</div>
+{% endblock %}

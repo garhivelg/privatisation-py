@@ -29,6 +29,19 @@ class Record(db.Model):
             self.reg_id,
         )
 
+    def get_city(self):
+        try:
+            city_id = int(self.city_id)
+        except TypeError:
+            city_id = 0
+
+        if city_id > 1:
+            return get_city(city_id)
+        return ""
+
+    def get_street(self):
+        return get_street(self.addr_type)
+
     def get_addr(self):
         addr = "{} {} {}/{}".format(
             get_street(self.addr_type),
@@ -37,13 +50,9 @@ class Record(db.Model):
             self.addr_flat,
         )
 
-        try:
-            city_id = int(self.city_id)
-        except TypeError:
-            city_id = 0
-
-        if city_id > 1:
-            addr = ' '.join([get_city(city_id), addr])
+        city = self.get_city()
+        if city:
+            addr = ' '.join([city, addr])
         return addr
 
     def get_owner(self):
