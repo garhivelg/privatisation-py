@@ -97,3 +97,37 @@ class Record(db.Model):
     def normalize(self):
         if self.reg_num is None:
             self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
+
+    def export(self):
+        return {
+            "id": self.id,
+            "book": {
+                "id": self.book_id,
+                "name": get_book(self.book_id),
+            },
+            "reg_num": self.reg_num,
+            "reg_id": self.reg_id,
+            "addr": {
+                "full": self.get_addr(),
+                "city": {
+                    "id": self.city_id,
+                    "name": get_city(self.city_id),
+                },
+                "street": {
+                    "type_id": self.addr_type,
+                    "type": get_street(self.addr_type),
+                    "name": self.addr_name,
+                },
+                "addr_build": self.addr_build,
+                "addr_flat": self.addr_flat,
+            },
+            "owner": {
+                "full": self.get_owner(),
+                "owner": self.owner,
+                "owner_init": self.owner_init,
+            },
+            "base_id": self.base_id,
+            "base_date": self.base_date,
+            "reg_date": self.reg_date,
+            "comment":  self.comment,
+        }

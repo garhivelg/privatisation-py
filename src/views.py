@@ -125,3 +125,19 @@ def list_street_names():
     for r in Record.query.distinct(Record.addr_name).group_by(Record.city_id, Record.addr_type, Record.addr_name):
         records.append(' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]))
     return render_template("list.html", items=records)
+
+
+@app.route("/export")
+def export_yml():
+    from models import Record
+    import yaml
+    records = Record.query.order_by(Record.book_id.asc(), Record.reg_num.asc()).all()
+
+    from datetime import date
+    from flask import make_response
+    # response = make_response(yaml.dump(records))
+    values = [r.export() for r in records]
+    response = make_response(yaml.dump(values, default_flow_style=False))
+    response.headers['Content-Type'] = 'text/yaml'
+    response.headers['Content-Disposition'] = 'attachment; filename=' + date.today().strftime("%x") + '.yml'
+    return response
