@@ -85,6 +85,11 @@ class Record(db.Model):
         self.owner = "Ленина"
         self.owner_init = "А.А."
         self.base_id = random.randrange(0, 4000)
+
+        from datetime import date, timedelta
+        rand_date = random.randrange(3650) + 7300
+        self.base_date = date.today() - timedelta(days=rand_date)
+
         # base_date = db.Column(db.Date)
         # reg_date = db.Column(db.Date, nullable=True)
         self.normalize()

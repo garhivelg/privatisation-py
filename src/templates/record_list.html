@@ -18,7 +18,7 @@
       <td><a href="{{ url_for('edit_record', record_id=r.id) }}">{{ r.get_addr() }}</a></td>
       <td><a href="#">{{ r.get_owner() }}</a></td>
       {% if r.base_date %}
-      <td>№{{ r.base_id }} от {{ r.base_date }}</td>
+      <td>№{{ r.base_id }} от {{ r.base_date.strftime('%d.%m.%Y') }}</td>
       {% else %}
       <td>№{{ r.base_id }}</td>
       {% endif %}
