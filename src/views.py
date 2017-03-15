@@ -141,3 +141,14 @@ def export_yml():
     response.headers['Content-Type'] = 'text/yaml'
     response.headers['Content-Disposition'] = 'attachment; filename=' + date.today().strftime("%x") + '.yml'
     return response
+
+
+@app.route("/import/files")
+def list_import_files():
+    records = []
+    import os
+    for file in os.listdir('../imports'):
+        # records.append(file)
+        if file.endswith(".dat"):
+            records.append(file)
+    return render_template("list.html", items=records)
