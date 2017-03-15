@@ -97,3 +97,31 @@ def generate_random(records=1):
         db.session.add(r)
     db.session.commit()
     return redirect(url_for("list_records"))
+
+
+@app.route("/list/books")
+def list_books():
+    from models.lookup import BOOKS
+    return render_template("list.html", items=BOOKS)
+
+
+@app.route("/list/streets")
+def list_streets():
+    from models.lookup import STREETS
+    return render_template("list.html", items=STREETS)
+
+
+@app.route("/list/cities")
+def list_cities():
+    from models.lookup import CITIES
+    return render_template("list.html", items=CITIES)
+
+
+@app.route("/list/streetnames")
+def list_street_names():
+    from models import Record
+    from models.lookup import CITIES, STREETS
+    records = []
+    for r in Record.query.distinct(Record.addr_name).group_by(Record.city_id, Record.addr_type, Record.addr_name):
+        records.append(' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]))
+    return render_template("list.html", items=records)
