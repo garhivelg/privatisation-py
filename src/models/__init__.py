@@ -26,7 +26,7 @@ class Record(db.Model):
     def get_reg(self):
         return "{}/{}".format(
             get_book(self.book_id),
-            self.reg_id,
+            self.reg_num,
         )
 
     def get_city(self):
@@ -39,15 +39,18 @@ class Record(db.Model):
             return get_city(city_id)
         return ""
 
-    def get_street(self):
-        return get_street(self.addr_type)
-
     def get_addr(self):
-        addr = "{} {} {}/{}".format(
+        if not self.addr_name:
+            return "Адрес не указан"
+
+        flat_num = self.addr_build
+        if self.addr_flat:
+            flat_num = flat_num + "/" + self.addr_flat
+
+        addr = "{} {} {}".format(
             get_street(self.addr_type),
             self.addr_name,
-            self.addr_build,
-            self.addr_flat,
+            flat_num,
         )
 
         city = self.get_city()
@@ -65,7 +68,8 @@ class Record(db.Model):
         from models.lookup import BOOKS, CITIES, STREETS
         import random
         self.book_id = random.randrange(len(BOOKS))
-        self.reg_id = str(random.randrange(0, 4000))
+        self.reg_num = random.randrange(0, 4000)
+        self.reg_id = self.get_reg()
         if random.randint(0, 10) == 0:
             self.reg_id = self.reg_id + 'а'
         self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
@@ -83,4 +87,5 @@ class Record(db.Model):
         self.normalize()
 
     def normalize(self):
-        self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
+        if self.reg_num is None:
+            self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
