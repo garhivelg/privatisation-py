@@ -36,8 +36,14 @@ class Record(db.Model):
             self.addr_build,
             self.addr_flat,
         )
-        if self.city_id > 1:
-            addr = ' '.join([get_city(self.city_id), addr])
+
+        try:
+            city_id = int(self.city_id)
+        except TypeError:
+            city_id = 0
+
+        if city_id > 1:
+            addr = ' '.join([get_city(city_id), addr])
         return addr
 
     def get_owner(self):
@@ -68,4 +74,4 @@ class Record(db.Model):
         self.normalize()
 
     def normalize(self):
-        self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit())),
+        self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
