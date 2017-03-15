@@ -15,7 +15,7 @@ def index():
 def list_records():
     from models import Record
     records = Record.query.order_by(Record.book_id.asc(), Record.reg_num.asc()).all()
-    return render_template("index.html", records=records)
+    return render_template("record_list.html", records=records)
 
 
 @app.route("/record/<int:record_id>")

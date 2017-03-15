@@ -1,4 +1,4 @@
-{% extends "rpa.html" %}
+{% extends "index.html" %}
 {% block content %}
 <h1>Запись № {{ record.reg_id }}</h1>
 <form method="post" action="{{ url_for('save_record', record_id=record.id) }}">

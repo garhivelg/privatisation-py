@@ -59,6 +59,9 @@ class Record(db.Model):
         return addr
 
     def get_owner(self):
+        if not self.owner:
+            return "Неизвестен"
+
         return "{} {}".format(
             self.owner,
             self.owner_init,
