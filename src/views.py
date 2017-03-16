@@ -295,3 +295,20 @@ def parse_addr():
         addr_build=res[2],
         addr_flat=res[3],
     )
+
+
+@app.route("/parse/owner", methods=["POST", ])
+def parse_owner():
+    owner = request.form.get('owner', "")
+    import re
+    parser = re.compile(r"(.*)\s+(\w\.\s*\w\.)")
+    matches = parser.match(owner)
+    if matches:
+        res = matches.groups()
+    else:
+        res = [owner, ""]
+    
+    return jsonify(
+        owner=res[0],
+        owner_init=res[1],
+    )    

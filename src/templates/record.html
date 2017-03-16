@@ -14,6 +14,18 @@
       return false;
     });
   });
+
+  $(function() {
+	    $('#full_owner').bind('change', function() {
+	      $.post('{{ url_for("parse_owner") }}', {
+	        owner: $('input[name="full_owner"]').val()
+	      }, function(data) {
+	        $("#owner").val(data.owner);
+	        $("#owner_init").val(data.owner_init);
+	      }, "json");
+	      return false;
+	    });
+	  });
 </script>
 {% endblock %}
 {% block content %}
