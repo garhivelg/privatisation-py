@@ -144,6 +144,19 @@ def list_street_names():
     return render_template("list.html", items=records)
 
 
+@app.route("/reindex")
+def reindex(records=1):
+    from models import Record
+
+    records = Record.query.all()
+    for r in records:
+        r.normalize()
+        print("Запись №{} успешно переиндексирована".format(r.reg_id))
+        db.session.add(r)
+    db.session.commit()
+    return redirect(url_for("list_records"))
+
+
 @app.route("/export")
 def export_yml():
     from models import Record
