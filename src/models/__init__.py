@@ -96,7 +96,8 @@ class Record(db.Model):
 
     def normalize(self):
         if self.reg_num is None:
-            self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
+            if self.reg_id:
+                self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
 
     def export(self):
         return {

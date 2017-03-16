@@ -16,7 +16,7 @@ def list_records():
     order = request.args.get('order', None)
     if order is not None:
         session["order"] = order
-    order = session["order"]
+    order = session.get("order")
 
     from models import Record
     q = Record.query
