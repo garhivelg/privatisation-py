@@ -250,27 +250,24 @@ def load_from_file(filename):
         ])
 
         r.normalize()
+        print("Запись №{} успешно импортирована".format(r.reg_id))
         db.session.add(r)
-        # print(r)
 
         if not l:
                 break
-        # print(l)
     db.session.commit()
-    return d
+    return True
 
 
 @app.route("/import/files")
 def list_import_files():
     import os
     imports = '../imports'
-    # print(request.args)
     f = []
     filename = request.args.get('file', None)
     if filename:
         f = load_from_file(os.path.join(imports, filename))
-        print(f)
-        return "f.__repr__()"
+        return redirect(url_for("list_records"))
 
     records = []
     for file in os.listdir(imports):

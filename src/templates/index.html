@@ -62,22 +62,13 @@
 
   <div class="row">
     <div class="col-md-3">
-      {% if session['rpg'] %}
+      {% if session['order'] %}
       <div>
-        <p><strong>Game system:</strong> <a href="{{ url_for('rpg_list')}}">{{session['rpg']}}</a></p>
+        Сортировка: {{session['order']}}
       </div>
       {% endif %}
-      <div>
-	    {% if session['campaign'] %}
-	    <p><strong>Campaign:</strong> <a href="{{ url_for('campaign_list')}}">{{session['campaign'].title}}</a></p>
-        {% endif %}
-	    {% if session['session'] %}
-	    <p><strong>Session:</strong> <a href="{{ url_for('session_list')}}">{{session['session']}}</a></p>
-        {% endif %}
-      </div>
     </div> 
     <div class="col-md-9">
-      Order: {{session['order']}}
 {% block content %}{% endblock %}
     </div> 
   </div>
