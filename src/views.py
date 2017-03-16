@@ -102,19 +102,19 @@ def generate_random(records=1):
 @app.route("/list/books")
 def list_books():
     from models.lookup import BOOKS
-    return render_template("list.html", items=BOOKS)
+    return render_template("list.html", items=[[b,  "#"] for b in BOOKS])
 
 
 @app.route("/list/streets")
 def list_streets():
     from models.lookup import STREETS
-    return render_template("list.html", items=STREETS)
+    return render_template("list.html", items=[[s, "#"] for s in STREETS])
 
 
 @app.route("/list/cities")
 def list_cities():
     from models.lookup import CITIES
-    return render_template("list.html", items=CITIES)
+    return render_template("list.html", items=[[c, "#"] for c in CITIES])
 
 
 @app.route("/list/streetnames")
@@ -123,7 +123,7 @@ def list_street_names():
     from models.lookup import CITIES, STREETS
     records = []
     for r in Record.query.distinct(Record.addr_name).group_by(Record.city_id, Record.addr_type, Record.addr_name):
-        records.append(' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]))
+        records.append([' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]), "#"])
     return render_template("list.html", items=records)
 
 
@@ -143,12 +143,121 @@ def export_yml():
     return response
 
 
+def load_from_file(filename):
+    import logging
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+
+    from models import Record
+    from models.lookup import get_book, get_street, CITIES
+    f = open(filename, 'r', encoding='cp1251')
+    d = []
+    while True:
+        r = Record()
+
+        tmp = f.readline()
+        if not tmp:
+            break
+
+        record_id = int(tmp)
+        book_id = int(f.readline()) - 1
+        book = get_book(book_id)
+        reg_id = f.readline().rstrip()
+
+        r = Record.query.filter_by(reg_id=reg_id).first()
+        if r is None:
+            r = Record()
+
+        r.book_id = book_id
+        r.reg_id = reg_id
+        addr_type = f.readline()
+        r.addr_name = f.readline().rstrip()
+        r.addr_build = f.readline().rstrip()
+        r.addr_flat = f.readline().rstrip()
+        r.city_id = 0
+        try:
+            r.addr_type = int(addr_type)
+        except ValueError:
+            addr_data = addr_type.rstrip().split(':')
+            if len(addr_data) > 1:
+                addr_data.append(CITIES.index(addr_data[1]))
+                r.addr_type = int(addr_data[0])
+                r.city_id = CITIES.index(addr_data[1])
+            else:
+                r.addr_type = 0
+        street = get_street(r.addr_type)
+        addr = [
+            r.addr_type,
+            r.city_id,
+            r.addr_name,
+            r.addr_build,
+            r.addr_flat,
+            street,
+            r.get_addr(),
+        ]
+        r.owner = f.readline().rstrip()
+        r.owner_init = f.readline().rstrip()
+        owner = [
+            r.owner,
+            r.owner_init,
+            r.get_owner(),
+        ]
+        r.base_id = f.readline().rstrip()
+
+        from datetime import datetime
+        base_date_str = f.readline().rstrip()
+        reg_date_str = f.readline().rstrip()
+        r.base_date = datetime.strptime(base_date_str, '%d.%m.%y')
+        r.reg_date = datetime.strptime(reg_date_str, '%d.%m.%y')
+        l = f.readline()
+
+        d.append([
+            record_id,
+            [
+                r.book_id,
+                book,
+            ],
+            r.reg_id,
+            addr,
+            owner,
+            r.base_id,
+            [
+                base_date_str,
+                # base_date,
+                r.base_date,
+            ],
+            [
+                reg_date_str,
+                # reg_date,
+                r.reg_date,
+            ],
+        ])
+
+        r.normalize()
+        db.session.add(r)
+        # print(r)
+
+        if not l:
+                break
+        # print(l)
+    db.session.commit()
+    return d
+
+
 @app.route("/import/files")
 def list_import_files():
-    records = []
     import os
-    for file in os.listdir('../imports'):
+    imports = '../imports'
+    # print(request.args)
+    f = []
+    filename = request.args.get('file', None)
+    if filename:
+        f = load_from_file(os.path.join(imports, filename))
+        print(f)
+        return "f.__repr__()"
+
+    records = []
+    for file in os.listdir(imports):
         # records.append(file)
         if file.endswith(".dat"):
-            records.append(file)
+            records.append([file, url_for('list_import_files') + "?file=" + file])
     return render_template("list.html", items=records)
