@@ -3,11 +3,11 @@
 <table>
   <thead>
     <tr>
-      <td>Дело</td>
-      <td>Регистрационный №</td>
-      <td>Адрес</td>
-      <td>Владелец</td>
-      <td>Основание для регистрации</td>
+      <td><a href="{{ url_for('list_records') }}?order=book_id">Дело</a></td>
+      <td><a href="{{ url_for('list_records') }}?order=reg_id">Регистрационный №</a></td>
+      <td><a href="{{ url_for('list_records') }}?order=addr">Адрес</a></td>
+      <td><a href="{{ url_for('list_records') }}?order=owner">Владелец</a></td>
+      <td><a href="{{ url_for('list_records') }}?order=base_id">Основание для регистрации</a></td>
     </tr>
   </thead>
   <tbody>

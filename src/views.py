@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
-from flask import request, render_template, redirect, flash
+from flask import request, render_template, redirect, session, flash
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
@@ -13,8 +13,25 @@ def index():
 
 @app.route("/record")
 def list_records():
+    order = request.args.get('order', None)
+    if order is not None:
+        session["order"] = order
+    order = session["order"]
+
     from models import Record
-    records = Record.query.order_by(Record.book_id.asc(), Record.reg_num.asc()).all()
+    q = Record.query
+    if order == 'book_id':
+        q = q.order_by(Record.book_id.asc())
+    elif order == 'reg_id':
+        q = q.order_by(Record.book_id.asc(), Record.reg_num.asc())
+    elif order == 'addr':
+        q = q.order_by(Record.city_id.asc(), Record.addr_name.asc(), Record.addr_type.asc(), Record.addr_build.asc(), Record.addr_flat.asc())
+    elif order == 'owner':
+        q = q.order_by(Record.owner.asc(), Record.owner_init.asc())
+    elif order == 'base_id':
+        q = q.order_by(Record.base_id.asc())
+
+    records = q.all()
     return render_template("record_list.html", records=records)
 
 
