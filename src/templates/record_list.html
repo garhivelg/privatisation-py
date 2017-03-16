@@ -11,7 +11,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for r in records %}
+    {% for r in records.items %}
     <tr>
       <td>{{ r.get_book() }}</td>
       <td>{{ r.reg_id }}</td>
@@ -26,4 +26,17 @@
     {% endfor %}
   </tbody>
 </table>
+{% if records.has_prev %}<a href="{{ url_for('list_records') }}?page={{ records.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a>{% else %}<span class="glyphicon glyphicon-menu-left"></span>{% endif %} 
+{%- for page in records.iter_pages() %}
+    {% if page %}
+      {% if page != records.page %}
+        <a href="{{ url_for('list_records') }}?page={{ records.page }}">{{ page }}</a>
+      {% else %}
+        <strong>{{ page }}</strong>
+      {% endif %}
+    {% else %}
+      <span class=ellipsis>…</span>
+    {% endif %}
+{%- endfor %}
+{% if records.has_next %}<a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a>{% else %}<span class="glyphicon glyphicon-menu-right"></span>{% endif %}
 {% endblock %}

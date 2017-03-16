@@ -14,6 +14,7 @@ def index():
 @app.route("/record")
 def list_records():
     order = request.args.get('order', None)
+    page = request.args.get('page', 1)
     if order is not None:
         session["order"] = order
     order = session.get("order")
@@ -31,8 +32,8 @@ def list_records():
     elif order == 'base_id':
         q = q.order_by(Record.base_id.asc())
 
-    records = q.all()
-    return render_template("record_list.html", records=records)
+    records = q.paginate(int(page), 50) #  all()
+    return render_template("record_list.html", records=records, page=page)
 
 
 @app.route("/record/<int:record_id>")
