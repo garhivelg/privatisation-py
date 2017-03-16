@@ -1,4 +1,21 @@
 {% extends "index.html" %}
+{% block script %}
+<script type=text/javascript>
+  $(function() {
+    $('#full_addr').bind('change', function() {
+      $.post('{{ url_for("parse_addr") }}', {
+        addr: $('input[name="full_addr"]').val()
+      }, function(data) {
+        $("#addr_type").val(data.addr_type).change();
+        $("#addr_name").val(data.addr_name);
+        $("#addr_build").val(data.addr_build);
+        $("#addr_flat").val(data.addr_flat);
+      }, "json");
+      return false;
+    });
+  });
+</script>
+{% endblock %}
 {% block content %}
 <h1>Запись № {{ record.reg_id }}</h1>
 <form method="post" action="{{ url_for('save_record', record_id=record.id) }}">
@@ -26,7 +43,7 @@
   </div>
   <p>Дата регистрации {{ form.reg_date }}</p>  
   <p>
-    <input type="submit" \>
+    <input type="submit" class="btn btn-success" value="Сохранить">
   </p>
 </div>
 <div class="col-md-6">

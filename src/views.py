@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
-from flask import request, render_template, redirect, session, flash
+from flask import request, render_template, redirect, session, flash, jsonify
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
@@ -275,3 +275,23 @@ def list_import_files():
         if file.endswith(".dat"):
             records.append([file, url_for('list_import_files') + "?file=" + file])
     return render_template("list.html", items=records)
+
+
+@app.route("/parse/addr", methods=["POST", ])
+def parse_addr():
+    addr = request.form.get('addr', "")
+    import re
+    parser = re.compile(r"(\w*\.)\s*(.*)\s+(\w+)/(\w+)")
+    matches = parser.match(addr)
+    if matches:
+        res = matches.groups()
+    else:
+        res = [0, addr, "", ""]
+    
+    from models.lookup import find_street    
+    return jsonify(
+        addr_type=find_street(res[0]),
+        addr_name=res[1],
+        addr_build=res[2],
+        addr_flat=res[3],
+    )

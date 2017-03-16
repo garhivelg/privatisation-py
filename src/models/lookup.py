@@ -32,6 +32,13 @@ def get_street(street_id=None):
     return STREETS[street_id]
 
 
+def find_street(street):
+    try:
+        return STREETS.index(street)
+    except ValueError:
+        return 0
+
+
 def get_city(city_id=None):
     if city_id not in range(1, len(CITIES) + 1):
         city_id = 0
