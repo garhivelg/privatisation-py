@@ -211,7 +211,7 @@ def load_from_file(filename):
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
     from models import Record
-    from models.lookup import get_book, get_street, CITIES
+    from models.lookup import get_book, get_street, set_city
     f = open(filename, 'r', encoding='cp1251')
     d = []
     while True:
@@ -242,9 +242,10 @@ def load_from_file(filename):
         except ValueError:
             addr_data = addr_type.rstrip().split(':')
             if len(addr_data) > 1:
-                addr_data.append(CITIES.index(addr_data[1]))
+                city = set_city(addr_data[1])
+                addr_data.append(city)
                 r.addr_type = int(addr_data[0])
-                r.city_id = CITIES.index(addr_data[1])
+                r.city_id = city
             else:
                 r.addr_type = 0
         street = get_street(r.addr_type)

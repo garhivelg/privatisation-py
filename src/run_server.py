@@ -14,4 +14,9 @@ if debug:
 # logging.basicConfig(**logconfig)
 
 if __name__ == "__main__":
+    from models.lookup import load
+    load()
+    from models.lookup import CITIES
+    print(CITIES)
+
     app.run(debug=debug)

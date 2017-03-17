@@ -13,17 +13,15 @@ STREETS = [
     "пос.",
 ]
 
-CITIES = [
-    "г. Луганск",
-    "г. Луганск",
-    "Александровск",
-    "пос. Юбилейный",
-    "пос.Дзержинского",
-    "пос.Промжилстрой",
-    "пос. Дзержинског",
-]
+CITIES = []
 
-BOOKS = range(1, 25)
+BOOKS = range(25)
+
+
+def load():
+    global CITIES
+    with open("../db/cities.txt") as f:
+        CITIES = f.read().splitlines()
 
 
 def get_street(street_id=None):
@@ -39,8 +37,19 @@ def find_street(street):
         return 0
 
 
+def set_city(city_name=""):
+    global CITIES
+    if city_name not in CITIES:
+        CITIES.append(city_name)
+        with open("../db/cities.txt", "w") as f:
+            for c in CITIES:
+                f.write("{}\n".format(c))
+
+    return CITIES.index(city_name)
+
+
 def get_city(city_id=None):
-    if city_id not in range(1, len(CITIES) + 1):
+    if city_id not in range(len(CITIES)):
         city_id = 0
     return CITIES[city_id]
 
