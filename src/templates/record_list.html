@@ -3,11 +3,11 @@
 <table>
   <thead>
     <tr>
-      <td><a href="{{ url_for('list_records') }}?order=book_id">Дело</a></td>
-      <td><a href="{{ url_for('list_records') }}?order=reg_id">Регистрационный №</a></td>
-      <td><a href="{{ url_for('list_records') }}?order=addr">Адрес</a></td>
-      <td><a href="{{ url_for('list_records') }}?order=owner">Владелец</a></td>
-      <td><a href="{{ url_for('list_records') }}?order=base_id">Основание для регистрации</a></td>
+      <td><a href="{{ links['reg_id'] }}">Дело</a></td>
+      <td><a href="{{ links['reg_id'] }}">Регистрационный №</a></td>
+      <td><a href="{{ links['addr'] }}">Адрес</a></td>
+      <td><a href="{{ links['owner'] }}">Владелец</a></td>
+      <td><a href="{{ links['base_id'] }}">Основание для регистрации</a></td>
     </tr>
   </thead>
   <tbody>
@@ -30,7 +30,7 @@
 {%- for page in records.iter_pages() %}
     {% if page %}
       {% if page != records.page %}
-        <a href="{{ url_for('list_records') }}?page={{ records.page }}">{{ page }}</a>
+        <a href="{{ url_for('list_records') }}?page={{ page }}">{{ page }}</a>
       {% else %}
         <strong>{{ page }}</strong>
       {% endif %}

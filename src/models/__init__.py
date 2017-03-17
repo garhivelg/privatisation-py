@@ -132,3 +132,42 @@ class Record(db.Model):
             "reg_date": self.reg_date,
             "comment":  self.comment,
         }
+
+
+class Sort:
+    title = ""
+
+    def sort(self, query):
+        query.order_by(None)
+
+
+ORDER_BY = {
+    "reg_id": {
+        "title": "Регистрационный №",
+        "order": {
+            "asc": [Record.book_id.asc(), Record.reg_num.asc()],
+            "desc": [Record.book_id.desc(), Record.reg_num.desc()],
+        },
+    },
+    "addr": {
+        "title": "Адрес",
+        "order": {
+            "asc": [Record.city_id.asc(), Record.addr_name.asc(), Record.addr_type.asc(), Record.addr_build.asc(), Record.addr_flat.asc()],
+            "desc": [Record.city_id.desc(), Record.addr_name.desc(), Record.addr_type.desc(), Record.addr_build.desc(), Record.addr_flat.desc()],
+        },
+    },
+    "owner": {
+        "title": "Владелец",
+        "order": {
+            "asc": [Record.owner.asc(), Record.owner_init.asc()],
+            "desc": [Record.owner.desc(), Record.owner_init.desc()],
+        },
+    },
+    "base_id": {
+        "title": "Основание",
+        "order": {
+            "asc": [Record.base_id.asc(), ],
+            "desc": [Record.base_id.desc(), ],
+        },
+    },
+}

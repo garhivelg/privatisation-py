@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
-from flask import request, render_template, redirect, session, flash, jsonify
+from flask import g, request, render_template, redirect, session, flash, jsonify
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
@@ -13,27 +13,39 @@ def index():
 
 @app.route("/record")
 def list_records():
-    order = request.args.get('order', None)
+    from models import ORDER_BY
+    order_id = request.args.get('order', None)
+    order_dir = request.args.get('dir', None)
+    order_desc = order_dir == 'desc'
+    if order_id is not None:
+        session["order"] = order_id
+        order_dir = 'default'
+    if order_dir is not None:
+        session["order_desc"] = order_desc
+    order_id = session.get("order")
+    if session.get("order_desc"):
+        order_dir = 'desc'
+    else:
+        order_dir = 'asc'
+
+    links = dict()
+    for k in ORDER_BY.keys():
+        v = "asc"
+        if k == order_id:
+            if not order_desc:
+                v = "desc"
+        links[k] = url_for('list_records', order=k, dir=v)
+
+    order = ORDER_BY.get(order_id, {"title": "", "order": {order_dir: [None]}})
     page = request.args.get('page', 1)
-    if order is not None:
-        session["order"] = order
-    order = session.get("order")
+    g.order = order["title"]
 
     from models import Record
     q = Record.query
-    if order == 'book_id':
-        q = q.order_by(Record.book_id.asc())
-    elif order == 'reg_id':
-        q = q.order_by(Record.book_id.asc(), Record.reg_num.asc())
-    elif order == 'addr':
-        q = q.order_by(Record.city_id.asc(), Record.addr_name.asc(), Record.addr_type.asc(), Record.addr_build.asc(), Record.addr_flat.asc())
-    elif order == 'owner':
-        q = q.order_by(Record.owner.asc(), Record.owner_init.asc())
-    elif order == 'base_id':
-        q = q.order_by(Record.base_id.asc())
+    q = q.order_by(*order["order"][order_dir])
 
-    records = q.paginate(int(page), 50) #  all()
-    return render_template("record_list.html", records=records, page=page)
+    records = q.paginate(int(page), 50)
+    return render_template("record_list.html", records=records, page=page, links=links)
 
 
 @app.route("/record/<int:record_id>")
@@ -51,9 +63,7 @@ def edit_record(record_id):
 
 @app.route("/record/add")
 def add_record():
-    import random
-    from models.lookup import BOOKS
-    book_id = random.randrange(len(BOOKS))
+    book_id = session.get("book_id", 0)
 
     from models import Record
     from forms import RecordForm
@@ -89,6 +99,7 @@ def save_record(record_id=0):
         record.normalize()
         db.session.add(record)
         db.session.commit()
+        session["book_id"] = record.book_id
 
         flash("Данные успешно внесены")
     else:
@@ -301,8 +312,8 @@ def parse_addr():
         res = matches.groups()
     else:
         res = [0, addr, "", ""]
-    
-    from models.lookup import find_street    
+
+    from models.lookup import find_street
     return jsonify(
         addr_type=find_street(res[0]),
         addr_name=res[1],
@@ -321,8 +332,8 @@ def parse_owner():
         res = matches.groups()
     else:
         res = [owner, ""]
-    
+
     return jsonify(
         owner=res[0],
         owner_init=res[1],
-    )    
+    )
