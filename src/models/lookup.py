@@ -20,7 +20,7 @@ BOOKS = range(25)
 
 def load():
     global CITIES
-    with open("../db/cities.txt") as f:
+    with open("../db/cities.txt", encoding="utf-8") as f:
         CITIES = f.read().splitlines()
 
 
@@ -41,7 +41,7 @@ def set_city(city_name=""):
     global CITIES
     if city_name not in CITIES:
         CITIES.append(city_name)
-        with open("../db/cities.txt", "w") as f:
+        with open("../db/cities.txt", "w", encoding="utf-8") as f:
             for c in CITIES:
                 f.write("{}\n".format(c))
 
