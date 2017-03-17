@@ -7,6 +7,7 @@ from wtforms.fields.html5 import DateField
 
 from models.lookup import BOOKS, CITIES, STREETS
 
+
 class RecordForm(FlaskForm):
     book_id = SelectField("Дело №",
                           choices=list(enumerate(BOOKS)),
@@ -20,9 +21,9 @@ class RecordForm(FlaskForm):
                           coerce=int,
                           )
     addr_type = SelectField("Вид улицы",
-                          choices=list(enumerate(STREETS)),
-                          coerce=int,
-                          )
+                            choices=list(enumerate(STREETS)),
+                            coerce=int,
+                            )
     addr_name = StringField("Название улицы", validators=[Length(max=64), ])
     addr_build = StringField("Дом", validators=[Length(max=8), ])
     addr_flat = StringField("Квартира", validators=[Length(max=16), ])
@@ -36,8 +37,3 @@ class RecordForm(FlaskForm):
 
     reg_date = DateField('Дата регистрации', format='%Y-%m-%d', validators=[Optional(), ])
     comment = TextAreaField('Примечание')
-
-    def fill(self, record):
-        self.book_id.data = record.book_id
-        self.reg_id.data = record.get_reg()
-        self.comment.data = record.comment

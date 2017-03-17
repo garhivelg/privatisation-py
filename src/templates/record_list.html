@@ -1,5 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
+{% if count %}
+Найдено {{ count }} записей
 <table>
   <thead>
     <tr>
@@ -39,4 +41,7 @@
     {% endif %}
 {%- endfor %}
 {% if records.has_next %}<a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a>{% else %}<span class="glyphicon glyphicon-menu-right"></span>{% endif %}
+{% else %}
+<div>По вашему запросу ничего не найдено</div>
+{% endif %}
 {% endblock %}

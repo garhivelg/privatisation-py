@@ -66,6 +66,36 @@
         <strong>Сортировка:</strong> {{g.order}}
       </div>
       {% endif %}
+      {% if search %}
+<form method="post" action="{{ url_for('list_records') }}">
+{{ search.csrf_token }}
+<div>
+  <p>{{ search.book_id.label }} {{ search.book_id }}</p>  
+  <p>
+  {{ search.reg_id.label }} {{ search.reg_id(size=8) }}<br>  
+  </p>
+  <div>
+    <h4>Адрес</h4>
+    <p>{{ search.city_id }}</p>  
+    <p>{{ search.addr_type }} {{ search.addr_name(size=24) }}</p>
+    <p>д. {{ search.addr_build(size=4) }} кв. {{ search.addr_flat(size=4) }}</p>  
+  </div>
+  <div>
+    <h4>Владелец</h4>
+    <p>{{ search.owner(size=24) }}&nbsp;{{ search.owner_init(size=8) }}</p>  
+  </div>
+  <div>
+    <h4>Основание</h4>
+    <p>Распоряжение № {{ search.base_id }} от {{ search.base_date }}</p>  
+  </div>
+  <p>Дата регистрации {{ search.reg_date }}</p>  
+  <p>
+    <input type="submit" class="btn btn-success" value="Фильтровать">
+    <a href="{{ url_for('list_records', filter=False) }}" class="btn btn-success">Очистить</a>
+  </p>
+</div>
+</form>
+      {% endif %}
     </div> 
     <div class="col-md-9">
 {% block content %}{% endblock %}

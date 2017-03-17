@@ -11,7 +11,7 @@ def index():
     return redirect(url_for("list_records"))
 
 
-@app.route("/record")
+@app.route("/record", methods=["GET", "POST"])
 def list_records():
     from models import ORDER_BY
     order_id = request.args.get('order', None)
@@ -44,8 +44,29 @@ def list_records():
     q = Record.query
     q = q.order_by(*order["order"][order_dir])
 
+    from forms import RecordForm
+    form = request.form
+    if form:
+        session["filter"] = form
+
+    filter_get = request.args.get('filter', True)
+    if filter_get == "False":
+        session["filter"] = dict()
+    print(filter_get)
+
+    filter_by = session.get("filter", dict())
+    search = RecordForm(filter_by)
+    fields = search.data
+    del(fields["csrf_token"])
+    for k, v in fields.items():
+        print(k, v)
+        if v:
+            q = q.filter(getattr(Record, k).like(v))
+
+    # print(str(q))
+    count = q.count()
     records = q.paginate(int(page), 50)
-    return render_template("record_list.html", records=records, page=page, links=links)
+    return render_template("record_list.html", records=records, page=page, links=links, search=search, count=count)
 
 
 @app.route("/record/<int:record_id>")
