@@ -10,6 +10,7 @@
       <td><a href="{{ links['addr'] }}">Адрес</a></td>
       <td><a href="{{ links['owner'] }}">Владелец</a></td>
       <td><a href="{{ links['base_id'] }}">Основание для регистрации</a></td>
+      <td>&nbsp;</td>
     </tr>
   </thead>
   <tbody>
@@ -24,6 +25,7 @@
       {% else %}
       <td>№{{ r.base_id }}</td>
       {% endif %}
+      <td><a href="{{ url_for('del_record', record_id=r.id) }}"><span class="glyphicon glyphicon-remove"></span></a></td>
     </tr>
     {% endfor %}
   </tbody>

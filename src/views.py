@@ -135,6 +135,20 @@ def save_record(record_id=0):
     return redirect(url_for("edit_record", record_id=record_id))
 
 
+@app.route("/record/del/<int:record_id>")
+def del_record(record_id=0):
+    from models import Record
+    record = Record.query.get(record_id)
+
+    if record is not None:
+        db.session.delete(record)
+        db.session.commit()
+
+        flash("Запись успешно удалена")
+
+    return redirect(url_for("edit_record", record_id=record_id))
+
+
 @app.route("/random")
 @app.route("/random/<int:records>")
 def generate_random(records=1):
