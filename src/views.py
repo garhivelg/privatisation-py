@@ -56,6 +56,19 @@ def list_records():
 
     filter_by = session.get("filter", dict())
     search = RecordForm(filter_by)
+    filter_book = request.args.get('book')
+    if filter_book:
+        search.book_id.data = filter_book
+    filter_city = request.args.get('city')
+    if filter_city:
+        search.city_id.data = filter_city
+    filter_addr_type = request.args.get('addr_type')
+    if filter_addr_type:
+        search.addr_type.data = filter_addr_type
+    filter_street = request.args.get('street')
+    if filter_street:
+        search.addr_name.data = filter_street
+
     fields = search.data
     del(fields["csrf_token"])
     for k, v in fields.items():
@@ -166,19 +179,19 @@ def generate_random(records=1):
 @app.route("/list/books")
 def list_books():
     from models.lookup import BOOKS
-    return render_template("list.html", items=[[b,  "#"] for b in BOOKS])
+    return render_template("list.html", items=[[b, url_for('list_records', book=i)] for i, b in enumerate(BOOKS)])
 
 
 @app.route("/list/streets")
 def list_streets():
     from models.lookup import STREETS
-    return render_template("list.html", items=[[s, "#"] for s in STREETS])
+    return render_template("list.html", items=[[s, url_for('list_records', addr_type=i)] for i, s in enumerate(STREETS)])
 
 
 @app.route("/list/cities")
 def list_cities():
     from models.lookup import CITIES
-    return render_template("list.html", items=[[c, "#"] for c in CITIES])
+    return render_template("list.html", items=[[c, url_for('list_records', city=i)] for i, c in enumerate(CITIES)])
 
 
 @app.route("/list/streetnames")
@@ -187,7 +200,7 @@ def list_street_names():
     from models.lookup import CITIES, STREETS
     records = []
     for r in Record.query.distinct(Record.addr_name).group_by(Record.city_id, Record.addr_type, Record.addr_name):
-        records.append([' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]), "#"])
+        records.append([' '.join([CITIES[r.city_id], STREETS[r.addr_type], r.addr_name]), url_for('list_records', street=r.addr_name, city=r.city_id, addr_type=r.addr_type)])
     return render_template("list.html", items=records)
 
 
