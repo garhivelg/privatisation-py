@@ -61,6 +61,19 @@ def list_records():
 
     filter_by = session.get("filter", dict())
     search = RecordForm(filter_by)
+    filter_book = request.args.get('book')
+    if filter_book:
+        search.book_id.data = filter_book
+    filter_city = request.args.get('city')
+    if filter_city:
+        search.city_id.data = filter_city
+    filter_addr_type = request.args.get('addr_type')
+    if filter_addr_type:
+        search.addr_type.data = filter_addr_type
+    filter_street = request.args.get('street')
+    if filter_street:
+        search.addr_name.data = filter_street
+
     fields = search.data
     del(fields["csrf_token"])
     for k, v in fields.items():
@@ -180,7 +193,7 @@ def generate_random(records=1):
 def list_books():
     from models.lookup import BOOKS
     return render_template("list.html", items=[
-        [b,  url_for("list_records", book_id=i)] for i, b in enumerate(BOOKS)
+        [b,  url_for("list_records", book=i)] for i, b in enumerate(BOOKS)
     ])
 
 
@@ -188,7 +201,7 @@ def list_books():
 def list_streets():
     from models.lookup import STREETS
     return render_template("list.html", items=[
-        [s, url_for("list_records", streettype=i)] for i, s in enumerate(STREETS)
+        [s, url_for("list_records", addr_type=i)] for i, s in enumerate(STREETS)
     ])
 
 
@@ -196,7 +209,7 @@ def list_streets():
 def list_cities():
     from models.lookup import CITIES
     return render_template("list.html", items=[
-        [c, url_for("list_records", city_id=i)] for i, c in enumerate(CITIES)
+        [c, url_for("list_records", city=i)] for i, c in enumerate(CITIES)
     ])
 
 
@@ -216,9 +229,9 @@ def list_street_names():
             ),
             url_for(
                 "list_records",
-                city_id=r.city_id,
-                streettype=r.addr_type,
-                streetname=r.addr_name
+                city=r.city_id,
+                addr_type=r.addr_type,
+                street=r.addr_name
             )
         ])
     return render_template("list.html", items=records)
