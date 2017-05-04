@@ -259,97 +259,115 @@ def load_from_file(filename):
 
     from models import Record
     from models.lookup import get_book, get_street, set_city
-    f = open(filename, 'r', encoding='cp1251')
-    d = []
-    while True:
-        r = Record()
-
-        tmp = f.readline()
-        if not tmp:
-            break
-
-        record_id = int(tmp)
-        book_id = int(f.readline()) - 1
-        book = get_book(book_id)
-        reg_id = f.readline().rstrip()
-
-        r = Record.query.filter_by(reg_id=reg_id).first()
-        if r is None:
+    with open(filename, 'r', encoding='cp1251') as f:
+        d = []
+        while True:
             r = Record()
 
-        r.book_id = book_id + 1
-        r.reg_id = reg_id
-        addr_type = f.readline()
-        r.addr_name = f.readline().rstrip()
-        r.addr_build = f.readline().rstrip()
-        r.addr_flat = f.readline().rstrip()
-        r.city_id = 0
-        try:
-            r.addr_type = int(addr_type)
-        except ValueError:
-            addr_data = addr_type.rstrip().split(':')
-            if len(addr_data) > 1:
-                city = set_city(addr_data[1])
-                addr_data.append(city)
-                if addr_data[0]:
-                    r.addr_type = int(addr_data[0])
-                r.city_id = city
-            else:
-                r.addr_type = 0
-        street = get_street(r.addr_type)
-        addr = [
-            r.addr_type,
-            r.city_id,
-            r.addr_name,
-            r.addr_build,
-            r.addr_flat,
-            street,
-            r.get_addr(),
-        ]
-        r.owner = f.readline().rstrip()
-        r.owner_init = f.readline().rstrip()
-        owner = [
-            r.owner,
-            r.owner_init,
-            r.get_owner(),
-        ]
-        r.base_id = f.readline().rstrip()
-
-        from datetime import datetime
-        base_date_str = f.readline().rstrip()
-        reg_date_str = f.readline().rstrip()
-        r.base_date = datetime.strptime(base_date_str, '%d.%m.%y')
-        r.reg_date = datetime.strptime(reg_date_str, '%d.%m.%y')
-        l = f.readline()
-
-        d.append([
-            record_id,
-            [
-                r.book_id,
-                book,
-            ],
-            r.reg_id,
-            addr,
-            owner,
-            r.base_id,
-            [
-                base_date_str,
-                # base_date,
-                r.base_date,
-            ],
-            [
-                reg_date_str,
-                # reg_date,
-                r.reg_date,
-            ],
-        ])
-
-        r.normalize()
-        print("Запись №{} успешно импортирована".format(r.reg_id))
-        db.session.add(r)
-
-        if not l:
+            tmp = f.readline()
+            if not tmp:
                 break
+
+            record_id = int(tmp)
+            book_id = int(f.readline()) - 1
+            book = get_book(book_id)
+            reg_id = f.readline().rstrip()
+
+            r = Record.query.filter_by(reg_id=reg_id).first()
+            if r is None:
+                r = Record()
+
+            r.book_id = book_id + 1
+            r.reg_id = reg_id
+            addr_type = f.readline()
+            r.addr_name = f.readline().rstrip()
+            r.addr_build = f.readline().rstrip()
+            r.addr_flat = f.readline().rstrip()
+            r.city_id = 0
+            try:
+                r.addr_type = int(addr_type)
+            except ValueError:
+                addr_data = addr_type.rstrip().split(':')
+                if len(addr_data) > 1:
+                    city = set_city(addr_data[1])
+                    addr_data.append(city)
+                    if addr_data[0]:
+                        r.addr_type = int(addr_data[0])
+                    r.city_id = city
+                else:
+                    r.addr_type = 0
+            street = get_street(r.addr_type)
+            addr = [
+                r.addr_type,
+                r.city_id,
+                r.addr_name,
+                r.addr_build,
+                r.addr_flat,
+                street,
+                r.get_addr(),
+            ]
+            r.owner = f.readline().rstrip()
+            r.owner_init = f.readline().rstrip()
+            owner = [
+                r.owner,
+                r.owner_init,
+                r.get_owner(),
+            ]
+            r.base_id = f.readline().rstrip()
+
+            from datetime import datetime
+            base_date_str = f.readline().rstrip()
+            reg_date_str = f.readline().rstrip()
+            r.base_date = datetime.strptime(base_date_str, '%d.%m.%y')
+            r.reg_date = datetime.strptime(reg_date_str, '%d.%m.%y')
+            l = f.readline()
+
+            d.append([
+                record_id,
+                [
+                    r.book_id,
+                    book,
+                ],
+                r.reg_id,
+                addr,
+                owner,
+                r.base_id,
+                [
+                    base_date_str,
+                    # base_date,
+                    r.base_date,
+                ],
+                [
+                    reg_date_str,
+                    # reg_date,
+                    r.reg_date,
+                ],
+            ])
+
+            r.normalize()
+            print("Запись №{} успешно импортирована".format(r.reg_id))
+            db.session.add(r)
+
+            if not l:
+                    break
+    db.session.commit()
+
+    with open(filename + '.lst', 'r', encoding='cp1251') as f:
+        while True:
+            reg_id = f.readline()
+            if not reg_id:
+                break
+            file_id = '../imports' + f.readline()
+            print(file_id)
+            r = Record.query.filter_by(reg_id=reg_id).first()
+            if not r:
+                continue
+            if not file_id:
+                continue
+            with open(file_id, 'r', encoding='cp1251') as comment_file:
+                r.comment = comment_file.read()
+            print(r.comment)
+            db.session.add(r)
     db.session.commit()
     return True
 
