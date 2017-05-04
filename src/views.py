@@ -14,9 +14,11 @@ def index():
 @app.route("/record", methods=["GET", "POST"])
 def list_records():
     from models import ORDER_BY
+    book_id = request.args.get('book_id', None)
     city_id = request.args.get('city_id', None)
     streettype = request.args.get('streettype', None)
     streetname = request.args.get('streetname', None)
+
     order_id = request.args.get('order', None)
     order_dir = request.args.get('dir', None)
     order_desc = order_dir == 'desc'
@@ -65,10 +67,11 @@ def list_records():
         print(k, v)
         if v:
             q = q.filter(getattr(Record, k).like(v))
+    if book_id is not None:
+        search.book_id.data = int(book_id)
     if city_id is not None:
-        search.city_id.data = city_id
+        search.city_id.data = int(city_id)
     if streettype is not None:
-        print("STREETTYPE", streettype)
         search.addr_type.data = int(streettype)
     if streetname is not None:
         search.addr_name.data = streetname
@@ -176,19 +179,25 @@ def generate_random(records=1):
 @app.route("/list/books")
 def list_books():
     from models.lookup import BOOKS
-    return render_template("list.html", items=[[b,  "#"] for b in BOOKS])
+    return render_template("list.html", items=[
+        [b,  url_for("list_records", book_id=i)] for i, b in enumerate(BOOKS)
+    ])
 
 
 @app.route("/list/streets")
 def list_streets():
     from models.lookup import STREETS
-    return render_template("list.html", items=[[s, "#"] for s in STREETS])
+    return render_template("list.html", items=[
+        [s, url_for("list_records", streettype=i)] for i, s in enumerate(STREETS)
+    ])
 
 
 @app.route("/list/cities")
 def list_cities():
     from models.lookup import CITIES
-    return render_template("list.html", items=[[c, "#"] for c in CITIES])
+    return render_template("list.html", items=[
+        [c, url_for("list_records", city_id=i)] for i, c in enumerate(CITIES)
+    ])
 
 
 @app.route("/list/streetnames")
@@ -196,8 +205,22 @@ def list_street_names():
     from models import Record
     from models.lookup import get_city, get_street
     records = []
-    for r in Record.query.distinct(Record.addr_name).group_by(Record.city_id, Record.addr_type, Record.addr_name):
-        records.append([' '.join([get_city(r.city_id), get_street(r.addr_type), r.addr_name]), url_for("list_records", city_id=r.city_id, streettype=r.addr_type, streetname=r.addr_name)])
+    for r in Record.query.distinct(Record.addr_name).group_by(
+        Record.city_id,
+        Record.addr_type,
+        Record.addr_name
+    ):
+        records.append([
+            ' '.join(
+                [get_city(r.city_id), get_street(r.addr_type), r.addr_name]
+            ),
+            url_for(
+                "list_records",
+                city_id=r.city_id,
+                streettype=r.addr_type,
+                streetname=r.addr_name
+            )
+        ])
     return render_template("list.html", items=records)
 
 
@@ -254,7 +277,7 @@ def load_from_file(filename):
         if r is None:
             r = Record()
 
-        r.book_id = book_id
+        r.book_id = book_id + 1
         r.reg_id = reg_id
         addr_type = f.readline()
         r.addr_name = f.readline().rstrip()
@@ -265,7 +288,6 @@ def load_from_file(filename):
             r.addr_type = int(addr_type)
         except ValueError:
             addr_data = addr_type.rstrip().split(':')
-            print(addr_data)
             if len(addr_data) > 1:
                 city = set_city(addr_data[1])
                 addr_data.append(city)
