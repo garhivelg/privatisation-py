@@ -1,17 +1,5 @@
 # -*- coding:utf-8 -*-
-STREETS = [
-    "",
-    "ул.",
-    "кв.",
-    "пер.",
-    "гор.",
-    "пр.",
-    "прсп.",
-    "пл.",
-    "уч.",
-    "мкр.",
-    "пос.",
-]
+STREETS = []
 
 CITIES = []
 
@@ -23,9 +11,24 @@ def load():
     with open("../db/cities.txt", encoding="utf-8") as f:
         CITIES = f.read().splitlines()
 
+    global STREETS
+    with open("../db/streets.txt", encoding="utf-8") as f:
+        STREETS = f.read().splitlines()
+
+
+def set_street(street_name=""):
+    global STREETS
+    if street_name not in STREETS:
+        STREETS.append(street_name)
+        with open("../db/streets.txt", "w", encoding="utf-8") as f:
+            for s in STREETS:
+                f.write("{}\n".format(s))
+
+    return STREETS.index(street_name)
+
 
 def get_street(street_id=None):
-    if street_id not in range(1, len(STREETS) + 1):
+    if street_id not in range(1, len(STREETS)):
         street_id = 0
     return STREETS[street_id]
 
