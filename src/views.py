@@ -357,7 +357,7 @@ def load_from_file(filename):
             reg_id = f.readline()
             if not reg_id:
                 break
-            file_id = '../imports' + f.readline()
+            file_id = '../imports/' + f.readline()
             print(file_id)
             r = Record.query.filter_by(reg_id=reg_id).first()
             if not r:
