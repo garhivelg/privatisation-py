@@ -40,6 +40,12 @@ def find_street(street):
         return 0
 
 
+def street_name(street):
+    if not street:
+        return "-"
+    return street
+
+
 def set_city(city_name=""):
     global CITIES
     if city_name not in CITIES:

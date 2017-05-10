@@ -71,11 +71,10 @@ def list_records():
         search.addr_name.data = filter_street
     no_street = request.args.get('no_street')
     if no_street is not None:
-        session["no_street"] = no_street
+        session["no_street"] = int(no_street)
 
     fields = search.data
     for k, v in fields.items():
-        print(k, type(v), v)
         if v is None:
             continue
         if not hasattr(Record, k):
@@ -86,13 +85,13 @@ def list_records():
         if isinstance(v, str):
             if not v:
                 continue
-        print("FILTER", k, v)
+        print(k, type(v), "\"%s\"" % v)
         q = q.filter(getattr(Record, k).like(v))
     if session.get("no_street", False):
-        print("No STREET")
+        print("No STREET", session.get("no_street"))
         q = q.filter(Record.addr_name.like(''))
 
-    # print(str(q))
+    print(str(q))
     count = q.count()
     records = q.paginate(int(page), 50)
     return render_template("record_list.html", records=records, page=page, links=links, search=search, count=count)
@@ -203,10 +202,10 @@ def list_books():
 
 @app.route("/list/streets")
 def list_streets():
-    from models.lookup import STREETS
+    from models.lookup import STREETS, street_name
     items = [(-1, "Все"), ] + list(enumerate(STREETS))
     return render_template("list.html", items=[
-        [s, url_for("list_records", addr_type=i)] for i, s in items
+        [street_name(s), url_for("list_records", addr_type=i)] for i, s in items
     ])
 
 
@@ -239,7 +238,7 @@ def list_street_names():
         Record.addr_name
     ):
         street = r.addr_name
-        no_street = not street
+        no_street = int(not street)
         records.append([
             ' '.join(
                 [get_city(r.city_id), get_street(r.addr_type), r.addr_name]
