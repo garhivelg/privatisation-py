@@ -4,6 +4,7 @@ from flask import g, request, render_template, redirect, session, flash, jsonify
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
+from models import add_filters
 
 
 @app.route("/")
@@ -53,7 +54,6 @@ def list_records():
     if filter_get == "False":
         session["filter"] = dict()
         session["no_street"] = False
-    print(filter_get)
 
     filter_by = session.get("filter", dict())
     search = RecordForm(filter_by)
@@ -73,23 +73,7 @@ def list_records():
     if no_street is not None:
         session["no_street"] = int(no_street)
 
-    fields = search.data
-    for k, v in fields.items():
-        if v is None:
-            continue
-        if not hasattr(Record, k):
-            continue
-        if isinstance(v, int):
-            if v < 0:
-                continue
-        if isinstance(v, str):
-            if not v:
-                continue
-        print(k, type(v), "\"%s\"" % v)
-        q = q.filter(getattr(Record, k).like(v))
-    if session.get("no_street", False):
-        print("No STREET", session.get("no_street"))
-        q = q.filter(Record.addr_name.like(''))
+    q = add_filters(q, search.data, session.get("no_street"))
 
     print(str(q))
     count = q.count()
@@ -220,6 +204,7 @@ def list_cities():
 
 @app.route("/list/streetnames")
 def list_street_names():
+    from forms import RecordForm
     from models import Record
     from models.lookup import get_city, get_street
     records = [(
@@ -232,11 +217,15 @@ def list_street_names():
         )
 
     ), ]
-    for r in Record.query.distinct(Record.addr_name).group_by(
+    search = RecordForm(session.get("filter", dict()))
+    q = Record.query
+    q = q.distinct(Record.addr_name).group_by(
         Record.city_id,
         Record.addr_type,
         Record.addr_name
-    ):
+    )
+    q = add_filters(q, search.data)
+    for r in q:
         street = r.addr_name
         no_street = int(not street)
         records.append([
