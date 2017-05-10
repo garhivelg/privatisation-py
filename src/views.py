@@ -14,11 +14,6 @@ def index():
 @app.route("/record", methods=["GET", "POST"])
 def list_records():
     from models import ORDER_BY
-    book_id = request.args.get('book_id', None)
-    city_id = request.args.get('city_id', None)
-    streettype = request.args.get('streettype', None)
-    streetname = request.args.get('streetname', None)
-
     order_id = request.args.get('order', None)
     order_dir = request.args.get('dir', None)
     order_desc = order_dir == 'desc'
@@ -57,37 +52,45 @@ def list_records():
     filter_get = request.args.get('filter', True)
     if filter_get == "False":
         session["filter"] = dict()
+        session["no_street"] = False
     print(filter_get)
 
     filter_by = session.get("filter", dict())
     search = RecordForm(filter_by)
     filter_book = request.args.get('book')
-    if filter_book:
-        search.book_id.data = filter_book
+    if filter_book is not None:
+        search.book_id.data = int(filter_book)
     filter_city = request.args.get('city')
-    if filter_city:
-        search.city_id.data = filter_city
+    if filter_city is not None:
+        search.city_id.data = int(filter_city)
     filter_addr_type = request.args.get('addr_type')
-    if filter_addr_type:
-        search.addr_type.data = filter_addr_type
+    if filter_addr_type is not None:
+        search.addr_type.data = int(filter_addr_type)
     filter_street = request.args.get('street')
-    if filter_street:
+    if filter_street is not None:
         search.addr_name.data = filter_street
+    no_street = request.args.get('no_street')
+    if no_street is not None:
+        session["no_street"] = no_street
 
     fields = search.data
-    del(fields["csrf_token"])
     for k, v in fields.items():
-        print(k, v)
-        if v:
-            q = q.filter(getattr(Record, k).like(v))
-    if book_id is not None:
-        search.book_id.data = int(book_id)
-    if city_id is not None:
-        search.city_id.data = int(city_id)
-    if streettype is not None:
-        search.addr_type.data = int(streettype)
-    if streetname is not None:
-        search.addr_name.data = streetname
+        print(k, type(v), v)
+        if v is None:
+            continue
+        if not hasattr(Record, k):
+            continue
+        if isinstance(v, int):
+            if v < 0:
+                continue
+        if isinstance(v, str):
+            if not v:
+                continue
+        print("FILTER", k, v)
+        q = q.filter(getattr(Record, k).like(v))
+    if session.get("no_street", False):
+        print("No STREET")
+        q = q.filter(Record.addr_name.like(''))
 
     # print(str(q))
     count = q.count()
@@ -192,24 +195,27 @@ def generate_random(records=1):
 @app.route("/list/books")
 def list_books():
     from models.lookup import BOOKS
+    items = [(-1, "Все"), ] + list(enumerate(BOOKS))
     return render_template("list.html", items=[
-        [b,  url_for("list_records", book=i)] for i, b in enumerate(BOOKS)
+        [b,  url_for("list_records", book=i)] for i, b in items
     ])
 
 
 @app.route("/list/streets")
 def list_streets():
     from models.lookup import STREETS
+    items = [(-1, "Все"), ] + list(enumerate(STREETS))
     return render_template("list.html", items=[
-        [s, url_for("list_records", addr_type=i)] for i, s in enumerate(STREETS)
+        [s, url_for("list_records", addr_type=i)] for i, s in items
     ])
 
 
 @app.route("/list/cities")
 def list_cities():
     from models.lookup import CITIES
+    items = [(-1, "Все"), ] + list(enumerate(CITIES))
     return render_template("list.html", items=[
-        [c, url_for("list_records", city=i)] for i, c in enumerate(CITIES)
+        [c, url_for("list_records", city=i)] for i, c in items
     ])
 
 
@@ -217,12 +223,23 @@ def list_cities():
 def list_street_names():
     from models import Record
     from models.lookup import get_city, get_street
-    records = []
+    records = [(
+        "Все",
+        url_for(
+            "list_records",
+            city=-1,
+            addr_type=-1,
+            street=None
+        )
+
+    ), ]
     for r in Record.query.distinct(Record.addr_name).group_by(
         Record.city_id,
         Record.addr_type,
         Record.addr_name
     ):
+        street = r.addr_name
+        no_street = not street
         records.append([
             ' '.join(
                 [get_city(r.city_id), get_street(r.addr_type), r.addr_name]
@@ -231,7 +248,8 @@ def list_street_names():
                 "list_records",
                 city=r.city_id,
                 addr_type=r.addr_type,
-                street=r.addr_name
+                street=r.addr_name,
+                no_street=no_street
             )
         ])
     return render_template("list.html", items=records)

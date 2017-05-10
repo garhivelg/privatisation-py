@@ -2,3 +2,7 @@ body {
 	margin: 0 20px;
     padding-top: 64px;
 }
+
+.records td {
+    padding: 0px 5px;
+}

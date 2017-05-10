@@ -10,18 +10,18 @@ from models.lookup import BOOKS, CITIES, STREETS
 
 class RecordForm(FlaskForm):
     book_id = SelectField("Дело №",
-                          choices=list(enumerate(BOOKS)),
+                          choices=[(-1, "Все"), ] + list(enumerate(BOOKS)),
                           coerce=int,
                           )
     reg_id = StringField("Регистрационный №", validators=[DataRequired(), Length(max=8)])
 
     full_addr = StringField("Адрес")
     city_id = SelectField("Населенный пункт",
-                          choices=list(enumerate(CITIES)),
+                          choices=[(-1, "Все"), ] + list(enumerate(CITIES)),
                           coerce=int,
                           )
     addr_type = SelectField("Вид улицы",
-                            choices=list(enumerate(STREETS)),
+                            choices=[(-1, "Все"), ] + list(enumerate(STREETS)),
                             coerce=int,
                             )
     addr_name = StringField("Название улицы", validators=[Length(max=64), ])
