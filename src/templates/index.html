@@ -60,12 +60,7 @@
 {% endwith %}
 
   <div class="row">
-    <div class="col-md-3">
-      {% if g.order %}
-      <div>
-        <strong>Сортировка:</strong> {{g.order}}
-      </div>
-      {% endif %}
+    <div id="filter" class="col-md-3" style="display: none;">
       {% if search %}
 <form method="post" action="{{ url_for('list_records') }}">
 {{ search.csrf_token }}
@@ -98,11 +93,19 @@
       {% endif %}
     </div> 
     <div class="col-md-9">
+      <h4 class="filter"><a href="#" id="filterClick">Фильтр</a></h4>
 {% block content %}{% endblock %}
     </div> 
   </div>
   <script src="{{ url_for("static", filename="js/jquery-1.12.4.min.js") }}"></script>
   <script src="{{ url_for("static", filename="bootstrap/js/bootstrap.min.js") }}"></script>  
+  <script type=text/javascript>
+  $(function() {
+    $('#filterClick').bind('click', function() {
+      $('#filter').toggle();
+    });
+  });
+  </script>
 {% block script %}{% endblock %}
 </body>
 </html>

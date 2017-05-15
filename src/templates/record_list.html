@@ -1,7 +1,14 @@
 {% extends "index.html" %}
 {% block content %}
+{% if g.order %}
+{% endif %}
 {% if count %}
-Найдено {{ count }} записей
+<div>
+  <strong>Сортировка:</strong> {{g.order}}
+</div>
+<div>
+  <strong>Найдено:</strong> {{ count }} записей
+</div>
 <table class="records">
   <thead>
     <tr>
@@ -44,6 +51,6 @@
 {%- endfor %}
 {% if records.has_next %}<a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a>{% else %}<span class="glyphicon glyphicon-menu-right"></span>{% endif %}
 {% else %}
-<div>По вашему запросу ничего не найдено</div>
+<h3>По вашему запросу ничего не найдено</h3>
 {% endif %}
 {% endblock %}

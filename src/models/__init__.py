@@ -15,7 +15,7 @@ def add_filters(query, fields, no_street=False):
         if isinstance(v, str):
             if not v:
                 continue
-        print(k, type(v), "\"%s\"" % v)
+        # print(k, type(v), "\"%s\"" % v)
         query = query.filter(getattr(Record, k).like(v))
     # if session.get("no_street", False):
     if no_street:
