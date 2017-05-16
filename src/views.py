@@ -4,7 +4,7 @@ from flask import g, request, render_template, redirect, session, flash, jsonify
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
-from models import add_filters
+from models import add_filters, update_records
 
 from werkzeug.datastructures import MultiDict
 
@@ -94,7 +94,10 @@ def edit_record(record_id):
         return redirect(url_for("list_records"))
 
     form = RecordForm(obj=record)
-    return render_template("record.html", record=record, form=form, default_addr=record.get_addr(), default_owner=record.get_owner())
+    return render_template(
+        "record.html", record=record, form=form,
+        default_addr=record.get_addr(), default_owner=record.get_owner(),
+        action=url_for('save_record', record_id=record.id))
 
 
 @app.route("/record/add")
@@ -116,7 +119,10 @@ def add_record():
     record.reg_id = record.get_reg()
 
     form = RecordForm(obj=record)
-    return render_template("record.html", record=record, form=form, default_addr="ул. Советская 85/25", default_owner="Фамилия И.О.")
+    return render_template(
+        "record.html", record=record, form=form,
+        default_addr="ул. Советская 85/25", default_owner="Фамилия И.О.",
+        action=url_for('save_record', record_id=record.id))
 
 
 @app.route("/record/save", methods=["POST", ])
@@ -163,6 +169,34 @@ def del_record(record_id=0):
         flash("Запись успешно удалена")
 
     return redirect(url_for("edit_record", record_id=record_id))
+
+
+@app.route("/record/all", methods=["GET", "POST"])
+def edit_all():
+    from models import Record
+    from forms import RecordForm
+    save_form = RecordForm(request.form)
+
+    form = RecordForm(MultiDict(session.get("filter", dict())))
+
+    q = Record.query
+    q = add_filters(q, form.data)
+
+    if request.form:
+        # record = Record.query.get(record_id)
+
+        c = update_records(q, save_form.data)
+        db.session.commit()
+
+        flash("Данные успешно внесены")
+        return redirect(url_for("list_records", filter=False))
+
+    record = Record()
+
+    return render_template(
+        "record.html", record=record, form=form,
+        default_addr="", default_owner="",
+        hide_calc=True, action=url_for('edit_all'))
 
 
 @app.route("/random")

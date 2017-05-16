@@ -24,6 +24,26 @@ def add_filters(query, fields, no_street=False):
     return query
 
 
+def update_records(query, fields):
+    updates = dict()
+    for k, v in fields.items():
+        if v is None:
+            continue
+        if not hasattr(Record, k):
+            continue
+        if isinstance(v, int):
+            if v < 0:
+                continue
+        if isinstance(v, str):
+            if not v:
+                continue
+        # print(k, type(v), "\"%s\"" % v)
+        updates[k] = v
+    if not updates:
+        return 0
+    return query.update(updates, synchronize_session='fetch')
+
+
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer)

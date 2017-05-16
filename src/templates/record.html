@@ -29,24 +29,30 @@
 </script>
 {% endblock %}
 {% block content %}
-<h1>Запись № {{ record.reg_id }}</h1>
-<form method="post" action="{{ url_for('save_record', record_id=record.id) }}">
+{% if record.reg_id %}
+<h1>Запись № {{record.reg_id}}</h1>
+{% endif %}
+<form method="post" action="{{ action }}">
 {{ form.csrf_token }}
 <div class="row">
 <div class="col-md-6">
   <p>{{ form.book_id.label }} {{ form.book_id }}</p>  
   <p>
-  {{ form.reg_id.label }} {{ form.reg_id(size=8, placeholder='1/1') }}<br>  
+  {{ form.reg_id.label }} {{ form.reg_id(size=8, placeholder='1/1') }}  
   </p>
   <div>
     <h4>Адрес</h4>
+    {% if not hide_calc %}
     <p>{{ form.full_addr(size=48, placeholder=default_addr) }}</p>  
+    {% endif %}
     <p>{{ form.city_id }}</p>  
     <p>{{ form.addr_type }} {{ form.addr_name(size=24) }} д. {{ form.addr_build(size=4) }} кв. {{ form.addr_flat(size=4) }}</p>  
   </div>
   <div>
     <h4>Владелец</h4>
+    {% if not hide_calc %}
     <p>{{ form.full_owner(size=48, placeholder=default_owner) }}</p>  
+    {% endif %}
     <p>{{ form.owner(size=32) }}&nbsp;{{ form.owner_init(size=8) }}</p>  
   </div>
   <div>
