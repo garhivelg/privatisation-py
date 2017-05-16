@@ -138,6 +138,7 @@ def save_record(record_id=0):
         session["book_id"] = record.book_id
 
         flash("Данные успешно внесены")
+        return redirect(url_for("list_records"))
     else:
         flash("Пожалуйста, перепроверьте данные")
         for field, errors in form.errors.items():
