@@ -93,7 +93,9 @@
       {% endif %}
     </div> 
     <div class="col-md-9">
+      {% if search %}
       <h4 class="filter"><a href="#" id="filterClick">Фильтр</a></h4>
+    {% endif %}
 {% block content %}{% endblock %}
     </div> 
   </div>

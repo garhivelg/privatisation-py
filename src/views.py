@@ -6,6 +6,8 @@ from flask.helpers import url_for
 from app import app, db
 from models import add_filters
 
+from werkzeug.datastructures import MultiDict
+
 
 @app.route("/")
 def index():
@@ -48,7 +50,7 @@ def list_records():
     from forms import RecordForm
     form = request.form
     if form:
-        session["filter"] = form
+        session["filter"] = form.to_dict()
 
     filter_get = request.args.get('filter', True)
     if filter_get == "False":
@@ -56,22 +58,23 @@ def list_records():
         session["no_street"] = False
 
     filter_by = session.get("filter", dict())
-    search = RecordForm(filter_by)
     filter_book = request.args.get('book')
     if filter_book is not None:
-        search.book_id.data = int(filter_book)
+        filter_by["book_id"] = int(filter_book)
     filter_city = request.args.get('city')
     if filter_city is not None:
-        search.city_id.data = int(filter_city)
+        filter_by["city_id"] = int(filter_city)
     filter_addr_type = request.args.get('addr_type')
     if filter_addr_type is not None:
-        search.addr_type.data = int(filter_addr_type)
+        filter_by["addr_type"] = int(filter_addr_type)
     filter_street = request.args.get('street')
     if filter_street is not None:
-        search.addr_name.data = filter_street
+        filter_by["addr_name"] = filter_street
     no_street = request.args.get('no_street')
     if no_street is not None:
         session["no_street"] = int(no_street)
+    # print(filter_by)
+    search = RecordForm(MultiDict(filter_by))
 
     q = add_filters(q, search.data, session.get("no_street"))
 
@@ -217,14 +220,14 @@ def list_street_names():
         )
 
     ), ]
-    search = RecordForm(session.get("filter", dict()))
+    search = RecordForm(MultiDict(session.get("filter", dict())))
     q = Record.query
     q = q.distinct(Record.addr_name).group_by(
         Record.city_id,
         Record.addr_type,
         Record.addr_name
     )
-    q = add_filters(q, search.data)
+    # q = add_filters(q, search.data)
     for r in q:
         street = r.addr_name
         no_street = int(not street)
