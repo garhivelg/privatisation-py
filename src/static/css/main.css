@@ -6,3 +6,20 @@ body {
 .records td {
     padding: 0px 5px;
 }
+
+.base_id {
+    font-size: x-small;
+}
+
+.base_id span {
+    font-size: 14px;
+    display: inline-block;
+}
+
+.base_id .id_num {
+    width: 40px;
+}
+
+.base_id .base_date {
+    padding: 0px 10px;
+}
