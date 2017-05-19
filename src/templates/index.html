@@ -21,7 +21,7 @@
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="{{ url_for('list_records') }}">Список</a></li>
+        <li><a href="{{ url_for('list_records') }}">Список</a></li>
         <li><a href="{{ url_for('add_record') }}">Добавить</a></li>
 	  	<li class="dropdown">
 	  	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Справочники <span class="caret"></span></a>
@@ -44,7 +44,7 @@
 	  	  <ul class="dropdown-menu">
 	  	    <li><a href="{{ url_for('reindex') }}">Переиндексировать</a></li>
           <li><a href="{{ url_for('edit_all') }}">Групповое изменение</a></li>
-	  	    <li><a href="#">Найти пропущенные</a></li>
+          <li><a href="{{ url_for('missing', book_id=session.get('filter', dict()).get('book_id')) }}">Найти пропущенные</a></li>
 	  	  </ul>
 	  	</li>
       </ul>

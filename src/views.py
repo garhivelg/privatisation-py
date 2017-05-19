@@ -16,6 +16,7 @@ def backup_db(time):
     shutil.copyfile("../db/privatisation.db", "../backup/{}".format(filename))
     print("Saved as {}".format(filename))
 
+
 @app.route("/")
 def index():
     return redirect(url_for("list_records"))
@@ -309,6 +310,58 @@ def reindex(records=1):
         db.session.add(r)
     db.session.commit()
     return redirect(url_for("list_records"))
+
+
+@app.route("/missing")
+@app.route("/missing/<int:book_id>")
+def missing(book_id=None):
+    from models import Record
+    from models.lookup import BOOKS
+
+    if book_id is None:
+        selected_books = BOOKS
+    else:
+        selected_books = [book_id, ]
+
+    res = dict()
+    for b in selected_books:
+        q = Record.query.filter_by(book_id=b)
+        first = q.order_by(Record.reg_num.asc()).first()
+        last = q.order_by(Record.reg_num.desc()).first()
+        count = q.count()
+        res[b] = dict()
+
+        if not last:
+            print("BOOK#{} Empty!".format(b))
+            continue
+
+        res[b]['first'] = first.reg_id
+        res[b]['last'] = last.reg_id
+        if last.reg_num < b * 10000:
+            multiplier = 1000
+        else:
+            multiplier = 10000
+        first_id = b * multiplier
+        expected = last.reg_num - first_id
+        print("BOOK#{}\t{}-{} - {} of {}:\t{}".format(b, first.reg_id, last.reg_id, count, expected, last))
+        missing = []
+        doubled = []
+        for i in range(1, expected + 1):
+            reg_id = "{}/{}".format(b, i)
+            records = Record.query.filter_by(reg_id=reg_id)
+            if records.count() < 1:
+                print("{} is missing!".format(reg_id))
+                missing.append([reg_id, records.first()])
+                continue
+            if records.count() > 1:
+                print("{} is doubled!".format(reg_id))
+                doubled.append([reg_id, records.all()])
+                continue
+            print("{} is ok!".format(reg_id))
+
+        res[b]['missing'] = missing
+        res[b]['doubled'] = doubled
+    return render_template("missing.html", books=res)
 
 
 @app.route("/export")
