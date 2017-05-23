@@ -30,8 +30,10 @@
       <td class="base_id">
       {% if r.base_date %}
         <span class="id_num">№{{ r.base_id }}</span> от <span class="base_date">{{ r.base_date.strftime('%d.%m.%Y') }}</span>
-      {% else %}
+      {% elif r.base_id %}
         <span class="id_num">№{{ r.base_id }}</span>
+      {% else %}
+        <span class="id_num">&dash;</span>
       {% endif %}
       </td>
       <td><a href="{{ url_for('del_record', record_id=r.id) }}"><span class="glyphicon glyphicon-remove"></span></a></td>

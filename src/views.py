@@ -79,6 +79,7 @@ def list_records():
     filter_book = request.args.get('book')
     if filter_book is not None:
         filter_by["book_id"] = int(filter_book)
+        session["book_id"] = int(filter_book)
     filter_city = request.args.get('city')
     if filter_city is not None:
         filter_by["city_id"] = int(filter_city)

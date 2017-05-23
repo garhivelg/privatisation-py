@@ -32,7 +32,7 @@ class RecordForm(FlaskForm):
     owner = StringField("Фамилия", validators=[Length(max=64), ])
     owner_init = StringField("И.О.", validators=[Length(max=8), ])
 
-    base_id = IntegerField("Распоряжение №")
+    base_id = IntegerField("Распоряжение №", validators=[Optional(), ])
     base_date = DateField('Дата распоряжения', format='%Y-%m-%d', validators=[Optional(), ])
 
     reg_date = DateField('Дата регистрации', format='%Y-%m-%d', validators=[Optional(), ])
