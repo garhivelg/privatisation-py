@@ -25,8 +25,8 @@
     <tr>
       <td>{{ r.get_book() }}</td>
       <td>{{ r.reg_id }}</td>
-      <td><a href="{{ url_for('edit_record', record_id=r.id) }}">{{ r.get_addr(full=True) }}</a></td>
-      <td><a href="{{ url_for('edit_record', record_id=r.id) }}">{{ r.get_owner() }}</a></td>
+      <td><a href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}">{{ r.get_addr(full=True) }}</a></td>
+      <td><a href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}">{{ r.get_owner() }}</a></td>
       <td class="base_id">
       {% if r.base_date %}
         <span class="id_num">№{{ r.base_id }}</span> от <span class="base_date">{{ r.base_date.strftime('%d.%m.%Y') }}</span>

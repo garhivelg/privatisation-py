@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, TextAreaField, SelectField
+from wtforms import IntegerField, StringField, TextAreaField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms.fields.html5 import DateField
 
@@ -37,3 +37,5 @@ class RecordForm(FlaskForm):
 
     reg_date = DateField('Дата регистрации', format='%Y-%m-%d', validators=[Optional(), ])
     comment = TextAreaField('Примечание')
+
+    page_id = HiddenField()

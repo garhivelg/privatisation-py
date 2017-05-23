@@ -113,6 +113,7 @@ def edit_record(record_id):
         return redirect(url_for("list_records"))
 
     form = RecordForm(obj=record)
+    form.page_id.data = request.args.get('page', 1)
     return render_template(
         "record.html", record=record, form=form,
         default_addr=record.get_addr(), default_owner=record.get_owner(),
@@ -163,7 +164,11 @@ def save_record(record_id=0):
         session["book_id"] = record.book_id
 
         flash("Данные успешно внесены")
-        return redirect(url_for("list_records"))
+        try:
+            page_id = int(form.page_id.data)
+        except ValueError:
+            page_id = 1
+        return redirect(url_for("list_records", page=page_id))
     else:
         flash("Пожалуйста, перепроверьте данные")
         for field, errors in form.errors.items():
