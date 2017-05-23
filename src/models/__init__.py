@@ -76,11 +76,11 @@ class Record(db.Model):
         except TypeError:
             city_id = 0
 
-        if city_id > 1:
-            return get_city(city_id)
-        return ""
+        if city_id <= 0:
+            return ''
+        return get_city(city_id)
 
-    def get_addr(self):
+    def get_addr(self, full=False):
         if not self.addr_name:
             return "Адрес не указан"
 
@@ -96,7 +96,7 @@ class Record(db.Model):
 
         city = self.get_city()
         if city:
-            addr = ' '.join([city, addr])
+            addr = ', '.join([city, addr])
         return addr
 
     def get_owner(self):
