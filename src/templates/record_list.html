@@ -4,6 +4,11 @@
 {% endif %}
 {% if count %}
 <div>
+  <form action="/record" method="GET">
+    <strong>Перейти на страницу:</strong> <input type="text" size="5" name="page"> <input type="submit" value="Перейти">
+  </form>
+</div>
+<div>
   <strong>Сортировка:</strong> {{g.order}}
 </div>
 <div>
