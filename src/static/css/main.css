@@ -17,7 +17,7 @@ body {
 }
 
 .base_id .id_num {
-    width: 40px;
+    min-width: 50px;
 }
 
 .base_id .base_date {

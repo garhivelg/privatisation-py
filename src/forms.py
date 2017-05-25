@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, StringField, TextAreaField, SelectField, HiddenField
+from wtforms import StringField, TextAreaField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms.fields.html5 import DateField
 
@@ -32,7 +32,7 @@ class RecordForm(FlaskForm):
     owner = StringField("Фамилия", validators=[Length(max=64), ])
     owner_init = StringField("И.О.", validators=[Length(max=8), ])
 
-    base_id = IntegerField("Распоряжение №", validators=[Optional(), ])
+    base_id = StringField("Распоряжение №", validators=[Optional(), ])
     base_date = DateField('Дата распоряжения', format='%Y-%m-%d', validators=[Optional(), ])
 
     reg_date = DateField('Дата регистрации', format='%Y-%m-%d', validators=[Optional(), ])
