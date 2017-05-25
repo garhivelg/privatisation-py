@@ -26,6 +26,21 @@
 	      return false;
 	    });
 	  });
+
+  $(function() {
+	    $('.owner_names input').bind('change', function() {
+        first_name = $('#owner_firstname').val();
+        middle_name = $('#owner_middlename').val();
+        if (first_name.length > 0) {
+          first_name = first_name[0] + ".";
+        }
+        if (middle_name.length > 0) {
+          middle_name = middle_name[0] + ".";
+        }
+	      $("#owner_init").val(first_name + middle_name);
+	      return false;
+	    });
+	  });
 </script>
 {% endblock %}
 {% block content %}
@@ -54,6 +69,8 @@
     <p>{{ form.full_owner(size=48, placeholder=default_owner) }}</p>  
     {% endif %}
     <p>{{ form.owner(size=32) }}&nbsp;{{ form.owner_init(size=8) }}</p>  
+    <p class="owner_names">{{ form.owner_firstname(size=32, placeholder=default_firstname) }}</p>
+    <p class="owner_names">{{ form.owner_middlename(size=32, placeholder=default_middlename) }}</p>  
   </div>
   <div>
     <h4>Основание</h4>

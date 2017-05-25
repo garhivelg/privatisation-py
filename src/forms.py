@@ -31,6 +31,8 @@ class RecordForm(FlaskForm):
     full_owner = StringField("Владелец")
     owner = StringField("Фамилия", validators=[Length(max=64), ])
     owner_init = StringField("И.О.", validators=[Length(max=8), ])
+    owner_firstname = StringField("Имя", validators=[Length(max=64), ])
+    owner_middlename = StringField("Отчество", validators=[Length(max=64), ])
 
     base_id = StringField("Распоряжение №", validators=[Optional(), ])
     base_date = DateField('Дата распоряжения', format='%Y-%m-%d', validators=[Optional(), ])

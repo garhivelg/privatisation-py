@@ -115,9 +115,15 @@ def edit_record(record_id):
     form = RecordForm(obj=record)
     form.page_id.data = request.args.get('page', 1)
     return render_template(
-        "record.html", record=record, form=form,
-        default_addr=record.get_addr(), default_owner=record.get_owner(),
-        action=url_for('save_record', record_id=record.id))
+        "record.html",
+        record=record,
+        form=form,
+        default_addr=record.get_addr(),
+        default_owner=record.get_owner(),
+        default_firstname="Имя",
+        default_middlename="Отчество",
+        action=url_for('save_record', record_id=record.id)
+    )
 
 
 @app.route("/record/add")
@@ -140,9 +146,15 @@ def add_record():
 
     form = RecordForm(obj=record)
     return render_template(
-        "record.html", record=record, form=form,
-        default_addr="ул. Советская 85/25", default_owner="Фамилия И.О.",
-        action=url_for('save_record', record_id=record.id))
+        "record.html",
+        record=record,
+        form=form,
+        default_addr="ул. Советская 85/25",
+        default_owner="Фамилия И.О.",
+        default_firstname="Имя",
+        default_middlename="Отчество",
+        action=url_for('save_record', record_id=record.id)
+    )
 
 
 @app.route("/record/save", methods=["POST", ])

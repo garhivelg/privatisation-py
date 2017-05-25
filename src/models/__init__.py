@@ -56,6 +56,8 @@ class Record(db.Model):
     addr_flat = db.Column(db.String(16))
     owner = db.Column(db.String(64))
     owner_init = db.Column(db.String(8))
+    owner_firstname = db.Column(db.String(64))
+    owner_middlename = db.Column(db.String(64))
     base_id = db.Column(db.String(8), nullable=True)
     base_date = db.Column(db.Date, nullable=True)
     reg_date = db.Column(db.Date, nullable=True)
