@@ -6,7 +6,7 @@ from app import app
 import os
 import logging
 # logconfig = {"format": "%(asctime)s: [%(levelname)s]:\t%(message)s"}
-debug = os.environ.get('DEBUG', False)
+debug = os.environ.get('FLASK_DEBUG', False)
 if debug:
     logging.getLogger().setLevel(logging.DEBUG)
     # logconfig["level"] = logging.DEBUG

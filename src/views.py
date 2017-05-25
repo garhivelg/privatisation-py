@@ -131,7 +131,7 @@ def add_record():
     reg_id = 1
     if last is not None:
         if last.reg_num is not None:
-            reg_id = last.reg_num + 1
+            reg_id = last.get_reg_int() + 1
 
     record = Record()
     record.book_id = book_id

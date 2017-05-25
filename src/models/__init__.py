@@ -70,6 +70,16 @@ class Record(db.Model):
             self.reg_num,
         )
 
+    def get_reg_int(self):
+        parts = self.reg_id.split("/")
+        if len(parts) != 2:
+            return 1
+        try:
+            res = int(''.join(c for c in parts[-1] if c.isdigit()))
+        except ValueError:
+            res = 1
+        return res
+
     def get_city(self):
         try:
             city_id = int(self.city_id)

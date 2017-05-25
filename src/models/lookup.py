@@ -30,7 +30,10 @@ def set_street(street_name=""):
 def get_street(street_id=None):
     if street_id not in range(1, len(STREETS)):
         street_id = 0
-    return STREETS[street_id]
+    try:
+        return STREETS[street_id]
+    except IndexError:
+        return "ERROR"
 
 
 def find_street(street):
@@ -60,7 +63,10 @@ def set_city(city_name=""):
 def get_city(city_id=None):
     if city_id not in range(len(CITIES)):
         city_id = 0
-    return CITIES[city_id]
+    try:
+        return CITIES[city_id]
+    except IndexError:
+        return "ERROR"
 
 
 def get_book(book_id=None):
