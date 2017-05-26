@@ -560,10 +560,19 @@ def parse_owner():
 @app.route("/add/register", methods=["GET", "POST", ])
 def add_register():
     from forms import RegisterForm
+    from models import Register
 
+    register = Register()
     form = RegisterForm()
-    app.logger.debug(form)
-    return render_template("edit_register.html", form=form)
+    if form.validate_on_submit():
+        form.populate_obj(register)
+        db.session.add(register)
+        db.session.commit()
+        flash("Опись добавлена")
+    registers = Register.query.all()
+    app.logger.debug(form.errors)
+    app.logger.debug(registers)
+    return render_template("edit_register.html", form=form, items=registers)
 
 
 @app.route("/add/case", methods=["GET", "POST", ])
@@ -572,3 +581,4 @@ def add_case():
 
     form = CaseForm()
     app.logger.debug(form)
+    return render_template("case.html", form=form)

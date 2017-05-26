@@ -3,8 +3,8 @@ from app import db
 
 class Register(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    fund = db.Column(db.String(4), info={'label': "Фонд"})
-    register = db.Column(db.String(4), info={'label': "Опись"})
+    fund = db.Column(db.String(8), info={'label': "Фонд"})
+    register = db.Column(db.Integer(), info={'label': "Опись"})
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
 
 
