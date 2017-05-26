@@ -1,7 +1,5 @@
-from models import Record
-
-
 def add_filters(query, fields, no_street=False):
+    from models import Record
     for k, v in fields.items():
         if v is None:
             continue
@@ -23,6 +21,7 @@ def add_filters(query, fields, no_street=False):
 
 
 def update_records(query, fields):
+    from models import Record
     updates = dict()
     for k, v in fields.items():
         if v is None:
