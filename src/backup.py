@@ -1,20 +1,24 @@
+from app import app
+
+
 import shutil
 import os
 from datetime import datetime, timedelta
 
 
 BACKUP_TIME = timedelta(minutes=5)
+ROOT_PATH = os.path.abspath('..')
+DB_FILENAME = "privatisation.db"
 
 
 def copy_db(time):
-    ROOT_PATH = os.path.abspath('..')
-    old_filename = "privatisation.db"
+    old_filename = DB_FILENAME
     new_filename = "privatisation-{}.db".format(time.strftime("%y-%m-%d-%H-%M"))
     shutil.copyfile(
         os.path.join(ROOT_PATH, "db", old_filename),
         os.path.join(ROOT_PATH, "backup", new_filename),
     )
-    print("Saved as {}".format(new_filename))
+    app.logger.debug("Saved as {}".format(new_filename))
 
 
 def backup(saved):

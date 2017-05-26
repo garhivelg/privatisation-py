@@ -5,18 +5,25 @@ from app import app
 
 import os
 import logging
-# logconfig = {"format": "%(asctime)s: [%(levelname)s]:\t%(message)s"}
+
+
+from d2logger import getHandler
+
+
 debug = os.environ.get('FLASK_DEBUG', False)
-if debug:
-    logging.getLogger().setLevel(logging.DEBUG)
-    # logconfig["level"] = logging.DEBUG
-    # logconfig["filename"] = "debug.log"
-# logging.basicConfig(**logconfig)
 
 if __name__ == "__main__":
     from models.lookup import load
     load()
     from models.lookup import CITIES
-    print(CITIES)
+
+    handler = getHandler()
+    app.logger.addHandler(handler)
+    if debug:
+        app.logger.setLevel(logging.DEBUG)
+
+    app.logger.info("Starting Server")
+    app.logger.info("Debug mode is %s", debug)
+    app.logger.debug("CITIES=%s", CITIES)
 
     app.run(debug=debug)
