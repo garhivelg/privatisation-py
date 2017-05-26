@@ -1,0 +1,19 @@
+{% extends "index.html" %}
+{% block content %}
+<form method="post" action="/">
+  {{ form.hidden_tag() }}
+  <div class="row">
+    <div class="col-md-6">
+      <p>{{ form.register.label }} {{ form.register }}</p>  
+      <p>{{ form.book_id.label }} {{ form.book_id }}</p>  
+      <p>{{ form.book_num.label }} {{ form.book_num }}</p>  
+      <p><input type="submit" class="btn btn-success" value="Сохранить"></p>
+    </div>
+    <div class="col-md-6">
+    {{ form.description.label }}<br>
+    {{ form.description(rows=15) }}
+    </div>
+  </div>
+</form>
+{% endblock %}
+

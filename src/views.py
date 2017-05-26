@@ -555,3 +555,20 @@ def parse_owner():
         owner=res[0],
         owner_init=res[1],
     )
+
+
+@app.route("/add/register", methods=["GET", "POST", ])
+def add_register():
+    from forms import RegisterForm
+
+    form = RegisterForm()
+    app.logger.debug(form)
+    return render_template("edit_register.html", form=form)
+
+
+@app.route("/add/case", methods=["GET", "POST", ])
+def add_case():
+    from forms import CaseForm
+
+    form = CaseForm()
+    app.logger.debug(form)

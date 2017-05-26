@@ -4,8 +4,40 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Length, Optional
 from wtforms.fields.html5 import DateField
+from wtforms.ext.sqlalchemy.fields import QuerySelectField
+from wtforms_alchemy import model_form_factory
 
 from models.lookup import BOOKS, CITIES, STREETS
+from models import Case, Register
+
+
+from app import db
+
+
+BaseModelForm = model_form_factory(FlaskForm)
+
+
+class ModelForm(BaseModelForm):
+    @classmethod
+    def get_session(self):
+        return db.session
+
+
+class RegisterForm(ModelForm):
+    class Meta:
+        model = Register
+
+
+class CaseForm(ModelForm):
+    register = QuerySelectField(
+        "Register",
+        get_label=lambda r: r.fund + ':' + r.register,
+        query_factory=lambda: Register.query.all(),
+        allow_blank=True,
+    )
+
+    class Meta:
+        model = Case
 
 
 class RecordForm(FlaskForm):
