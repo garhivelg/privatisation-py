@@ -4,17 +4,10 @@ from flask import g, request, render_template, redirect, session, flash, jsonify
 # from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
-from models import add_filters, update_records
+from models.utils import add_filters, update_records
+from backup import backup
 
 from werkzeug.datastructures import MultiDict
-from datetime import datetime, timedelta
-
-
-def backup_db(time):
-    import shutil
-    filename = "privatisation-{}.db".format(time.strftime("%y-%m-%d-%H-%M"))
-    shutil.copyfile("../db/privatisation.db", "../backup/{}".format(filename))
-    print("Saved as {}".format(filename))
 
 
 @app.route("/")
@@ -24,15 +17,7 @@ def index():
 
 @app.route("/record", methods=["GET", "POST"])
 def list_records():
-    time_saved = session.get("saved")
-    time_now = datetime.now()
-    if time_saved is None:
-        time_saved = time_now
-        session["saved"] = time_saved
-    delta = time_now - time_saved
-    if delta > timedelta(hours=1):
-        backup_db(time_now)
-        session["saved"] = time_now
+    session["saved"] = backup(session.get("saved"))
 
     from models import ORDER_BY
     order_id = request.args.get('order', None)
