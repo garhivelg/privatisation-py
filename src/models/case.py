@@ -7,6 +7,12 @@ class Register(db.Model):
     register = db.Column(db.Integer(), info={'label': "Опись"})
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
 
+    def title(self, format="ф. %s оп. %s"):
+        return format % (self.fund, self.register)
+
+    def __repr__(self):
+        return self.title()
+
 
 class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)

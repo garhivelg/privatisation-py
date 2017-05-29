@@ -23,3 +23,7 @@ body {
 .base_id .base_date {
     padding: 0px 10px;
 }
+
+.btn-add {
+    margin: 5px 40px;
+}

@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 # -*- coding:utf-8 -*-
 from flask import g, request, render_template, redirect, session, flash, jsonify
-# from flask import g, render_template, redirect, session
 from flask.helpers import url_for
 from app import app, db
 from models.utils import add_filters, update_records
@@ -557,22 +556,51 @@ def parse_owner():
     )
 
 
-@app.route("/add/register", methods=["GET", "POST", ])
-def add_register():
+@app.route("/registers")
+def list_registers():
+    from models import Register
+    items = Register.query.all()
+
+    return render_template(
+        "list.html",
+        items=[
+            [i, url_for("edit_register", register_id=i.id)] for i in items
+        ],
+        add=url_for("edit_register"),
+    )
+
+
+@app.route("/register/edit/<int:register_id>", methods=["GET", "POST", ])
+@app.route("/register/edit/<string:fund_title>/<int:fund_register>")
+@app.route("/register/add", methods=["GET", "POST", ])
+def edit_register(register_id=None, fund_title=None, fund_register=None):
     from forms import RegisterForm
     from models import Register
 
-    register = Register()
-    form = RegisterForm()
+    if fund_title is not None:
+        register = Register.query \
+            .filter(Register.fund == fund_title) \
+            .filter(Register.register == fund_register) \
+            .first_or_404()
+    elif register_id is not None:
+        register = Register.query.get_or_404(register_id)
+    else:
+        register = Register()
+    form = RegisterForm(obj=register)
+
     if form.validate_on_submit():
         form.populate_obj(register)
         db.session.add(register)
+        if register.id:
+            flash("Опись изменена")
+        else:
+            flash("Опись добавлена")
         db.session.commit()
-        flash("Опись добавлена")
+
     registers = Register.query.all()
     app.logger.debug(form.errors)
     app.logger.debug(registers)
-    return render_template("edit_register.html", form=form, items=registers)
+    return render_template("edit_register.html", form=form, items=registers, register=register)
 
 
 @app.route("/add/case", methods=["GET", "POST", ])
