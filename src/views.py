@@ -564,7 +564,11 @@ def list_registers():
     return render_template(
         "list.html",
         items=[
-            [i, url_for("edit_register", register_id=i.id)] for i in items
+            [
+                i,
+                url_for("list_cases", register_id=i.id),
+                url_for("edit_register", register_id=i.id)
+            ] for i in items
         ],
         add=url_for("edit_register"),
     )
@@ -596,17 +600,81 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
         else:
             flash("Опись добавлена")
         db.session.commit()
+        return redirect(url_for("list_registers"))
 
-    registers = Register.query.all()
     app.logger.debug(form.errors)
-    app.logger.debug(registers)
-    return render_template("edit_register.html", form=form, items=registers, register=register)
+    return render_template(
+        "edit_register.html",
+        form=form,
+        register=register,
+    )
 
 
-@app.route("/add/case", methods=["GET", "POST", ])
-def add_case():
+@app.route("/register/<int:register_id>/cases")
+@app.route("/register/<string:fund_title>/<int:fund_register>/cases")
+@app.route("/cases")
+def list_cases(register_id=None, fund_title=None, fund_register=None):
+    from models import Case
+    q = Case.query
+    if fund_title is not None:
+        register = Register.query \
+            .filter(Register.fund == fund_title) \
+            .filter(Register.register == fund_register) \
+            .first()
+        q = q.filter(Case.register_id == register.id)
+    elif register_id is not None:
+        app.logger.debug(q)
+        q = q.filter(Case.register_id == register_id)
+        app.logger.debug(q)
+    items = q.all()
+
+    app.logger.debug(items)
+    return render_template(
+        "list.html",
+        items=[
+            [
+                i,
+                url_for("edit_case", case_id=i.id),
+            ] for i in items
+        ],
+        add=url_for("edit_case"),
+    )
+
+
+@app.route("/case/edit/<int:case_id>", methods=["GET", "POST", ])
+@app.route("/case/edit/<string:fund_title>/<int:fund_register>/<int:case_num>")
+@app.route("/case/add", methods=["GET", "POST", ])
+def edit_case(case_id=None, case_num=None, fund_title=None, fund_register=None):
     from forms import CaseForm
+    from models import Register, Case
 
-    form = CaseForm()
-    app.logger.debug(form)
-    return render_template("case.html", form=form)
+    if fund_title is not None:
+        register = Register.query \
+            .filter(Register.fund == fund_title) \
+            .filter(Register.register == fund_register) \
+            .first_or_404()
+        case = Case.query \
+            .filter(Case.register_id == register.id) \
+            .filter(Case.case_num == case_num) \
+            .first_or_404()
+    elif case_id is not None:
+        case = Case.query.get_or_404(case_id)
+    else:
+        case = Case()
+    form = CaseForm(obj=case)
+
+    if form.validate_on_submit():
+        form.populate_obj(case)
+        case.register_id = form.register.data.id
+        db.session.add(case)
+        if case.id:
+            flash("Опись изменена")
+        else:
+            flash("Опись добавлена")
+        db.session.commit()
+        return redirect(url_for("list_cases"))
+
+
+    app.logger.debug(form.errors)
+
+    return render_template("case.html", form=form, case=case)

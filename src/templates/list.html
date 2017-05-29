@@ -5,7 +5,12 @@
 {% endif %}
 <ul>
   {% for i in items %}
-    <li><a href="{{ i[1] }}">{{ i[0] }}</a></li>
+    <li>
+      <a href="{{ i[1] }}">{{ i[0] }}</a>
+      {% if  i | length > 2 %}
+      <a href="{{ i[2] }}"><span class="glyphicon glyphicon-edit"></span></a>
+      {% endif %}
+    </li>
   {% endfor %}
 </ul>
 {% endblock %}

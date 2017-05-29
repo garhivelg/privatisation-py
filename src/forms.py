@@ -30,8 +30,7 @@ class RegisterForm(ModelForm):
 
 class CaseForm(ModelForm):
     register = QuerySelectField(
-        "Register",
-        get_label=lambda r: r.fund + ':' + r.register,
+        "Опись",
         query_factory=lambda: Register.query.all(),
         allow_blank=True,
     )

@@ -16,7 +16,17 @@ class Register(db.Model):
 
 class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    register_id = db.Column(db.ForeignKey('register.id'))
+    register_id = db.Column(db.Integer, db.ForeignKey('register.id'))
     book_id = db.Column(db.String(8))
     book_num = db.Column(db.Integer)
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
+
+    register = db.relationship("Register")
+
+    def title(self, format="%s д. %d"):
+        if self.register:
+            return format % (self.register, self.book_num)
+        return format % ('', self.book_num)
+
+    def __repr__(self):
+        return self.title()
