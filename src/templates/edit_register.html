@@ -12,15 +12,18 @@
         <p><input type="submit" class="btn btn-success" value="Сохранить"></p>
       </form>
     </div>
-    {% if items %}
     <div class="col-md-6">
+      <div class="btn-toolbar">
+        <a href="{{ url_for('edit_case', register_id=register.id) }}" class="btn btn-default">Добавить</a>
+      </div>
+      {% if items %}
       <ul>
         {% for i in items %}
           <li><a href="{{ url_for('edit_case', case_id=i.id) }}">{{ i }}</a></li>
         {% endfor %}
       </ul>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
 {% endblock %}
 
