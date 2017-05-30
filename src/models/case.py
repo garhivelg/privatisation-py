@@ -19,9 +19,11 @@ class Case(db.Model):
     register_id = db.Column(db.Integer, db.ForeignKey('register.id'))
     book_id = db.Column(db.String(8), info={'label': "Дело №"})
     book_num = db.Column(db.Integer)
+    facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'))
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
 
     register = db.relationship("Register")
+    facility = db.relationship("Facility")
 
     def title(self, format="%s д. %d"):
         if self.register:

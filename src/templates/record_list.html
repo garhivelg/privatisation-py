@@ -3,16 +3,25 @@
 {% if g.order %}
 {% endif %}
 {% if count %}
-<div>
-  <form action="/record" method="GET" class="page-select">
-    <strong>Перейти на страницу:</strong> <input type="text" size="5" name="page" class="form-control"> <input type="submit" value="Перейти" class="btn">
-  </form>
-</div>
-<div>
-  <strong>Сортировка:</strong> {{g.order}}
-</div>
-<div>
-  <strong>Найдено:</strong> {{ count }} записей
+<div class="row">
+  <div class="col-md-6">
+  <div>
+    <strong>Сортировка:</strong> {{g.order}}
+  </div>
+  <div>
+    <strong>Найдено:</strong> {{ count }} записей
+  </div>
+  </div>
+  <div class="col-md-6">
+    <form action="/record" method="GET" class="page-select">
+      <span class="input-group">
+        <input type="text" size="5" name="page" class="form-control" placeholder="Введите номер страницы, чтобы перейти">
+        <span class="input-group-btn">
+          <input type="submit" value="Перейти" class="btn">
+        </span>
+      </span>
+    </form>
+  </div>
 </div>
 <table class="records table">
   <thead>

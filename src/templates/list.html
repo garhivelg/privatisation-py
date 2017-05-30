@@ -2,9 +2,10 @@
 {% block content %}
 {% if add %}
 <div class="btn-toolbar">
-  <a href="{{ add }}" class="btn btn-default">Добавить</a>
+  <a href="{{ add }}" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span> Добавить</a>
 </div>
 {% endif %}
+{% if items %}
 <ul>
   {% for i in items %}
     <li>
@@ -15,4 +16,7 @@
     </li>
   {% endfor %}
 </ul>
+{% else %}
+<h3>Список пуст</h3>
+{% endif %}
 {% endblock %}

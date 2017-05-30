@@ -9,6 +9,7 @@
         {{ form.hidden_tag() }}
         <p class="sized-field">{{ form.register.label }} {{ form.register(class="form-control") }}</p>
         <p class="sized-field">{{ form.book_id.label }} {{ form.book_num(size=7, class="form-control") }}</p>  
+        <p class="sized-field">{{ form.facility.label }} {{ form.facility(class="form-control") }}</p>
         <p class="sized-field">
           {{ form.description.label }}
           {{ form.description(rows=5, cols=40, class="form-control") }}

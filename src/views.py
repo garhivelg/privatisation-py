@@ -611,6 +611,54 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
     )
 
 
+@app.route("/facilities")
+def list_facilities():
+    from models import Facility
+    items = Facility.query.all()
+
+    return render_template(
+        "list.html",
+        items=[
+            [
+                i,
+                url_for("edit_facility", facility_id=i.id)
+            ] for i in items
+        ],
+        add=url_for("edit_facility"),
+    )
+
+
+@app.route("/facility/edit/<int:facility_id>", methods=["GET", "POST", ])
+@app.route("/facility/add", methods=["GET", "POST", ])
+def edit_facility(facility_id=None):
+    from forms import FacilityForm
+    from models import Facility, Case
+
+    if facility_id is not None:
+        facility = Facility.query.get_or_404(facility_id)
+    else:
+        facility = Facility()
+    form = FacilityForm(obj=facility)
+
+    if form.validate_on_submit():
+        form.populate_obj(facility)
+        db.session.add(facility)
+        if facility.id:
+            flash("Предприятие изменено")
+        else:
+            flash("Предприятие добавлено")
+        db.session.commit()
+        return redirect(url_for("list_facilities"))
+
+    app.logger.debug(form.errors)
+    return render_template(
+        "edit_facility.html",
+        form=form,
+        facility=facility,
+        items=Case.query.filter(Case.facility == facility)
+    )
+
+
 @app.route("/register/<int:register_id>/cases")
 @app.route("/register/<string:fund_title>/<int:fund_register>/cases")
 @app.route("/cases")
@@ -677,6 +725,7 @@ def edit_case(
     if form.validate_on_submit():
         form.populate_obj(case)
         case.register_id = form.register.data.id
+        case.facility_id = form.facility.data.id
         db.session.add(case)
         if case.id:
             flash("Опись изменена")

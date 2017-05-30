@@ -8,7 +8,7 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms_alchemy import model_form_factory
 
 from models.lookup import BOOKS, CITIES, STREETS
-from models import Case, Register
+from models import Case, Register, Facility
 
 
 from app import db
@@ -28,10 +28,20 @@ class RegisterForm(ModelForm):
         model = Register
 
 
+class FacilityForm(ModelForm):
+    class Meta:
+        model = Facility
+
+
 class CaseForm(ModelForm):
     register = QuerySelectField(
         "Опись",
         query_factory=lambda: Register.query.all(),
+        allow_blank=True,
+    )
+    facility = QuerySelectField(
+        "Предприятие",
+        query_factory=lambda: Facility.query.all(),
         allow_blank=True,
     )
 

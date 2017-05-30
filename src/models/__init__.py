@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from app import db
 from models.lookup import get_street, get_city, get_book
+from models.facility import *
 from models.case import *
 
 
