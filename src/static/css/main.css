@@ -41,6 +41,7 @@ body {
 }
 
 .lined-field input, .lined-field select {
+    display: inline-block;
     width: 146px;
 }
 

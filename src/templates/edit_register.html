@@ -4,10 +4,10 @@
     <div class="col-md-6">
       <form method="post" action="{{ url_for('edit_register', register_id=register.id) }}">
         {{ form.hidden_tag() }}
-        <p class="sized-field lined-field">{{ form.fund.label }} {{ form.fund(size=7) }} {{ form.register.label }} {{ form.register(size=7) }}</p>  
+        <p class="sized-field lined-field">{{ form.fund.label }} {{ form.fund(size=7, class="form-control") }} {{ form.register.label }} {{ form.register(size=7, class="form-control") }}</p>  
         <p class="sized-field">
           {{ form.description.label }}
-          {{ form.description(rows=5, cols=40) }}
+          {{ form.description(rows=5, cols=40, class="form-control") }}
         </p>
         <p><input type="submit" class="btn btn-success" value="Сохранить"></p>
       </form>

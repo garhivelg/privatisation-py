@@ -630,7 +630,11 @@ def list_cases(register_id=None, fund_title=None, fund_register=None):
     cases = q.all()
 
     items = [("Все", url_for("list_records", book=-1)), ] + [
-        [i,  url_for("list_records", book=i.id)] for i in cases
+        [
+            i,
+            url_for("list_records", book=i.id),
+            url_for("edit_case", case_id=i.id),
+        ] for i in cases
     ]
 
     app.logger.debug(items)
