@@ -212,7 +212,13 @@ def edit_all():
     if request.form:
         # record = Record.query.get(record_id)
 
-        c = update_records(q, save_form.data)
+        app.logger.debug(q)
+        app.logger.debug(save_form.data)
+        data = save_form.data
+        data['book_id'] = save_form.case.data.id
+        data['case'] = None
+        app.logger.debug(data)
+        c = update_records(q, data)
         db.session.commit()
 
         flash("Данные успешно внесены")
