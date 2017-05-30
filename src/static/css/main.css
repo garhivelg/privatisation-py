@@ -50,6 +50,11 @@ body {
     width: 405px;
 }
 
+.page-select input, .page-select select {
+    display: inline-block;
+    width: 80px;
+}
+
 .btn-toolbar {
     padding: 5px 40px 10px 40px;
 }

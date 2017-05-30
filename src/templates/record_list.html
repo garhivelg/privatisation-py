@@ -4,8 +4,8 @@
 {% endif %}
 {% if count %}
 <div>
-  <form action="/record" method="GET">
-    <strong>Перейти на страницу:</strong> <input type="text" size="5" name="page"> <input type="submit" value="Перейти">
+  <form action="/record" method="GET" class="page-select">
+    <strong>Перейти на страницу:</strong> <input type="text" size="5" name="page" class="form-control"> <input type="submit" value="Перейти" class="btn">
   </form>
 </div>
 <div>
@@ -14,15 +14,15 @@
 <div>
   <strong>Найдено:</strong> {{ count }} записей
 </div>
-<table class="records">
+<table class="records table">
   <thead>
     <tr>
-      <td><a href="{{ links['reg_id'] }}">Дело</a></td>
-      <td><a href="{{ links['reg_id'] }}">Рег. №</a></td>
-      <td><a href="{{ links['addr'] }}">Адрес</a></td>
-      <td><a href="{{ links['owner'] }}">Владелец</a></td>
-      <td><a href="{{ links['base_id'] }}">Основание для регистрации</a></td>
-      <td>&nbsp;</td>
+      <th><a href="{{ links['reg_id'] }}">Дело</a></th>
+      <th><a href="{{ links['reg_id'] }}">Рег. №</a></th>
+      <th><a href="{{ links['addr'] }}">Адрес</a></th>
+      <th><a href="{{ links['owner'] }}">Владелец</a></th>
+      <th><a href="{{ links['base_id'] }}">Основание для регистрации</a></th>
+      <th>&nbsp;</th>
     </tr>
   </thead>
   <tbody>
@@ -46,20 +46,20 @@
     {% endfor %}
   </tbody>
 </table>
-{% if records.has_prev %}<a href="{{ url_for('list_records') }}?page={{ records.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a>{% else %}<span class="glyphicon glyphicon-menu-left"></span>{% endif %} 
-{%- for page in records.iter_pages() %}
-    {% if page %}
-      {% if page != records.page %}
-        <a href="{{ url_for('list_records') }}?page={{ page }}">{{ page }}</a>
-      {% else %}
-        <strong>{{ page }}</strong>
-      {% endif %}
-    {% else %}
-      <span class=ellipsis>…</span>
-    {% endif %}
-{%- endfor %}
-{% if records.has_next %}<a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a>{% else %}<span class="glyphicon glyphicon-menu-right"></span>{% endif %}
 {% else %}
 <h3>По вашему запросу ничего не найдено</h3>
+{% endif %}
+{% if records.pages %}
+<ul class="pagination">
+  <li{% if not records.has_prev %} class="disabled"{% endif %}><a href="{{ url_for('list_records') }}?page={{ records.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a></li>
+  {%- for page in records.iter_pages() %}
+    {% if page %}
+      <li{% if page == records.page %} class="active"{% endif %}><a href="{{ url_for('list_records') }}?page={{ page }}">{{ page }}</a></li>
+    {% else %}
+      <li><span class=ellipsis>…</span></li>
+    {% endif %}
+  {%- endfor %}
+  <li{% if not records.has_next %} class="disabled"{% endif %}><a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a></li>
+</ul>
 {% endif %}
 {% endblock %}
