@@ -64,6 +64,7 @@ def list_records():
     if filter_book is not None:
         filter_by["book_id"] = int(filter_book)
         session["book_id"] = int(filter_book)
+        app.logger.debug("SESSION[book_id]=%s", session["book_id"])
     filter_city = request.args.get('city')
     if filter_city is not None:
         filter_by["city_id"] = int(filter_city)
@@ -97,6 +98,7 @@ def edit_record(record_id):
         return redirect(url_for("list_records"))
 
     form = RecordForm(obj=record)
+    app.logger.debug(form.case.data)
     form.page_id.data = request.args.get('page', 1)
     return render_template(
         "record.html",
@@ -113,8 +115,10 @@ def edit_record(record_id):
 @app.route("/record/add")
 def add_record():
     book_id = session.get("book_id", 0)
+    app.logger.debug("SESSION[book_id]=%s", session["book_id"])
+    app.logger.debug("book_id=%s", book_id)
 
-    from models import Record
+    from models import Record, Case
     from forms import RecordForm
     # from sqlalchemy.orm.exc import NoResultFound
     last = Record.query.filter_by(book_id=book_id).order_by(Record.reg_num.desc()).first()
@@ -124,9 +128,10 @@ def add_record():
             reg_id = last.get_reg_int() + 1
 
     record = Record()
-    record.book_id = book_id
+    record.case = Case.query.get(book_id)
     record.reg_num = reg_id
     record.reg_id = record.get_reg()
+    app.logger.debug("book_id=%s", record.case)
 
     form = RecordForm(obj=record)
     return render_template(

@@ -50,10 +50,11 @@ class CaseForm(ModelForm):
 
 
 class RecordForm(FlaskForm):
-    book_id = SelectField("Дело №",
-                          choices=[(-1, "Все"), ] + list(enumerate(BOOKS)),
-                          coerce=int,
-                          )
+    case = QuerySelectField(
+        "Дело №",
+        query_factory=lambda: Case.query.all(),
+        allow_blank=True,
+    )
     reg_id = StringField("Регистрационный №", validators=[DataRequired(), Length(max=8)])
 
     full_addr = StringField("Адрес")

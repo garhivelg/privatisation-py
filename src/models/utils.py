@@ -1,5 +1,8 @@
+# from app import app
+
+
 def add_filters(query, fields, no_street=False):
-    from models import Record
+    from models import Record, Case
     for k, v in fields.items():
         if v is None:
             continue
@@ -11,7 +14,9 @@ def add_filters(query, fields, no_street=False):
         if isinstance(v, str):
             if not v:
                 continue
-        # print(k, type(v), "\"%s\"" % v)
+        if isinstance(v, Case):
+            query = query.filter(Record.case == v)
+            continue
         query = query.filter(getattr(Record, k).like(v))
     # if session.get("no_street", False):
     if no_street:

@@ -67,7 +67,7 @@
 <form method="post" action="{{ url_for('list_records') }}">
 {{ search.csrf_token }}
 <div>
-  <p>{{ search.book_id.label }} {{ search.book_id }}</p>  
+  <p>{{ search.case.label }} {{ search.case }}</p>  
   <p>
   {{ search.reg_id.label }} {{ search.reg_id(size=8) }}<br>  
   </p>

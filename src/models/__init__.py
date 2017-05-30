@@ -7,7 +7,8 @@ from models.case import *
 
 class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    book_id = db.Column(db.Integer)
+    # book_id = db.Column(db.Integer)
+    book_id = db.Column(db.Integer, db.ForeignKey("case.id"))
     reg_num = db.Column(db.Integer)
     reg_id = db.Column(db.String(8))
     city_id = db.Column(db.Integer)
@@ -24,12 +25,18 @@ class Record(db.Model):
     reg_date = db.Column(db.Date, nullable=True)
     comment = db.Column(db.UnicodeText)
 
+    case = db.relationship("Case")
+
     def get_book(self):
-        return get_book(self.book_id)
+        return self.case
 
     def get_reg(self):
+        if self.case:
+            book_id = self.case.book_num
+        else:
+            book_id = 0
         return "{}/{}".format(
-            get_book(self.book_id),
+            book_id,
             self.reg_num,
         )
 
@@ -84,7 +91,7 @@ class Record(db.Model):
     def generate_random(self):
         from models.lookup import BOOKS, CITIES, STREETS
         import random
-        self.book_id = random.randrange(len(BOOKS))
+        # self.book_id = random.randrange(len(BOOKS))
         self.reg_num = random.randrange(0, 4000)
         self.reg_id = self.get_reg()
         if random.randint(0, 10) == 0:
@@ -117,8 +124,8 @@ class Record(db.Model):
         return {
             "id": self.id,
             "book": {
-                "id": self.book_id,
-                "name": get_book(self.book_id),
+                "id": self.casei.id,
+                "name": get_book(self.case.id),
             },
             "reg_num": self.reg_num,
             "reg_id": self.reg_id,
