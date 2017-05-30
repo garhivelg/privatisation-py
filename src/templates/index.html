@@ -96,7 +96,9 @@
     </div> 
     <div class="col-md-9">
       {% if search %}
-      <h4 class="filter"><a href="#" id="filterClick">Фильтр</a></h4>
+      <div class="btn-toolbar filter">
+        <a href="#" class="btn btn-default" id="filterClick"><span class="glyphicon glyphicon-filter"></span> Фильтр</a>
+      </div>
     {% endif %}
 {% block content %}{% endblock %}
     </div> 

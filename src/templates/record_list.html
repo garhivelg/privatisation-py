@@ -37,8 +37,8 @@
   <tbody>
     {% for r in records.items %}
     <tr>
-      <td>{{ r.get_book() }}</td>
-      <td>{{ r.reg_id }}</td>
+      <td><em>{{ r.get_book() }}</em></td>
+      <td><strong>{{ r.reg_id }}</strong></td>
       <td><a href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}">{{ r.get_addr(full=True) }}</a></td>
       <td><a href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}">{{ r.get_owner() }}</a></td>
       <td class="base_id">

@@ -44,7 +44,10 @@
 </script>
 {% endblock %}
 {% block content %}
-{% if record.reg_num %}
+{% if record.id %}
+<div class="btn-toolbar filter">
+  <a href="{{ url_for('list_records', page=form.page_id.data) }}" class="btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
+</div>
 <h1>Запись № {{record.reg_id}}</h1>
 {% endif %}
 <form method="post" action="{{ action }}">
