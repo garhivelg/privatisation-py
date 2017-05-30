@@ -62,9 +62,9 @@ def list_records():
     filter_by = session.get("filter", dict())
     filter_book = request.args.get('book')
     if filter_book is not None:
-        filter_by["book_id"] = int(filter_book)
-        session["book_id"] = int(filter_book)
-        app.logger.debug("SESSION[book_id]=%s", session["book_id"])
+        book_id = int(filter_book)
+        session["book_id"] = book_id
+        filter_by["case"] = filter_book
     filter_city = request.args.get('city')
     if filter_city is not None:
         filter_by["city_id"] = int(filter_city)
@@ -78,6 +78,8 @@ def list_records():
     if no_street is not None:
         session["no_street"] = int(no_street)
     # print(filter_by)
+
+    app.logger.debug(filter_by)
     search = RecordForm(MultiDict(filter_by))
 
     q = add_filters(q, search.data, session.get("no_street"))

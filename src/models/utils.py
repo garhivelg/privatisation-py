@@ -1,7 +1,8 @@
-# from app import app
+from app import app
 
 
 def add_filters(query, fields, no_street=False):
+    app.logger.debug(fields)
     from models import Record, Case
     for k, v in fields.items():
         if v is None:
