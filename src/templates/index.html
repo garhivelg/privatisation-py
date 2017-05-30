@@ -64,33 +64,59 @@
   <div class="row">
     <div id="filter" class="col-md-3" style="display: none;">
       {% if search %}
-<form method="post" action="{{ url_for('list_records') }}">
-{{ search.csrf_token }}
-<div>
-  <p>{{ search.case.label }} {{ search.case }}</p>  
-  <p>
-  {{ search.reg_id.label }} {{ search.reg_id(size=8) }}<br>  
-  </p>
+<form method="post" action="{{ url_for('list_records') }}" class="form-horizontal">
+  {{ search.hidden_tag() }}
+  {{ search.csrf_token }}
   <div>
-    <h4>Адрес</h4>
-    <p>{{ search.city_id }}</p>  
-    <p>{{ search.addr_type }} {{ search.addr_name(size=24) }}</p>
-    <p>д. {{ search.addr_build(size=4) }} кв. {{ search.addr_flat(size=4) }}</p>  
+    <div>
+      {{ search.case.label(class="control-label") }} 
+      {{ search.case(class="form-control") }}
+    </div>  
+    <div>
+      {{ search.reg_id.label(class="control-label") }}
+      {{ search.reg_id(size=8, class="form-control") }}  
+    </div>  
+    <div>
+      <h4>Адрес</h4>
+      <div class="form-group">
+        <div class="col-sm-12">{{ search.city_id(class="form-control") }}</div>
+        <div class="col-sm-4">{{ search.addr_type(class="form-control") }}</div>
+        <div class="col-sm-8">{{ search.addr_name(size=24, class="form-control") }}</div>
+        <div class="col-sm-4"><label for="addr_build" class="control-label">д. </label>{{ search.addr_build(size=4, class="form-control") }}</div>
+        <div class="col-sm-4"><label for="addr_flat" class="control-label">кв. </label>{{ search.addr_flat(size=4, class="form-control") }}</div>
+      </div>  
+    </div>
+    <div>
+      <h4>Владелец</h4>
+      <div class="form-group">
+        <div class="col-sm-9">{{ search.owner(size=24, class="form-control") }}</div>
+        <div class="col-sm-3">{{ search.owner_init(size=8, class="form-control") }}</div>
+      </div>  
+    </div>
+    <div>
+      <h4>Основание</h4>
+      <div class="form-group">
+        <label for="base_id" class="control-label col-sm-6">Распоряжение № </label>
+        <div class="col-sm-6">
+          {{ search.base_id(class="form-control") }}
+        </div>
+        <label for="base_date" class="control-label col-sm-6">от </label>
+        <div class="col-sm-6">
+          {{ search.base_date(class="form-control") }}
+        </div>
+      </div>  
+    </div>
+    <div class="form-group">
+      <label for="reg_date" class="control-label col-sm-6">Дата регистрации</label>
+      <div class="col-sm-6">
+        {{ search.reg_date(class="form-control") }}
+      </div>
+    </div>  
+    <div>
+      <input type="submit" class="btn btn-success" value="Фильтровать">
+      <a href="{{ url_for('list_records', filter=False) }}" class="btn btn-warning">Очистить</a>
+    </div>  
   </div>
-  <div>
-    <h4>Владелец</h4>
-    <p>{{ search.owner(size=24) }}&nbsp;{{ search.owner_init(size=8) }}</p>  
-  </div>
-  <div>
-    <h4>Основание</h4>
-    <p>Распоряжение № {{ search.base_id }} от {{ search.base_date }}</p>  
-  </div>
-  <p>Дата регистрации {{ search.reg_date }}</p>  
-  <p>
-    <input type="submit" class="btn btn-success" value="Фильтровать">
-    <a href="{{ url_for('list_records', filter=False) }}" class="btn btn-success">Очистить</a>
-  </p>
-</div>
 </form>
       {% endif %}
     </div> 
