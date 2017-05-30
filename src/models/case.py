@@ -17,7 +17,7 @@ class Register(db.Model):
 class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     register_id = db.Column(db.Integer, db.ForeignKey('register.id'))
-    book_id = db.Column(db.String(8))
+    book_id = db.Column(db.String(8), info={'label': "Дело №"})
     book_num = db.Column(db.Integer)
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
 

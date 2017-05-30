@@ -1,7 +1,9 @@
 {% extends "index.html" %}
 {% block content %}
 {% if add %}
-<a class="btn btn-add btn-primary" href="{{add}}">Добавить</a>
+<div class="btn-toolbar">
+  <a href="{{ add }}" class="btn btn-default">Добавить</a>
+</div>
 {% endif %}
 <ul>
   {% for i in items %}

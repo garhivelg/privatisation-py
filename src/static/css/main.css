@@ -24,6 +24,31 @@ body {
     padding: 0px 10px;
 }
 
-.btn-add {
-    margin: 5px 40px;
+.sized-field {
+    width: 405px;
+}
+
+.sized-field label {
+    width: 100px;
+}
+
+.sized-field input, .sized-field select {
+    width: 300px;
+}
+
+.lined-field label {
+    width: 50px;
+}
+
+.lined-field input, .lined-field select {
+    width: 146px;
+}
+
+.sized-field textarea {
+    display: block;
+    width: 405px;
+}
+
+.btn-toolbar {
+    padding: 5px 40px 10px 40px;
 }

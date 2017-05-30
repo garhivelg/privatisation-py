@@ -566,7 +566,7 @@ def list_registers():
         items=[
             [
                 i,
-                url_for("list_cases", register_id=i.id),
+                # url_for("list_cases", register_id=i.id),
                 url_for("edit_register", register_id=i.id)
             ] for i in items
         ],
@@ -579,7 +579,7 @@ def list_registers():
 @app.route("/register/add", methods=["GET", "POST", ])
 def edit_register(register_id=None, fund_title=None, fund_register=None):
     from forms import RegisterForm
-    from models import Register
+    from models import Register, Case
 
     if fund_title is not None:
         register = Register.query \
@@ -607,6 +607,7 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
         "edit_register.html",
         form=form,
         register=register,
+        items=Case.query.filter(Case.register == register)
     )
 
 
@@ -614,7 +615,7 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
 @app.route("/register/<string:fund_title>/<int:fund_register>/cases")
 @app.route("/cases")
 def list_cases(register_id=None, fund_title=None, fund_register=None):
-    from models import Case
+    from models import Register, Case
     q = Case.query
     if fund_title is not None:
         register = Register.query \
@@ -673,7 +674,6 @@ def edit_case(case_id=None, case_num=None, fund_title=None, fund_register=None):
             flash("Опись добавлена")
         db.session.commit()
         return redirect(url_for("list_cases"))
-
 
     app.logger.debug(form.errors)
 

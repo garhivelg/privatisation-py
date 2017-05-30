@@ -1,17 +1,26 @@
 {% extends "index.html" %}
 {% block content %}
-  <form method="post" action="{{ url_for('edit_register', register_id=register.id) }}">
-  {{ form.hidden_tag() }}
   <div class="row">
-    <div class="col-md-12">
-      <p>{{ form.fund.label }} {{ form.fund(size=7) }} {{ form.register.label }} {{ form.register(size=7) }}</p>  
-      <p>
-        {{ form.description.label }}<br>
-        {{ form.description(rows=5, cols=40) }}
-      </p>
-      <p><input type="submit" class="btn btn-success" value="Сохранить"></p>
+    <div class="col-md-6">
+      <form method="post" action="{{ url_for('edit_register', register_id=register.id) }}">
+        {{ form.hidden_tag() }}
+        <p class="sized-field lined-field">{{ form.fund.label }} {{ form.fund(size=7) }} {{ form.register.label }} {{ form.register(size=7) }}</p>  
+        <p class="sized-field">
+          {{ form.description.label }}
+          {{ form.description(rows=5, cols=40) }}
+        </p>
+        <p><input type="submit" class="btn btn-success" value="Сохранить"></p>
+      </form>
     </div>
+    {% if items %}
+    <div class="col-md-6">
+      <ul>
+        {% for i in items %}
+          <li><a href="{{ url_for('edit_case', case_id=i.id) }}">{{ i }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
   </div>
-</form>
 {% endblock %}
 
