@@ -3,7 +3,7 @@ from app import app
 
 def add_filters(query, fields, no_street=False):
     app.logger.debug(fields)
-    from models import Record, Case
+    from . import Record, Case
     for k, v in fields.items():
         if v is None:
             continue
@@ -27,7 +27,7 @@ def add_filters(query, fields, no_street=False):
 
 
 def update_records(query, fields):
-    from models import Record
+    from . import Record
     updates = dict()
     for k, v in fields.items():
         if v is None:

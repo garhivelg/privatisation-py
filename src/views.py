@@ -3,7 +3,7 @@
 from flask import g, request, render_template, redirect, session, flash, jsonify
 from flask.helpers import url_for
 from app import app, db
-from models.utils import add_filters, update_records
+from priv.models.utils import add_filters, update_records
 from backup import backup
 
 from werkzeug.datastructures import MultiDict
@@ -18,7 +18,7 @@ def index():
 def list_records():
     session["saved"] = backup(session.get("saved"))
 
-    from models import ORDER_BY
+    from priv.models import ORDER_BY
     order_id = request.args.get('order', None)
     order_dir = request.args.get('dir', None)
     order_desc = order_dir == 'desc'
@@ -45,7 +45,7 @@ def list_records():
     page = request.args.get('page', 1)
     g.order = order["title"]
 
-    from models import Record
+    from priv.models import Record
     q = Record.query
     q = q.order_by(*order["order"][order_dir])
 
@@ -92,7 +92,7 @@ def list_records():
 
 @app.route("/record/<int:record_id>")
 def edit_record(record_id):
-    from models import Record
+    from priv.models import Record
     from forms import RecordForm
     record = Record.query.get(record_id)
     if record is None:
@@ -122,7 +122,7 @@ def add_record():
     app.logger.debug("SESSION[book_id]=%s", session.get("book_id"))
     app.logger.debug("book_id=%s", book_id)
 
-    from models import Record, Case
+    from priv.models import Record, Case
     from forms import RecordForm
     # from sqlalchemy.orm.exc import NoResultFound
     last = Record.query.filter_by(book_id=book_id).order_by(Record.reg_num.desc()).first()
@@ -159,7 +159,7 @@ def save_record(record_id=0):
     form = RecordForm(request.form)
 
     if form.validate():
-        from models import Record
+        from priv.models import Record
         record = Record.query.get(record_id)
         if record is None:
             record = Record()
@@ -190,7 +190,7 @@ def save_record(record_id=0):
 
 @app.route("/record/del/<int:record_id>")
 def del_record(record_id=0):
-    from models import Record
+    from priv.models import Record
     record = Record.query.get(record_id)
 
     if record is not None:
@@ -204,7 +204,7 @@ def del_record(record_id=0):
 
 @app.route("/record/all", methods=["GET", "POST"])
 def edit_all():
-    from models import Record
+    from priv.models import Record
     from forms import RecordForm
     save_form = RecordForm(request.form)
 
@@ -239,7 +239,7 @@ def edit_all():
 @app.route("/random")
 @app.route("/random/<int:records>")
 def generate_random(records=1):
-    from models import Record
+    from priv.models import Record
 
     for i in range(records):
         r = Record()
@@ -252,7 +252,7 @@ def generate_random(records=1):
 
 @app.route("/list/books")
 def list_books():
-    from models.lookup import BOOKS
+    from priv.models.lookup import BOOKS
     items = [(-1, "Все"), ] + list(enumerate(BOOKS))
     return render_template("list.html", items=[
         [b,  url_for("list_records", book=i)] for i, b in items
@@ -261,7 +261,7 @@ def list_books():
 
 @app.route("/list/streets")
 def list_streets():
-    from models.lookup import STREETS, street_name
+    from priv.models.lookup import STREETS, street_name
     items = [(-1, "Все"), ] + list(enumerate(STREETS))
     return render_template("list.html", items=[
         [street_name(s), url_for("list_records", addr_type=i)] for i, s in items
@@ -270,7 +270,7 @@ def list_streets():
 
 @app.route("/list/cities")
 def list_cities():
-    from models.lookup import CITIES
+    from priv.models.lookup import CITIES
     items = [(-1, "Все"), ] + list(enumerate(CITIES))
     return render_template("list.html", items=[
         [c, url_for("list_records", city=i)] for i, c in items
@@ -280,8 +280,8 @@ def list_cities():
 @app.route("/list/streetnames")
 def list_street_names():
     from forms import RecordForm
-    from models import Record
-    from models.lookup import get_city, get_street
+    from priv.models import Record
+    from priv.models.lookup import get_city, get_street
     records = [(
         "Все",
         url_for(
@@ -320,7 +320,7 @@ def list_street_names():
 
 @app.route("/reindex")
 def reindex(records=1):
-    from models import Record
+    from priv.models import Record
 
     records = Record.query.all()
     for r in records:
@@ -334,8 +334,8 @@ def reindex(records=1):
 @app.route("/missing")
 @app.route("/missing/<int:book_id>")
 def missing(book_id=None):
-    from models import Record
-    from models.lookup import BOOKS
+    from priv.models import Record
+    from priv.models.lookup import BOOKS
 
     if book_id is None:
         selected_books = BOOKS
@@ -385,7 +385,7 @@ def missing(book_id=None):
 
 @app.route("/export")
 def export_yml():
-    from models import Record
+    from priv.models import Record
     import yaml
     records = Record.query.order_by(Record.book_id.asc(), Record.reg_num.asc()).all()
 
@@ -403,8 +403,8 @@ def load_from_file(filename):
     import logging
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
-    from models import Record
-    from models.lookup import get_book, get_street, set_city
+    from priv.models import Record
+    from priv.models.lookup import get_book, get_street, set_city
     with open(filename, 'r', encoding='cp1251') as f:
         d = []
         while True:
@@ -547,7 +547,7 @@ def parse_addr():
     else:
         res = [0, addr, "", ""]
 
-    from models.lookup import find_street
+    from priv.models.lookup import find_street
     return jsonify(
         addr_type=find_street(res[0]),
         addr_name=res[1],
@@ -575,7 +575,7 @@ def parse_owner():
 
 @app.route("/registers")
 def list_registers():
-    from models import Register
+    from priv.models import Register
     items = Register.query.all()
 
     return render_template(
@@ -596,7 +596,7 @@ def list_registers():
 @app.route("/register/add", methods=["GET", "POST", ])
 def edit_register(register_id=None, fund_title=None, fund_register=None):
     from forms import RegisterForm
-    from models import Register, Case
+    from priv.models import Register, Case
 
     if fund_title is not None:
         register = Register.query \
@@ -630,7 +630,7 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
 
 @app.route("/facilities")
 def list_facilities():
-    from models import Facility
+    from priv.models import Facility
     items = Facility.query.all()
 
     return render_template(
@@ -649,7 +649,7 @@ def list_facilities():
 @app.route("/facility/add", methods=["GET", "POST", ])
 def edit_facility(facility_id=None):
     from forms import FacilityForm
-    from models import Facility, Case
+    from priv.models import Facility, Case
 
     if facility_id is not None:
         facility = Facility.query.get_or_404(facility_id)
@@ -680,7 +680,7 @@ def edit_facility(facility_id=None):
 @app.route("/register/<string:fund_title>/<int:fund_register>/cases")
 @app.route("/cases")
 def list_cases(register_id=None, fund_title=None, fund_register=None):
-    from models import Register, Case
+    from priv.models import Register, Case
     q = Case.query
     if fund_title is not None:
         register = Register.query \
@@ -722,7 +722,7 @@ def edit_case(
     register_id=0
 ):
     from forms import CaseForm
-    from models import Register, Case
+    from priv.models import Register, Case
 
     if fund_title is not None:
         register = Register.query \

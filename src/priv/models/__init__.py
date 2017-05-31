@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 from app import db
-from models.lookup import get_street, get_city, get_book
-from models.facility import *
-from models.case import *
+from priv.models.lookup import get_street, get_city, get_book
+from case.models.facility import *
+from case.models.case import *
 
 
 class Record(db.Model):
@@ -89,7 +89,7 @@ class Record(db.Model):
         )
 
     def generate_random(self):
-        from models.lookup import BOOKS, CITIES, STREETS
+        from .lookup import BOOKS, CITIES, STREETS
         import random
         # self.book_id = random.randrange(len(BOOKS))
         self.reg_num = random.randrange(0, 4000)

@@ -1,5 +1,5 @@
 from app import db
-from models import Record, Case
+from priv.models import Record, Case
 
 
 from test import PrivTestCase
@@ -104,10 +104,10 @@ class RecordTestCase(PrivTestCase):
         self.assertEqual(record.get_reg_int(), 1)
 
     def test_get_city(self):
-        from models.lookup import load
+        from priv.models.lookup import load
         load()
 
-        from models.lookup import CITIES
+        from priv.models.lookup import CITIES
 
         city_id = random.randrange(1, len(CITIES))
         city = CITIES[city_id]
@@ -131,7 +131,7 @@ class RecordTestCase(PrivTestCase):
         self.assertEqual(record.get_city(), '')
 
     def test_get_addr(self):
-        from models.lookup import load
+        from priv.models.lookup import load
         load()
 
         record = self.fake_record()

@@ -7,8 +7,8 @@ from wtforms.fields.html5 import DateField
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from wtforms_alchemy import model_form_factory
 
-from models.lookup import BOOKS, CITIES, STREETS
-from models import Case, Register, Facility
+from priv.models.lookup import BOOKS, CITIES, STREETS
+from priv.models import Case, Register, Facility
 
 
 from app import db

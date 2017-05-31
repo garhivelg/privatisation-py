@@ -1,4 +1,4 @@
-from models import Register, Case
+from case.models import Register, Case
 
 
 from test import PrivTestCase
