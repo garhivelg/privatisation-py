@@ -6,7 +6,7 @@ import os
 from datetime import datetime, timedelta
 
 
-BACKUP_TIME = timedelta(minutes=5)
+BACKUP_TIME = timedelta(minutes=30)
 ROOT_PATH = os.path.abspath('..')
 DB_FILENAME = "privatisation.db"
 
