@@ -53,7 +53,7 @@ class Record(db.Model):
     def get_city(self):
         try:
             city_id = int(self.city_id)
-        except TypeError:
+        except (TypeError, ValueError):
             city_id = 0
 
         if city_id <= 0:
@@ -98,8 +98,14 @@ class Record(db.Model):
             self.reg_id = self.reg_id + 'а'
         self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
 
-        self.city_id = random.randrange(len(CITIES))
-        self.addr_type = random.randrange(len(STREETS))
+        if len(CITIES):
+            self.city_id = random.randrange(len(CITIES))
+        else:
+            self.city_id = 0
+        if len(STREETS):
+            self.addr_type = random.randrange(0, len(STREETS))
+        else:
+            self.addr_type = 0
         self.addr_name = "Ленина"
         self.addr_build = random.randrange(1, 100)
         self.addr_flat = random.randrange(1, 100)
@@ -121,11 +127,15 @@ class Record(db.Model):
                 self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
 
     def export(self):
+        if self.case:
+            book_id = self.case.id
+        else:
+            book_id = 0
         return {
             "id": self.id,
             "book": {
-                "id": self.casei.id,
-                "name": get_book(self.case.id),
+                "id": book_id,
+                "name": get_book(book_id),
             },
             "reg_num": self.reg_num,
             "reg_id": self.reg_id,

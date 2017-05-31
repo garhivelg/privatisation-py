@@ -84,7 +84,7 @@ def list_records():
 
     q = add_filters(q, search.data, session.get("no_street"))
 
-    print(str(q))
+    app.logger.debug(str(q))
     count = q.count()
     records = q.paginate(int(page), 50)
     return render_template("record_list.html", records=records, page=page, links=links, search=search, count=count)
@@ -119,7 +119,7 @@ def edit_record(record_id):
 @app.route("/record/add")
 def add_record():
     book_id = session.get("book_id", 0)
-    app.logger.debug("SESSION[book_id]=%s", session["book_id"])
+    app.logger.debug("SESSION[book_id]=%s", session.get("book_id"))
     app.logger.debug("book_id=%s", book_id)
 
     from models import Record, Case

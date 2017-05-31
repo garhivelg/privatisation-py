@@ -9,3 +9,5 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/privatisation.db'
 SECRET_KEY = "some key"
 SESSION_TYPE = "filesystem"
 SESSION_FILE_DIR = "../tmp"
+
+SERVER_NAME = "localhost"

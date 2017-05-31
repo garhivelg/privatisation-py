@@ -18,7 +18,7 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     register_id = db.Column(db.Integer, db.ForeignKey('register.id'))
     book_id = db.Column(db.String(8), info={'label': "Дело №"})
-    book_num = db.Column(db.Integer)
+    book_num = db.Column(db.Integer, nullable=False, default=0)
     facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'))
     description = db.Column(db.UnicodeText, info={'label': "Примечания"})
 
@@ -26,9 +26,13 @@ class Case(db.Model):
     facility = db.relationship("Facility")
 
     def title(self, format="%s д. %d"):
+        if self.book_num is None:
+            book_num = 1
+        else:
+            book_num = self.book_num
         if self.register:
-            return format % (self.register, self.book_num)
-        return format % ('', self.book_num)
+            return format % (self.register, book_num)
+        return format % ('', book_num)
 
     def __repr__(self):
         return self.title()
