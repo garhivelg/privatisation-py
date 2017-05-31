@@ -6,3 +6,4 @@ Flask-SQLAlchemy==2.2
 Flask-WTF==0.14.2
 pyyaml==3.12
 WTForms-Alchemy==0.16.2
+coverage==4.4.1
