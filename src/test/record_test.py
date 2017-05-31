@@ -2,7 +2,6 @@ from app import db
 from models import Record, Case
 
 
-from flask.helpers import url_for
 from test import PrivTestCase
 from faker import Factory
 
@@ -66,11 +65,11 @@ class RecordTestCase(PrivTestCase):
         db.session.add(case)
         db.session.commit()
         record = self.fake_record()
+        record.reg_num = reg_num
         record.case = case
         db.session.add(record)
         db.session.commit()
         self.assertEqual(record.get_reg(), reg)
-
 
     def test_get_reg_int(self):
         reg_num = self.fake.pyint()
@@ -104,7 +103,6 @@ class RecordTestCase(PrivTestCase):
         record.reg_id = "%d/%s" % (reg_num, self.fake.pystr())
         self.assertEqual(record.get_reg_int(), 1)
 
-
     def test_get_city(self):
         from models.lookup import load
         load()
@@ -131,7 +129,6 @@ class RecordTestCase(PrivTestCase):
         record = self.fake_record()
         record.city_id = city_id
         self.assertEqual(record.get_city(), '')
-
 
     def test_get_addr(self):
         from models.lookup import load
@@ -163,7 +160,7 @@ class RecordTestCase(PrivTestCase):
 
         street_name = self.fake.street_title()
         building_number = self.fake.building_number()
-        flat_number =self.fake.building_number()
+        flat_number = self.fake.building_number()
         addr = "г. Луганск,  %s %s/%s" % \
             (street_name, building_number, flat_number)
         record = self.fake_record()
@@ -171,7 +168,6 @@ class RecordTestCase(PrivTestCase):
         record.addr_build = building_number
         record.addr_flat = flat_number
         self.assertEqual(record.get_addr(), addr)
-
 
     def test_get_owner(self):
         last_name = ''
@@ -206,12 +202,10 @@ class RecordTestCase(PrivTestCase):
         record.owner_init = init
         self.assertEqual(record.get_owner(), owner)
 
-
     def test_random(self):
         for i in range(10):
             record = self.fake_record()
             self.assertEqual(record.generate_random(), None)
-
 
     def test_normalize(self):
         reg_num = None
@@ -237,7 +231,6 @@ class RecordTestCase(PrivTestCase):
         record.reg_id = reg_id
         record.normalize()
         self.assertEqual(str(record.reg_num), reg_id)
-
 
     def test_export(self):
         record = self.fake_record()

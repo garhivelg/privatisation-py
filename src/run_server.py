@@ -11,7 +11,6 @@ from d2logger import getHandler
 
 
 debug = os.environ.get('FLASK_DEBUG', False)
-
 if __name__ == "__main__":
     from models.lookup import load
     load()
