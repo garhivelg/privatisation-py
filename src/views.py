@@ -8,6 +8,7 @@ from backup import backup
 
 from werkzeug.datastructures import MultiDict
 
+print("Loading views")
 
 @app.route("/")
 def index():
@@ -123,7 +124,7 @@ def add_record():
     app.logger.debug("book_id=%s", book_id)
 
     from priv.models import Record, Case
-    from forms import RecordForm
+    from priv.forms import RecordForm
     # from sqlalchemy.orm.exc import NoResultFound
     last = Record.query.filter_by(book_id=book_id).order_by(Record.reg_num.desc()).first()
     reg_id = 1

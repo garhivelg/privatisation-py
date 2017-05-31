@@ -12,9 +12,9 @@ from d2logger import getHandler
 
 debug = os.environ.get('FLASK_DEBUG', False)
 if __name__ == "__main__":
-    from models.lookup import load
+    from priv.models.lookup import load
     load()
-    from models.lookup import CITIES
+    from priv.models.lookup import CITIES
 
     handler = getHandler()
     app.logger.addHandler(handler)
