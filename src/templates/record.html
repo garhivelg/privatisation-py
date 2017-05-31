@@ -51,45 +51,84 @@
 <h1>Запись № {{record.reg_id}}</h1>
 {% endif %}
 <form method="post" action="{{ action }}">
-{{ form.csrf_token }}
+  {{ form.hidden_tag() }}
 <div class="row">
-<div class="col-md-6">
-  <p>{{ form.case.label }} {{ form.case }}</p>  
-  <p>
-  {{ form.reg_id.label }} {{ form.reg_id(size=8, placeholder='1/1') }}  
-  </p>
-  <div>
-    <h4>Адрес</h4>
-    {% if not hide_calc %}
-    <p>{{ form.full_addr(size=48, placeholder=default_addr) }}</p>  
-    {% endif %}
-    <p>{{ form.city_id }}</p>  
-    <p>{{ form.addr_type }} {{ form.addr_name(size=24) }} д. {{ form.addr_build(size=4) }} кв. {{ form.addr_flat(size=4) }}</p>  
+  <div class="col-md-6">
+    <div>
+      {{ form.case.label(class="control-label") }} 
+      {{ form.case(class="form-control") }}
+    </div>  
+    <div>
+      {{ form.reg_id.label(class="control-label") }}
+      {{ form.reg_id(size=8, class="form-control", placeholder="1/1") }}  
+    </div>  
+    <div>
+      <h4>Адрес</h4>
+      <div>
+        {% if not hide_calc %}
+        <div class="form-group row">
+        <div class="col-sm-12">{{ form.full_addr(size=48, class="form-control", placeholder=default_addr) }}</div>  
+        </div>  
+        {% endif %}
+        <div class="form-group row">
+        <div class="col-sm-12">{{ form.city_id(class="form-control") }}</div>
+        </div>  
+        <div class="form-group row">
+        <div class="col-sm-4">{{ form.addr_type(class="form-control") }}</div>
+        <div class="col-sm-8">{{ form.addr_name(size=24, class="form-control") }}</div>
+        </div>  
+        <div class="form-group row">
+        <div class="col-sm-4"><label for="addr_build" class="control-label">д. </label>{{ form.addr_build(size=4, class="form-control") }}</div>
+        <div class="col-sm-4"><label for="addr_flat" class="control-label">кв. </label>{{ form.addr_flat(size=4, class="form-control") }}</div>
+        </div>  
+      </div>  
+    </div>
+    <div>
+      <h4>Владелец</h4>
+      <div>
+        {% if not hide_calc %}
+        <div class="form-group row">
+        <div class="col-sm-12">{{ form.full_owner(size=48, class="form-control", placeholder=default_owner) }}</div>  
+        </div>  
+        {% endif %}
+        <div class="form-group row">
+        <div class="col-sm-9">{{ form.owner(size=24, class="form-control", placeholder=default_lastname) }}</div>
+        <div class="col-sm-3">{{ form.owner_init(size=8, class="form-control", placeholder=default_init) }}</div>
+        </div>  
+        <div class="form-group row">
+        <div class="col-sm-6 owner_names">{{ form.owner_firstname(size=32, class="form-control", placeholder=default_firstname) }}</div>
+        <div class="col-sm-6 owner_names">{{ form.owner_middlename(size=32, class="form-control", placeholder=default_middlename) }}</div>  
+        </div>  
+      </div>  
+    </div>
+    <div>
+      <h4>Основание</h4>
+      <div class="form-group row">
+        <label for="base_id" class="control-label col-sm-6">Распоряжение № </label>
+        <div class="col-sm-6">
+          {{ form.base_id(class="form-control") }}
+        </div>
+        <label for="base_date" class="control-label col-sm-6">от </label>
+        <div class="col-sm-6">
+          {{ form.base_date(class="form-control") }}
+        </div>
+      </div>  
+    </div>
+    <div class="form-group row">
+      <label for="reg_date" class="control-label col-sm-6">Дата регистрации</label>
+      <div class="col-sm-6">
+        {{ form.reg_date(class="form-control") }}
+      </div>
+    </div>  
+    <div>
+      <input type="submit" class="btn btn-success" value="Сохранить">
+    </div>  
   </div>
-  <div>
-    <h4>Владелец</h4>
-    {% if not hide_calc %}
-    <p>{{ form.full_owner(size=48, placeholder=default_owner) }}</p>  
-    {% endif %}
-    <p>{{ form.owner(size=32) }}&nbsp;{{ form.owner_init(size=8) }}</p>  
-    <p class="owner_names">{{ form.owner_firstname(size=32, placeholder=default_firstname) }}</p>
-    <p class="owner_names">{{ form.owner_middlename(size=32, placeholder=default_middlename) }}</p>  
+
+  <div class="col-md-6">
+    {{ form.comment.label }}
+    {{ form.comment(rows=15, class="form-control") }}
   </div>
-  <div>
-    <h4>Основание</h4>
-    <p>Распоряжение № {{ form.base_id }} от {{ form.base_date }}</p>  
-  </div>
-  <p>Дата регистрации {{ form.reg_date }}</p>  
-  {{ form.page_id }}
-  <p>
-    <input type="submit" class="btn btn-success" value="Сохранить">
-  </p>
-</div>
-<div class="col-md-6">
-  {{ record.description }}
-  {{ form.comment.label }}<br>
-  {{ form.comment(rows=15) }}
-</div>
 </div>
 </form>
 {% endblock %}

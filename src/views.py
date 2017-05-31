@@ -110,6 +110,8 @@ def edit_record(record_id):
         default_owner=record.get_owner(),
         default_firstname="Имя",
         default_middlename="Отчество",
+        default_lastname="Фамилия",
+        default_init="И.О.",
         action=url_for('save_record', record_id=record.id)
     )
 
@@ -144,6 +146,8 @@ def add_record():
         default_owner="Фамилия И.О.",
         default_firstname="Имя",
         default_middlename="Отчество",
+        default_lastname="Фамилия",
+        default_init="И.О.",
         action=url_for('save_record', record_id=record.id)
     )
 
