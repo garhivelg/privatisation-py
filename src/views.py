@@ -575,7 +575,7 @@ def parse_owner():
 
 @app.route("/registers")
 def list_registers():
-    from priv.models import Register
+    from case.models import Register
     items = Register.query.all()
 
     return render_template(
@@ -595,8 +595,8 @@ def list_registers():
 @app.route("/register/edit/<string:fund_title>/<int:fund_register>")
 @app.route("/register/add", methods=["GET", "POST", ])
 def edit_register(register_id=None, fund_title=None, fund_register=None):
-    from forms import RegisterForm
-    from priv.models import Register, Case
+    from case.forms import RegisterForm
+    from case.models import Register, Case
 
     if fund_title is not None:
         register = Register.query \
@@ -630,7 +630,7 @@ def edit_register(register_id=None, fund_title=None, fund_register=None):
 
 @app.route("/facilities")
 def list_facilities():
-    from priv.models import Facility
+    from case.models import Facility
     items = Facility.query.all()
 
     return render_template(
@@ -648,8 +648,8 @@ def list_facilities():
 @app.route("/facility/edit/<int:facility_id>", methods=["GET", "POST", ])
 @app.route("/facility/add", methods=["GET", "POST", ])
 def edit_facility(facility_id=None):
-    from forms import FacilityForm
-    from priv.models import Facility, Case
+    from case.forms import FacilityForm
+    from case.models import Facility, Case
 
     if facility_id is not None:
         facility = Facility.query.get_or_404(facility_id)
@@ -680,7 +680,7 @@ def edit_facility(facility_id=None):
 @app.route("/register/<string:fund_title>/<int:fund_register>/cases")
 @app.route("/cases")
 def list_cases(register_id=None, fund_title=None, fund_register=None):
-    from priv.models import Register, Case
+    from case.models import Register, Case
     q = Case.query
     if fund_title is not None:
         register = Register.query \
@@ -721,8 +721,8 @@ def edit_case(
     fund_register=None,
     register_id=0
 ):
-    from forms import CaseForm
-    from priv.models import Register, Case
+    from case.forms import CaseForm
+    from case.models import Register, Case
 
     if fund_title is not None:
         register = Register.query \
