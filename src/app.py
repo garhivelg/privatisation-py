@@ -2,23 +2,22 @@
 # -*- coding:utf-8 -*-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-# from flask_migrate import Migrate
 from flask_session import Session
 
-app = Flask(__name__)
-app.config.from_object('config')
 
-Session(app)
+def run_app():
+    app = Flask(__name__)
+    app.config.from_object('config')
+
+    Session(app)
+
+    db = SQLAlchemy(app)
+    db.create_all()
+    return app, db
 
 
-# from db import db_session
-db = SQLAlchemy(app)
-db.create_all()
+app, db = run_app()
 
-# import models
-from case.models import *
-from priv.models import *
-from case.views import *
-from views import *
 
-# migrate = Migrate(app, db)
+from priv import *
+from case import *
