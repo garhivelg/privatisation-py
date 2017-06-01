@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-LOG_FILENAME = "privatisation.log"
+LOG_FILENAME = "../log/privatisation.log"
 LOG_LEVEL = logging.DEBUG
 LOG_MAX_BYTES = 10000
 LOG_BACKUP_COUNT = 10
