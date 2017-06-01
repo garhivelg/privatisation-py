@@ -10,7 +10,7 @@ class Record(db.Model):
     # book_id = db.Column(db.Integer)
     book_id = db.Column(db.Integer, db.ForeignKey("case.id"))
     reg_num = db.Column(db.Integer)
-    reg_id = db.Column(db.String(8))
+    reg_id = db.Column(db.String(8), info={'label': "Регистрационный №"})
     city_id = db.Column(db.Integer)
     addr_type = db.Column(db.Integer)
     addr_name = db.Column(db.String(64))
@@ -20,10 +20,18 @@ class Record(db.Model):
     owner_init = db.Column(db.String(8))
     owner_firstname = db.Column(db.String(64))
     owner_middlename = db.Column(db.String(64))
-    base_id = db.Column(db.String(8), nullable=True)
+    base_id = db.Column(
+        db.String(8),
+        nullable=True,
+        info={'label': "Распоряжение №"}
+    )
     base_date = db.Column(db.Date, nullable=True)
-    reg_date = db.Column(db.Date, nullable=True)
-    comment = db.Column(db.UnicodeText)
+    reg_date = db.Column(
+        db.Date,
+        nullable=True,
+        info={'label': "Дата регистрации"}
+    )
+    comment = db.Column(db.UnicodeText, info={'label': "Примечание"})
 
     case = db.relationship("Case")
 
