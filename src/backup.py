@@ -16,7 +16,7 @@ def copy_db(time):
     new_filename = "privatisation-{}.db".format(time.strftime("%y-%m-%d-%H-%M"))
     shutil.copyfile(
         os.path.join(ROOT_PATH, "db", old_filename),
-        os.path.join(ROOT_PATH, "backup", new_filename),
+        os.path.join(ROOT_PATH, "db", "backup", new_filename),
     )
     app.logger.debug("Saved as {}".format(new_filename))
 
