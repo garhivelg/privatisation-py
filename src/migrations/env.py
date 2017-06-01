@@ -20,7 +20,7 @@ sys.path.append(parent_dir)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from models import db
+from app import db
 target_metadata = db.metadata
 # target_metadata = None
 

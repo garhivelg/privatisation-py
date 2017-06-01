@@ -1,4 +1,7 @@
 # -*- coding:utf-8 -*-
+from app import app
+
+
 STREETS = []
 
 CITIES = []
@@ -73,3 +76,7 @@ def get_book(book_id=None):
     if book_id not in range(1, len(BOOKS) + 1):
         book_id = 0
     return BOOKS[book_id]
+
+
+if not CITIES:
+    load()
