@@ -9,8 +9,6 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-from d2logger import Handler
-
 
 def run_app(debug=False):
     app = Flask(__name__)

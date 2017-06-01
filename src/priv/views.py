@@ -49,7 +49,7 @@ def list_records():
     q = Record.query
     q = q.order_by(*order["order"][order_dir])
 
-    from forms import RecordForm
+    from .forms import FilterForm
     form = request.form
     if form:
         session["filter"] = form.to_dict()
@@ -80,7 +80,7 @@ def list_records():
     # print(filter_by)
 
     app.logger.debug(filter_by)
-    search = RecordForm(MultiDict(filter_by))
+    search = FilterForm(MultiDict(filter_by))
 
     q = add_filters(q, search.data, session.get("no_street"))
 
