@@ -13,6 +13,7 @@
   </div>
   </div>
   <div class="col-md-6">
+    {% if records.pages %}
     <form action="/record" method="GET" class="page-select">
       <span class="input-group">
         <input type="text" size="5" name="page" class="form-control" placeholder="Введите номер страницы, чтобы перейти">
@@ -21,6 +22,18 @@
         </span>
       </span>
     </form>
+    <ul class="pagination">
+      <li{% if not records.has_prev %} class="disabled"{% endif %}><a href="{{ url_for('list_records') }}?page={{ records.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a></li>
+      {%- for page in records.iter_pages() %}
+        {% if page %}
+          <li{% if page == records.page %} class="active"{% endif %}><a href="{{ url_for('list_records') }}?page={{ page }}">{{ page }}</a></li>
+        {% else %}
+          <li><span class=ellipsis>…</span></li>
+        {% endif %}
+      {%- endfor %}
+      <li{% if not records.has_next %} class="disabled"{% endif %}><a href="{{ url_for('list_records') }}?page={{ records.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a></li>
+    </ul>
+    {% endif %}
   </div>
 </div>
 <table class="records table">

@@ -18,6 +18,7 @@ db.create_all()
 # import models
 from case.models import *
 from priv.models import *
+from case.views import *
 from views import *
 
 # migrate = Migrate(app, db)
