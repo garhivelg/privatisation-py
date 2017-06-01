@@ -40,6 +40,10 @@ from priv import *
 from case import *
 
 
+def run():
+    app.run()
+
+
 if __name__ == "__main__":
     # app.run(debug=debug)
     app.run()
