@@ -2,4 +2,4 @@
 
 
 from .models import *
-from views import *
+from .views import *
