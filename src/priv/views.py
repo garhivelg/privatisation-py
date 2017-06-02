@@ -92,8 +92,8 @@ def list_records():
 
 @app.route("/record/<int:record_id>")
 def edit_record(record_id):
-    from priv.models import Record
-    from forms import RecordForm
+    from .models import Record
+    from .forms import RecordForm
     record = Record.query.get(record_id)
     if record is None:
         flash("Запись не найдена")
@@ -122,8 +122,8 @@ def add_record():
     app.logger.debug("SESSION[book_id]=%s", session.get("book_id"))
     app.logger.debug("book_id=%s", book_id)
 
-    from priv.models import Record, Case
-    from priv.forms import RecordForm
+    from .models import Record, Case
+    from .forms import RecordForm
     # from sqlalchemy.orm.exc import NoResultFound
     last = Record.query.filter_by(book_id=book_id).order_by(Record.reg_num.desc()).first()
     reg_id = 1
@@ -155,7 +155,7 @@ def add_record():
 @app.route("/record/save", methods=["POST", ])
 @app.route("/record/save/<int:record_id>", methods=["POST", ])
 def save_record(record_id=0):
-    from forms import RecordForm
+    from .forms import RecordForm
     form = RecordForm(request.form)
 
     if form.validate():
@@ -204,8 +204,8 @@ def del_record(record_id=0):
 
 @app.route("/record/all", methods=["GET", "POST"])
 def edit_all():
-    from priv.models import Record
-    from forms import RecordForm
+    from .models import Record
+    from .forms import RecordForm
     save_form = RecordForm(request.form)
 
     form = RecordForm(MultiDict(session.get("filter", dict())))
@@ -280,9 +280,9 @@ def list_cities():
 
 @app.route("/list/streetnames")
 def list_street_names():
-    from forms import RecordForm
-    from priv.models import Record
-    from priv.models.lookup import get_city, get_street
+    from .forms import RecordForm
+    from .models import Record
+    from .models.lookup import get_city, get_street
     records = [(
         "Все",
         url_for(
