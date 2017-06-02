@@ -22,21 +22,18 @@ sys.path.append(parent_dir)
 with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
+with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
+    version = f.read().strip()
+
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
 setup(
     name='privatisation',
-
-    # Versions should comply with PEP440.  For a discussion on single-sourcing
-    # the version across setup.py and the project code, see
-    # https://packaging.python.org/en/latest/single_source_version.html
-    version='2.2.0',
-
+    version=version,
+    keywords='archive database flask privatisation',
     description='Privatisation database for archive',
     long_description=long_description,
-
-    # The project's main homepage.
     url='https://github.com/d2emon/privatisation-py',
 
     # Author details
@@ -71,26 +68,12 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    # What does your project relate to?
-    keywords='archive database flask privatisation',
-
     package_dir={'': 'src'},
-    # You can just specify the packages manually here if your project is
-    # simple. Or you can use find_packages().
     packages=find_packages('./src', exclude=['tests']),
-
-    # Alternatively, if you want to distribute just a my_module.py, uncomment
-    # this:
     py_modules=[
         "app",
         "config",
     ],
-
-    # List run-time dependencies here.  These will be installed by pip when
-    # your project is installed. For an analysis of "install_requires" vs pip's
-    # requirements files see:
-    # https://packaging.python.org/en/latest/requirements.html
-    # install_requires=['peppercorn'],
     install_requires=requirements,
 
     # List additional groups of dependencies here (e.g. development
