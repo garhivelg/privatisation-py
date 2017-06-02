@@ -27,9 +27,18 @@ class RecordForm(ModelForm):
         query_factory=lambda: Case.query.all(),
         allow_blank=True,
     )
+    city_id = SelectField("Населенный пункт",
+                          choices=[(-1, "Все"), ] + list(enumerate(CITIES)),
+                          coerce=int,
+                          )
+    addr_type = SelectField("Вид улицы",
+                            choices=[(-1, "Все"), ] + list(enumerate(STREETS)),
+                            coerce=int,
+                            )
     full_addr = StringField("Адрес")
     full_owner = StringField("Владелец")
     page_id = HiddenField()
+
     class Meta:
         model = Record
 
