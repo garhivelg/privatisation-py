@@ -3,6 +3,7 @@ import logging
 
 
 basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+# basedir = os.getcwd()
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/privatisation.db'
