@@ -10,3 +10,4 @@ WTForms-Alchemy==0.16.2
 coverage==4.4.1
 faker==0.7.12
 git+https://github.com/garhivelg/case
+git+https://github.com/d2emon/pybackup
