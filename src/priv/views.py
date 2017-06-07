@@ -328,40 +328,20 @@ def list_street_names():
 
 @app.route("/list/streetnames.json")
 def list_street_names_json():
-    from .models import Record
-    from .models.lookup import STREETS
-    records = []
+    from .models.lookup import STREETNAMES, parse_street
     query = request.args.get('query', '')
+    suggest = []
+    for s in STREETNAMES:
+        if query in s:
+            suggest.append({
+                'value': s,
+                'data': parse_street(s),
+            })
+            app.logger.debug("%s:%s", query, suggest)
 
-    app.logger.debug(STREETS)
-    for s in STREETS:
-        if not s:
-            continue
-        if query.startswith(s):
-            query = query[len(s) + 1:]
-            break
-
-    q = Record.query
-    q = q.distinct(Record.addr_name).group_by(
-        Record.city_id,
-        Record.addr_type,
-        Record.addr_name
-    )
-    q = q.filter(Record.addr_name.like("%" + query + "%"))
-    for r in q:
-        street = r.addr_name
-        no_street = int(not street)
-        records.append({
-            'value': r.get_addr(full=False),
-            'data': {
-                'city_id': r.city_id,
-                'addr_type': r.addr_type,
-                'addr_name': r.addr_name,
-            },
-        })
     return jsonify({
         "query": request.args.get('query', ''),
-        "suggestions": records,
+        "suggestions": suggest,
     })
 
 
@@ -586,6 +566,10 @@ def list_import_files():
 @app.route("/parse/addr", methods=["POST", ])
 def parse_addr():
     addr = request.form.get('addr', "")
+
+    from .models.lookup import parse_street
+    return jsonify(parse_street(addr, full=True))
+
     import re
     parser = re.compile(r"(\w*\.)\s*(.*)\s+(\w+)/(\w+)")
     matches = parser.match(addr)
