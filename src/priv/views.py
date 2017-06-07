@@ -570,22 +570,6 @@ def parse_addr():
     from .models.lookup import parse_street
     return jsonify(parse_street(addr, full=True))
 
-    import re
-    parser = re.compile(r"(\w*\.)\s*(.*)\s+(\w+)/(\w+)")
-    matches = parser.match(addr)
-    if matches:
-        res = matches.groups()
-    else:
-        res = [0, addr, "", ""]
-
-    from priv.models.lookup import find_street
-    return jsonify(
-        addr_type=find_street(res[0]),
-        addr_name=res[1],
-        addr_build=res[2],
-        addr_flat=res[3],
-    )
-
 
 @app.route("/parse/owner", methods=["POST", ])
 def parse_owner():
