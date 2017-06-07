@@ -323,8 +323,18 @@ def list_street_names():
 @app.route("/list/streetnames.json")
 def list_street_names_json():
     from .models import Record
+    from .models.lookup import STREETS
     records = []
     query = request.args.get('query', '')
+
+    app.logger.debug(STREETS)
+    for s in STREETS:
+        if not s:
+            continue
+        if query.startswith(s):
+            query = query[len(s) + 1:]
+            break
+
     q = Record.query
     q = q.distinct(Record.addr_name).group_by(
         Record.city_id,
