@@ -320,6 +320,35 @@ def list_street_names():
     return render_template("list.html", items=records)
 
 
+@app.route("/list/streetnames.json")
+def list_street_names_json():
+    from .models import Record
+    records = []
+    query = request.args.get('query', '')
+    q = Record.query
+    q = q.distinct(Record.addr_name).group_by(
+        Record.city_id,
+        Record.addr_type,
+        Record.addr_name
+    )
+    q = q.filter(Record.addr_name.like("%" + query + "%"))
+    for r in q:
+        street = r.addr_name
+        no_street = int(not street)
+        records.append({
+            'value': r.get_addr(full=False),
+            'data': {
+                'city_id': r.city_id,
+                'addr_type': r.addr_type,
+                'addr_name': r.addr_name,
+            },
+        })
+    return jsonify({
+        "query": request.args.get('query', ''),
+        "suggestions": records,
+    })
+
+
 @app.route("/reindex")
 def reindex(records=1):
     from priv.models import Record

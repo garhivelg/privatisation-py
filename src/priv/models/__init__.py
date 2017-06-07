@@ -68,23 +68,27 @@ class Record(db.Model):
             return ''
         return get_city(city_id)
 
-    def get_addr(self, full=False):
+    def get_addr(self, full=True):
         if not self.addr_name:
             return "Адрес не указан"
 
-        flat_num = self.addr_build
-        if self.addr_flat:
-            flat_num = flat_num + "/" + self.addr_flat
-
-        addr = "{} {} {}".format(
+        addr = "{} {}".format(
             get_street(self.addr_type),
-            self.addr_name,
-            flat_num,
+            self.addr_name
         )
 
         city = self.get_city()
         if city:
             addr = ', '.join([city, addr])
+
+        if not full:
+            return addr
+
+        flat_num = self.addr_build
+        if self.addr_flat:
+            flat_num = flat_num + "/" + self.addr_flat
+
+        addr += " " + flat_num
         return addr
 
     def get_owner(self):

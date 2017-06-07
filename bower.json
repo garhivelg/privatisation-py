@@ -1,0 +1,26 @@
+{
+  "name": "privatisation-py",
+  "homepage": "https://github.com/d2emon/privatisation-py",
+  "authors": [
+    "Dmitry Kutsenko <d2emonium@gmail.com>"
+  ],
+  "description": "Privatisation database for archive",
+  "main": "src/run_server.py",
+  "keywords": [
+    "archive",
+    "database"
+  ],
+  "license": "GPL-3",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "devbridge-autocomplete": "^1.4.1"
+  }
+}

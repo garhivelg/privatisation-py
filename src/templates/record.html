@@ -41,6 +41,15 @@
 	      return false;
 	    });
 	  });
+
+    $('.autocomplete').autocomplete({
+      serviceUrl: '/list/streetnames.json',
+      onSelect: function (suggestion) {
+        $("#city_id").val(suggestion.data.city_id).change()
+        $("#addr_type").val(suggestion.data.addr_type)
+        $("#addr_name").val(suggestion.data.addr_name)
+      }
+    });
 </script>
 {% endblock %}
 {% block content %}
@@ -67,7 +76,7 @@
       <div>
         {% if not hide_calc %}
         <div class="form-group row">
-        <div class="col-sm-12">{{ form.full_addr(size=48, class="form-control", placeholder=default_addr) }}</div>  
+        <div class="col-sm-12">{{ form.full_addr(size=48, class="form-control autocomplete", placeholder=default_addr) }}</div>  
         </div>  
         {% endif %}
         <div class="form-group row">
