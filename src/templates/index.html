@@ -45,7 +45,7 @@
 	  	  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Сервис <span class="caret"></span></a>
 	  	  <ul class="dropdown-menu">
 	  	    <li><a href="{{ url_for('reindex') }}">Переиндексировать</a></li>
-          <li><a href="{{ url_for('edit_all') }}">Групповое изменение</a></li>
+          <li><a id="group-edit" href="{{ url_for('edit_all') }}">Групповое изменение</a></li>
           <li><a href="{{ url_for('missing', book_id=session.get('filter', dict()).get('book_id')) }}">Найти пропущенные</a></li>
 	  	  </ul>
 	  	</li>

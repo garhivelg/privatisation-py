@@ -209,7 +209,13 @@ def edit_all():
     from .forms import RecordForm
     save_form = RecordForm(request.form)
 
-    form = RecordForm(MultiDict(session.get("filter", dict())))
+    filter_data = session.get("filter", dict())
+    if not filter_data:
+        flash("Фильтр не установлен!")
+        return redirect(url_for("list_records", filter=False))
+    filter_data = MultiDict(filter_data)
+
+    form = RecordForm(filter_data)
 
     q = Record.query
     q = add_filters(q, form.data)
