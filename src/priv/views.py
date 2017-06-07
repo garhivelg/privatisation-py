@@ -16,7 +16,7 @@ def index():
 
 @app.route("/record", methods=["GET", "POST"])
 def list_records():
-    app.logger.debug("Saved at %s", session["saved"])
+    app.logger.debug("Saved at %s", session.get("saved"))
     session["saved"] = backup(session.get("saved"))
 
     from priv.models import ORDER_BY
