@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
   {% for book_id, book in books.items() %}
-    <h3>Книга №{{book_id}}</h3>
+    <h3>{{book_id}}</h3>
     <p><strong>Записи:</strong> {% if book['first'] %} с {{ book['first'] }}{% endif %} {% if book['last'] %} по {{ book['last'] }}{% endif %}
     {% if book['missing'] %}
       <h3>Пропущено: {{ book['missing']|length }}</h3>

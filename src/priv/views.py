@@ -361,17 +361,17 @@ def reindex(records=1):
 @app.route("/missing")
 @app.route("/missing/<int:book_id>")
 def missing(book_id=None):
+    from case.models import Case
     from priv.models import Record
-    from priv.models.lookup import BOOKS
 
     if book_id is None:
-        selected_books = BOOKS
+        selected_books = Case.query.all()
     else:
-        selected_books = [book_id, ]
+        selected_books = [Case.query.get_or_404(book_id), ]
 
     res = dict()
     for b in selected_books:
-        q = Record.query.filter_by(book_id=b)
+        q = Record.query.filter_by(case=b)
         first = q.order_by(Record.reg_num.asc()).first()
         last = q.order_by(Record.reg_num.desc()).first()
         count = q.count()
@@ -383,17 +383,17 @@ def missing(book_id=None):
 
         res[b]['first'] = first.reg_id
         res[b]['last'] = last.reg_id
-        if last.reg_num < b * 10000:
+        if last.reg_num < b.book_num * 10000:
             multiplier = 1000
         else:
             multiplier = 10000
-        first_id = b * multiplier
+        first_id = b.book_num * multiplier
         expected = last.reg_num - first_id
         print("BOOK#{}\t{}-{} - {} of {}:\t{}".format(b, first.reg_id, last.reg_id, count, expected, last))
         missing = []
         doubled = []
         for i in range(1, expected + 1):
-            reg_id = "{}/{}".format(b, i)
+            reg_id = "{}/{}".format(b.book_num, i)
             records = Record.query.filter_by(reg_id=reg_id)
             if records.count() < 1:
                 print("{} is missing!".format(reg_id))
