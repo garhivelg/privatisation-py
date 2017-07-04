@@ -365,6 +365,9 @@ def missing(book_id=None):
     from priv.models import Record
 
     if book_id is None:
+        book_id = session.get('filter', dict()).get('case')
+
+    if book_id is None:
         selected_books = Case.query.all()
     else:
         selected_books = [Case.query.get_or_404(book_id), ]
