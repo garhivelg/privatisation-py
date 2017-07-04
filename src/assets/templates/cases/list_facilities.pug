@@ -1,4 +1,4 @@
-extends _list.pug
+extends ../_list.pug
 
 block panel_master
   | {% if register %}
@@ -27,7 +27,7 @@ block panel_head
 block table_headers
   thead
     tr
-      th(class="col-md-1 col-lg1 col-sm-1")
+      th(class="col-md-2 col-lg2 col-sm-2")
       th
         | {%if order_id==1%}
         a(href="?order=1{% if not desc %}&desc={{desc}}{% endif %}") 

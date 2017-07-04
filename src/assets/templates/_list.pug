@@ -1,4 +1,4 @@
-extends ../_priv.pug
+extends _priv.pug
 
 block content
   block panel_master
@@ -8,28 +8,29 @@ block content
       h4.panel-title 
         block panel_head
           | Справочник
-    | {% if add %}
-    .panel-group#accordion1
-      div(class="panel panel-default")
-        .panel-heading
-          h4.panel-title 
-            a(class="acordion-toggle", href="#accordion1_href", data-toggle="collapse", data-parent="#accordion1") Поиск <span class="caret"></span>
-        div(id="accordion1_href", class="panel-collapse collapse")
-          div(class="panel-body")
-            form(id="filter_form", class="form-search", method="get")
-              .btn-group
-                button(type="button", class="btn btn-default dropdown-toggle", data-toggle="dropdown") Добавить Фильтр <span class="caret"></span>
-                ul.dropdown-menu
-                  li
-                    a(href="#", name="protocol", class"filter btn") Протокол
-                  li
-                    a(href="#", name="record", class"filter btn") Опись
-                  li
-                    a(href="#", name="case", class"filter btn") Дело
-              table(class="table table-responsive table-hover filters")
-              button(type="submit", class="btn btn-sm btn-primary") <span class="glyphicon glyphicon-plus"></span> Искать <i class="fa fa-search"></i>
+    //.
+      | {% if add %}
+      .panel-group#accordion1
+        div(class="panel panel-default")
+          .panel-heading
+            h4.panel-title 
+              a(class="acordion-toggle", href="#accordion1_href", data-toggle="collapse", data-parent="#accordion1") Поиск <span class="caret"></span>
+          div(id="accordion1_href", class="panel-collapse collapse")
+            div(class="panel-body")
+              form(id="filter_form", class="form-search", method="get")
+                .btn-group
+                  button(type="button", class="btn btn-default dropdown-toggle", data-toggle="dropdown") Добавить Фильтр <span class="caret"></span>
+                  ul.dropdown-menu
+                    li
+                      a(href="#", name="protocol", class"filter btn") Протокол
+                    li
+                      a(href="#", name="record", class"filter btn") Опись
+                    li
+                      a(href="#", name="case", class"filter btn") Дело
+                table(class="table table-responsive table-hover filters")
+                button(type="submit", class="btn btn-sm btn-primary") <span class="glyphicon glyphicon-plus"></span> Искать <i class="fa fa-search"></i>
                
-    | {% endif %}
+      | {% endif %}
     div
       div(class="well well-sm")
         | {% if items.pages %}
