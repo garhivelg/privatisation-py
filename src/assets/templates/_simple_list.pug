@@ -1,0 +1,38 @@
+extends _priv.pug
+
+block content
+  block panel_master
+
+  div(class="panel panel-primary")
+    .panel-heading
+      h4.panel-title 
+        block panel_head
+          | Справочник
+    div
+      div(class="well well-sm")
+        | {% if add %}
+        | &nbsp;
+        a(href="{{ add }}", class="btn btn-sm btn-primary", data-toggle="tooltip", title="Добавить") <i class="fa fa-plus"></i>
+        | {% endif %}
+
+      | {% if items %}
+      .table-responsive
+        table(class="table table-bordered table-hover")
+          block table_headers
+
+          tbody
+            | {% for i in items %}
+            tr
+              block row_controls
+
+              block row_data
+                td 
+                  a(href="{{ i[1] }}") {{ i[0] }}  
+                  | {% if i|length > 2 %}
+                  a(href="{{ i[2] }}") <i class="fa fa-edit"></i>  
+                  | {% endif %}
+            | {% endfor %}
+      | {% else %}
+      h3 Список пуст
+      | {% endif %}
+

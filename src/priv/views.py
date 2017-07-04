@@ -262,7 +262,7 @@ def generate_random(records=1):
 def list_books():
     from priv.models.lookup import BOOKS
     items = [(-1, "Все"), ] + list(enumerate(BOOKS))
-    return render_template("list.html", items=[
+    return render_template("priv/list_data.html", items=[
         [b,  url_for("list_records", book=i)] for i, b in items
     ])
 
@@ -271,7 +271,7 @@ def list_books():
 def list_streets():
     from priv.models.lookup import STREETS, street_name
     items = [(-1, "Все"), ] + list(enumerate(STREETS))
-    return render_template("list.html", items=[
+    return render_template("priv/list_data.html", items=[
         [street_name(s), url_for("list_records", addr_type=i)] for i, s in items
     ])
 
@@ -280,7 +280,7 @@ def list_streets():
 def list_cities():
     from priv.models.lookup import CITIES
     items = [(-1, "Все"), ] + list(enumerate(CITIES))
-    return render_template("list.html", items=[
+    return render_template("priv/list_data.html", items=[
         [c, url_for("list_records", city=i)] for i, c in items
     ])
 
@@ -323,7 +323,7 @@ def list_street_names():
                 no_street=no_street
             )
         ])
-    return render_template("list.html", items=records)
+    return render_template("priv/list_data.html", items=records)
 
 
 @app.route("/list/streetnames.json")

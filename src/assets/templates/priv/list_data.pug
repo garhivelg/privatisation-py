@@ -1,0 +1,27 @@
+extends ../_simple_list.pug
+
+block panel_master
+  | {% if add %}
+  .btn-toolbar
+    a(href="{{ add }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить
+  | {% endif %}
+
+block panel_head
+  | Справочник
+
+block table_headers
+
+block row_controls
+  | {% if i | length > 2 %}
+  td(class="col-md-2 col-lg2 col-sm-2")
+    center
+      div(class="btn-group btn-group-xs")
+        a(href="{{ i[1] }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Просмотреть")
+          i(class="fa fa-search")
+        a(href="{{ i[2] }}", class="btn btn-sm btn-primary" data-toggle="tooltip", title="Редактировать")
+          i(class="fa fa-edit")
+  | {% endif %}
+
+block row_data
+  td 
+    a(href="{{ i[1] }}") {{ i[0] }}
