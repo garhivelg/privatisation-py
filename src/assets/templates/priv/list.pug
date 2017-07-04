@@ -1,0 +1,98 @@
+extends ../_priv.pug
+
+block content
+  | {% if g.order %}
+  | {% endif %}
+  | {% if count %}
+  .row
+    .col-md-6
+      div
+        <strong>Сортировка:</strong> {{g.order}}
+      div
+        <strong>Найдено:</strong> {{ count }} записей
+    .col-md-6
+      | {% if records.pages %}
+      form(action="/record", method="GET", class="page-select")
+        span.input-group
+          input(type="text", size="5", name="page", class="form-control", placeholder="Введите номер страницы, чтобы перейти")
+          span.input-group-btn
+            input(type="submit", value="Перейти", class="btn")
+      | {% endif %}
+  | {% if records.pages %}
+  ul.pagination
+    li(class="{% if not records.has_prev %}disabled{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ records.prev_num }}")
+        span(class="glyphicon glyphicon-menu-left")
+    | {%- for page in records.iter_pages() %}
+    | {% if page %}
+    li(class="{% if page == records.page %}active{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ page }}") {{ page }}
+    | {% else %}
+    li
+      span.ellipsis …
+    | {% endif %}
+    | {%- endfor %}
+    li(class="{% if not records.has_next %}disabled{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ records.next_num }}")
+        span(class="glyphicon glyphicon-menu-right")
+  | {% endif %}
+  table(class="records table")
+    thead
+      tr
+        th
+          a(href="{{ links['reg_id'] }}") Дело
+        th
+          a(href="{{ links['reg_id'] }}") Рег. №
+        th
+          a(href="{{ links['addr'] }}") Адрес
+        th
+          a(href="{{ links['owner'] }}") Владелец
+        th
+          a( href="{{ links['base_id'] }}") Основание для регистрации
+        th &nbsp;
+    tbody
+      | {% for r in records.items %}
+      tr
+        td
+          em {{ r.get_book() }}
+        td
+          strong {{ r.reg_id }}
+        td
+          a(href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}") {{ r.get_addr(full=True) }}
+        td
+          a(href="{{ url_for('edit_record', record_id=r.id, page=records.page) }}") {{ r.get_owner() }}
+        td.base_id
+          | {% if r.base_date %}
+          span.id_num №{{ r.base_id }}
+          | от 
+          span.base_date {{ r.base_date.strftime('%d.%m.%Y') }}
+          | {% elif r.base_id %}
+          span.id_num №{{ r.base_id }}
+          | {% else %}
+          span.id_num &dash;
+          | {% endif %}
+        td
+          a(href="{{ url_for('del_record', record_id=r.id) }}")
+            span(class="glyphicon glyphicon-remove")
+      | {% endfor %}
+  | {% else %}
+  h3 По вашему запросу ничего не найдено
+  | {% endif %}
+  | {% if records.pages %}
+  ul.pagination
+    li(class="{% if not records.has_prev %}disabled{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ records.prev_num }}")
+        span(class="glyphicon glyphicon-menu-left")
+    | {%- for page in records.iter_pages() %}
+    | {% if page %}
+    li(class="{% if page == records.page %}active{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ page }}") {{ page }}
+    | {% else %}
+    li
+      span.ellipsis …
+    | {% endif %}
+    | {%- endfor %}
+    li(class="{% if not records.has_next %}disabled{% endif %}")
+      a(href="{{ url_for('list_records') }}?page={{ records.next_num }}")
+        span(class="glyphicon glyphicon-menu-right")
+  | {% endif %}

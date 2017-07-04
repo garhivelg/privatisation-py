@@ -16,6 +16,12 @@ gulp.task('jquery', function(){
     .pipe(gulp.dest('static/js'));
 });
 
+// jQuery Autocomplete
+gulp.task('jquery:autocomplete', function(){
+  return gulp.src('assets/bower_components/devbridge-autocomplete/dist/jquery.autocomplete.min.js')
+    .pipe(gulp.dest('static/js'));
+});
+
 // Bootstrap
 gulp.task('bootstrap:css', function(){
   return gulp.src([
@@ -79,7 +85,7 @@ gulp.task('html', function(){
 });
 
 // Prepare js
-gulp.task('js', ['jquery', 'bootstrap:js'], function(){
+gulp.task('js', ['jquery', 'jquery:autocomplete', 'bootstrap:js'], function(){
   return gulp.src('assets/js/**/*.js')
     .pipe(concat('index.js'))
     .pipe(gulp.dest('static/js'));

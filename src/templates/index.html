@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Приватизация{% if title %} - {{title}}{% endif %}</title>
 <link rel="icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
-<link href="{{ url_for('static', filename='bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -135,9 +135,9 @@
 {% block content %}{% endblock %}
     </div> 
   </div>
-  <script src="{{ url_for("static", filename="js/jquery-1.12.4.min.js") }}"></script>
+  <script src="{{ url_for("static", filename="js/jquery.min.js") }}"></script>
   <script src="{{ url_for("static", filename="js/jquery.autocomplete.min.js") }}"></script>
-  <script src="{{ url_for("static", filename="bootstrap/js/bootstrap.min.js") }}"></script>  
+  <script src="{{ url_for("static", filename="js/bootstrap.min.js") }}"></script>  
 {% block script %}
 <script type=text/javascript>
   $(function() {

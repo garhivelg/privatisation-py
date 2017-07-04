@@ -1,0 +1,78 @@
+extends ../_priv.pug
+
+block content
+  block panel_master
+
+  div(class="panel panel-primary")
+    .panel-heading
+      h4.panel-title 
+        block panel_head
+          | Справочник
+    | {% if add %}
+    .panel-group#accordion1
+      div(class="panel panel-default")
+        .panel-heading
+          h4.panel-title 
+            a(class="acordion-toggle", href="#accordion1_href", data-toggle="collapse", data-parent="#accordion1") Поиск <span class="caret"></span>
+        div(id="accordion1_href", class="panel-collapse collapse")
+          div(class="panel-body")
+            form(id="filter_form", class="form-search", method="get")
+              .btn-group
+                button(type="button", class="btn btn-default dropdown-toggle", data-toggle="dropdown") Добавить Фильтр <span class="caret"></span>
+                ul.dropdown-menu
+                  li
+                    a(href="#", name="protocol", class"filter btn") Протокол
+                  li
+                    a(href="#", name="record", class"filter btn") Опись
+                  li
+                    a(href="#", name="case", class"filter btn") Дело
+              table(class="table table-responsive table-hover filters")
+              button(type="submit", class="btn btn-sm btn-primary") <span class="glyphicon glyphicon-plus"></span> Искать <i class="fa fa-search"></i>
+               
+    | {% endif %}
+    div
+      div(class="well well-sm")
+        | {% if items.pages %}
+        ul(class="pagination pagination-sm", style="display:inherit;")
+          li(class="{% if not items.has_prev %}disabled{% endif %}")
+            a(href="?page={{ items.prev_num }}")
+              span(class="glyphicon glyphicon-menu-left")
+          | {%- for page in items.iter_pages() %}
+          | {% if page %}
+          li(class="{% if page == items.page %}active{% endif %}")
+            a(href="?page={{ page }}") {{ page }}
+          | {% else %}
+          li
+            span(class=ellipsis) …
+          | {% endif %}
+          | {%- endfor %}
+          li(class="{% if not items.has_next %}disabled{% endif %}")
+            a(href="?page={{ items.next_num }}")
+              span(class="glyphicon glyphicon-menu-right")
+        | {% endif %}
+        | &nbsp;
+        a(href="{{ add }}", class="btn btn-sm btn-primary", data-toggle="tooltip", title="Добавить") <i class="fa fa-plus"></i>
+
+        .pull-right
+          strong Количество: 
+          | {{ items.total }}
+      | {% if items %}
+      .table-responsive
+        table(class="table table-bordered table-hover")
+          block table_headers
+
+          tbody
+            | {% for i in items.items %}
+            tr
+              block row_controls
+
+              block row_data
+                td 
+                  a(href="{{ i[1] }}") {{ i[0] }}  
+                  | {% if i|length > 2 %}
+                  a(href="{{ i[2] }}") <i class="fa fa-edit"></i>  
+                  | {% endif %}
+            | {% endfor %}
+      | {% else %}
+      h3 Список пуст
+      | {% endif %}

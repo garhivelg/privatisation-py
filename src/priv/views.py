@@ -88,7 +88,7 @@ def list_records():
     app.logger.debug(str(q))
     count = q.count()
     records = q.paginate(int(page), 50)
-    return render_template("record_list.html", records=records, page=page, links=links, search=search, count=count)
+    return render_template("priv/list.html", records=records, page=page, links=links, search=search, count=count)
 
 
 @app.route("/record/<int:record_id>")

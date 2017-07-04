@@ -1,0 +1,53 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title
+      block title
+        | Сайт{% if title %} - {{title}}{% endif %}
+    link(rel="icon", href="{{ url_for('static', filename='favicon/favicon.ico') }}")
+    link(href="{{ url_for('static', filename='css/bootstrap.min.css') }}", rel="stylesheet")
+    link(href="{{ url_for('static', filename='css/font-awesome.min.css') }}", rel="stylesheet")
+    block style
+      | {% block style %}{% endblock %}
+  body
+    header
+      nav(class="navbar navbar-inverse navbar-fixed-top")
+        div(class="container")
+          div(class="navbar-header")
+            button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar", aria-expanded="false", aria-controls="navbar")
+              span(class="sr-only") Toggle navigation
+              span(class="icon-bar")
+              span(class="icon-bar")
+              span(class="icon-bar")
+            a(class="navbar-brand", href="/")
+              block navbrand
+                | Сайт
+          div(id="navbar", class="navbar-collapse collapse")
+            block navbar
+    div(class="container")
+      #confirm-del(class="modal fade", tabindex=-1, role="dialog")
+        .modal-dialog
+          .modal-content
+            .modal-header Вы уверены?
+            .modal-body ...
+            .modal-footer
+              button(type="button", class="btn btn-default", data-dismiss="modal") Отменить
+              a(class="btn btn-default btn-danger btn-ok") Удалить
+
+      | {% with messages = get_flashed_messages(with_categories=True) %}
+      |   {% for category, message in messages %}
+      div(class="alert alert-{{category}}")
+        | {{ message }}
+      |   {% endfor %}
+      | {% endwith %}
+
+      div(class="row")
+        block body
+          block content
+            | {% block content %}{% endblock %}
+    
+    script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
+    script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
+    block script
+      | {% block script %}{% endblock %}
