@@ -9,7 +9,7 @@
   "scripts": {
     "preinstall": "git pull",
     "install": "pip install -r ../requirements.txt && bower install",
-    "prestart": "flask db upgrade && gulp",
+    "prestart": "alembic upgrade head && gulp",
     "start": "flask run",
     "test": "python tests.py"
   },
