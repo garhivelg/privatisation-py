@@ -104,7 +104,7 @@ def edit_record(record_id):
     app.logger.debug(form.case.data)
     form.page_id.data = request.args.get('page', 1)
     return render_template(
-        "record.html",
+        "priv/record.html",
         record=record,
         form=form,
         default_addr=record.get_addr(),
@@ -140,7 +140,7 @@ def add_record():
 
     form = RecordForm(obj=record)
     return render_template(
-        "record.html",
+        "priv/record.html",
         record=record,
         form=form,
         default_addr="ул. Советская 85/25",
@@ -239,7 +239,7 @@ def edit_all():
     record = Record()
 
     return render_template(
-        "record.html", record=record, form=form,
+        "priv/record.html", record=record, form=form,
         default_addr="", default_owner="",
         hide_calc=True, action=url_for('edit_all'))
 

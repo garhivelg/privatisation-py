@@ -1,0 +1,113 @@
+extends ../_priv.pug
+
+block script
+  script(type=text/javascript).
+    $(function() {
+      $('#full_addr').bind('change', function() {
+        $.post('{{ url_for("parse_addr") }}', {
+          addr: $('input[name="full_addr"]').val()
+        }, function(data) {
+          $("#addr_type").val(data.addr_type).change();
+          $("#addr_name").val(data.addr_name);
+          $("#addr_build").val(data.addr_build);
+          $("#addr_flat").val(data.addr_flat);
+        }, "json");
+        return false;
+      });
+    });
+
+    $(function() {
+      $('#full_owner').bind('change', function() {
+        $.post('{{ url_for("parse_owner") }}', {
+          owner: $('input[name="full_owner"]').val()
+        }, function(data) {
+          $("#owner").val(data.owner);
+          $("#owner_init").val(data.owner_init);
+        }, "json");
+        return false;
+      });
+    });
+
+    $(function() {
+      $('.owner_names input').bind('change', function() {
+        first_name = $('#owner_firstname').val();
+        middle_name = $('#owner_middlename').val();
+        if (first_name.length > 0) {
+          first_name = first_name[0] + ".";
+        }
+        if (middle_name.length > 0) {
+          middle_name = middle_name[0] + ".";
+        }
+        $("#owner_init").val(first_name + middle_name);
+          return false;
+        });
+      });
+
+    $('.autocomplete').autocomplete({
+      serviceUrl: '/list/streetnames.json',
+      onSelect: function (suggestion) {
+        $("#city_id").val(suggestion.data.city_id).change()
+        $("#addr_type").val(suggestion.data.addr_type)
+        $("#addr_name").val(suggestion.data.addr_name)
+      }
+    });
+
+block content
+  | {% if record.id %}
+  div(class="btn-toolbar filter")
+    a(href="{{ url_for('list_records', page=form.page_id.data) }}", class="btn btn-default") <span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
+  h1 Запись № {{record.reg_id}}
+  | {% endif %}
+  form(method="post", action="{{ action }}")
+    | {{ form.hidden_tag() }}
+    .row
+      .col-md-6
+        div
+          | {{ form.case.label(class="control-label") }} 
+          | {{ form.case(class="form-control") }}
+        div
+          | {{ form.reg_id.label(class="control-label") }}
+          | {{ form.reg_id(size=8, class="form-control", placeholder="1/1") }}  
+        div
+          h4 Адрес
+          div
+            | {% if not hide_calc %}
+            div(class="form-group row")
+              .col-sm-12 {{ form.full_addr(size=48, class="form-control autocomplete", placeholder=default_addr) }}
+            | {% endif %}
+            div(class="form-group row")
+              .col-sm-12 {{ form.city_id(class="form-control") }}
+            div(class="form-group row")
+              .col-sm-4 {{ form.addr_type(class="form-control") }}
+              .col-sm-8 {{ form.addr_name(size=24, class="form-control") }}
+            div(class="form-group row")
+              .col-sm-4 <label for="addr_build" class="control-label">д. </label>{{ form.addr_build(size=4, class="form-control") }}
+              .col-sm-4 <label for="addr_flat" class="control-label">кв. </label>{{ form.addr_flat(size=4, class="form-control") }}
+        div
+          h4 Владелец
+          div
+            | {% if not hide_calc %}
+            div(class="form-group row")
+              .col-sm-12 {{ form.full_owner(size=48, class="form-control", placeholder=default_owner) }}
+            | {% endif %}
+            div(class="form-group row")
+              .col-sm-9 {{ form.owner(size=24, class="form-control", placeholder=default_lastname) }}
+              .col-sm-3 {{ form.owner_init(size=8, class="form-control", placeholder=default_init) }}
+            div(class="form-group row")
+              div(class="col-sm-6 owner_names") {{ form.owner_firstname(size=32, class="form-control", placeholder=default_firstname) }}
+              div(class="col-sm-6 owner_names") {{ form.owner_middlename(size=32, class="form-control", placeholder=default_middlename) }}
+        div
+          h4 Основание
+          div(class="form-group row")
+            label(for="base_id", class="control-label col-sm-6") Распоряжение № 
+            .col-sm-6 {{ form.base_id(class="form-control") }}
+            label(for="base_date", class="control-label col-sm-6") от 
+            .col-sm-6 {{ form.base_date(class="form-control") }}
+          div(class="form-group row")
+            label(for="reg_date", class="control-label col-sm-6") Дата регистрации
+            .col-sm-6 {{ form.reg_date(class="form-control") }}
+        div
+          input(type="submit", class="btn btn-success", value="Сохранить")
+      .col-md-6
+        | {{ form.comment.label }}
+        | {{ form.comment(rows=15, class="form-control") }}
