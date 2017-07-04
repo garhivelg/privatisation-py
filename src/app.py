@@ -8,7 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 
-# from config import app_config
+from config import app_config
 
 import os
 import logging
@@ -21,9 +21,8 @@ db = SQLAlchemy()
 
 def create_app(debug=False):
     app = Flask(__name__)
-    app.config.from_object('config')
     # app = Flask(__name__, instance_relative_config=True)
-    # app.config.from_object(app_config[config_name])
+    app.config.from_object(app_config[config_name])
     # app.config.from_pyfile('config.py')
     # app.template_folder = app.config.get('TEMPLATE_FOLDER', '')
     # app.static_folder = app.config.get('STATIC_FOLDER', '')
