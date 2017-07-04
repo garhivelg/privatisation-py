@@ -8,7 +8,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 
-#from config import app_config
+# from config import app_config
 
 import os
 import logging
@@ -37,7 +37,7 @@ def create_app(debug=False):
     # login_manager.login_message = "You must be logged in to access this page."
     # login_manager.login_view = "auth.login"
 
-    migrate = Migrate(app, db)
+    # migrate = Migrate(app, db)
 
     # Logging
     log_config = app.config.get("LOG", dict())
@@ -50,7 +50,7 @@ def create_app(debug=False):
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
 
-    from app import models
+    # from app import models
 
     # from .admin import admin as admin_blueprint
     # app.register_blueprint(admin_blueprint, url_prefix='/admin')
@@ -79,11 +79,14 @@ def create_app(debug=False):
 # debug = os.environ.get('FLASK_DEBUG', False)
 # app, db = create_app(debug=debug)
 
+config_name = os.getenv('FLASK_CONFIG')
+app = create_app(config_name)
+
 
 from priv import *
 from case import *
 
 
 if __name__ == "__main__":
-    app = create_app()
+    # app = create_app()
     app.run()
