@@ -1,0 +1,30 @@
+{
+  "name": "privatisation",
+  "description": "Privatisation database for archive",
+  "main": "run.py",
+  "authors": [
+    "Dmitry Kutsenko <d2emonium@gmail.com>"
+  ],
+  "license": "GPL-3.0",
+  "keywords": [
+    "archive",
+    "database",
+    "flask",
+    "privatisation"
+  ],
+  "homepage": "https://github.com/d2emon/privatisation-py",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7",
+    "components-font-awesome": "^4.7.0"
+    "devbridge-autocomplete": "^1.4.1"
+  }
+}
