@@ -64,37 +64,91 @@
       <div class="alert alert-{{category}}">{{ message }}</div>  {% endfor %}
       {% endwith %}
       <div class="row">
-        <div class="row">
-          <div class="col-md-6">
-            <form method="post" action="{{ url_for('edit_register', register_id=register.id) }}">{{ form.hidden_tag() }}
-              <p class="sized-field">
-                 {{ form.fund.label }} {{ form.fund(class="form-control", size=7) }}
-                {{ form.register.label }} {{ form.register(class="form-control", size=7) }}
-              </p>
-              <p class="sized-field">
-                {{ form.description.label }}
-                {{ form.description(rows=5, cols=40, class="form-control") }}
-              </p>
-              <p>
-                <input class="btn btn-success" type="submit" value="Сохранить">
-              </p>
-            </form>
-          </div>
-          <div class="col-md-6">
-            <h3>Дела:</h3>
-            <div class="btn-toolbar"><a class="btn btn-default" href="{{ url_for('edit_case', register_id=register.id) }}"><span class="glyphicon glyphicon-plus"></span> Добавить</a></a>{% if items.pages %}
-              <ul class="pagination pagination-sm">
-                <li class="{% if not items.has_prev %}disabled{% endif %}"><a href="?page={{ items.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a></li>{%- for page in items.iter_pages() %}
-                {% if page %}
-                <li class="{% if page == items.page %}active{% endif %}"><a href="?page={{ page }}">{{ page }}</a></li>{% else %}
-                <li><span>…</span></li>{% endif %}
-                {%- endfor %}
-                <li class="{% if not items.has_next %}disabled{% endif %}"><a href="?page={{ items.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a></li>
-              </ul>{% endif %}
-            </div>{% if items.items %}
-            <ul>{% for i in items.items %}
-              <li> <a href="{{ url_for('edit_case', case_id=i.id) }}">{{ i }}</a></li>{% endfor %}
-            </ul>{% else %}<strong>В этой описи нет дел</strong>{% endif %}
+        <div class="col-md-3" id="filter" style="display: none;">{% if search %}
+          <form class="form-horizontal" method="post" action="{{ url_for('list_records') }}">{{ search.hidden_tag() }}
+            <div>
+              <div>
+                {{ search.case.label(class="control-label") }} 
+                {{ search.case(class="form-control") }}
+              </div>
+              <div>
+                {{ search.reg_id.label(class="control-label") }}
+                {{ search.reg_id(size=8, class="form-control") }}  
+              </div>
+            </div>
+            <div>
+              <h4>Адрес</h4>
+              <div class="form-group">
+                <div class="form-group row">
+                  <div class="col-sm-12">{{ search.full_addr(size=48, class="form-control autocomplete") }}</div>
+                </div>
+                <div class="col-sm-12">{{ search.city_id(class="form-control") }}</div>
+                <div class="col-sm-4">{{ search.addr_type(class="form-control") }}</div>
+                <div class="col-sm-8">{{ search.addr_name(size=24, class="form-control") }}</div>
+                <div class="col-sm-4"><label for="addr_build" class="control-label">д. </label>{{ search.addr_build(size=4, class="form-control") }}</div>
+                <div class="col-sm-4"><label for="addr_flat" class="control-label">кв. </label>{{ search.addr_flat(size=4, class="form-control") }}</div>
+              </div>
+            </div>
+            <div>
+              <h4>Владелец</h4>
+              <div class="form-group">
+                <div class="col-sm-9">{{ search.owner(size=24, class="form-control") }}</div>
+                <div class="col-sm-3">{{ search.owner_init(size=8, class="form-control") }}</div>
+              </div>
+            </div>
+            <div>
+              <h4>Основание</h4>
+              <div class="form-group">
+                <label class="control-label col-sm-6" for="base_id">Распоряжение № </label>
+                <div class="col-sm-6">{{ search.base_id(class="form-control") }}</div>
+                <label class="control-label col-sm-6" for="base_date">от </label>
+                <div class="col-sm-6">{{ search.base_date(class="form-control") }}</div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-6" for="reg_date">Дата регистрации
+                  <div class="col-sm-6">{{ search.reg_date(class="form-control") }}</div>
+                </label>
+              </div>
+            </div>
+            <div>
+              <input class="btn btn-success" type="submit" value="Фильтровать"><a class="btn btn-warning" href="{{ url_for('list_records', filter=False) }}">Очистить</a>
+            </div>
+          </form>{% endif %}
+        </div>
+        <div class="col-md-9">{% if search %}
+          <div class="btn-toolbar filter"><a class="btn btn-default" href="#" id="filterClick"><span class="glyphicon glyphicon-filter"></span> Фильтр</a></div>{% endif %}
+          <div class="row">
+            <div class="col-md-6">
+              <form method="post" action="{{ url_for('edit_register', register_id=register.id) }}">{{ form.hidden_tag() }}
+                <p class="sized-field">
+                   {{ form.fund.label }} {{ form.fund(class="form-control", size=7) }}
+                  {{ form.register.label }} {{ form.register(class="form-control", size=7) }}
+                </p>
+                <p class="sized-field">
+                  {{ form.description.label }}
+                  {{ form.description(rows=5, cols=40, class="form-control") }}
+                </p>
+                <p>
+                  <input class="btn btn-success" type="submit" value="Сохранить">
+                </p>
+              </form>
+            </div>
+            <div class="col-md-6">
+              <h3>Дела:</h3>
+              <div class="btn-toolbar"><a class="btn btn-default" href="{{ url_for('edit_case', register_id=register.id) }}"><span class="glyphicon glyphicon-plus"></span> Добавить</a></a>{% if items.pages %}
+                <ul class="pagination pagination-sm">
+                  <li class="{% if not items.has_prev %}disabled{% endif %}"><a href="?page={{ items.prev_num }}"><span class="glyphicon glyphicon-menu-left"></span></a></li>{%- for page in items.iter_pages() %}
+                  {% if page %}
+                  <li class="{% if page == items.page %}active{% endif %}"><a href="?page={{ page }}">{{ page }}</a></li>{% else %}
+                  <li><span>…</span></li>{% endif %}
+                  {%- endfor %}
+                  <li class="{% if not items.has_next %}disabled{% endif %}"><a href="?page={{ items.next_num }}"><span class="glyphicon glyphicon-menu-right"></span></a></li>
+                </ul>{% endif %}
+              </div>{% if items.items %}
+              <ul>{% for i in items.items %}
+                <li> <a href="{{ url_for('edit_case', case_id=i.id) }}">{{ i }}</a></li>{% endfor %}
+              </ul>{% else %}<strong>В этой описи нет дел</strong>{% endif %}
+            </div>
           </div>
         </div>
       </div>

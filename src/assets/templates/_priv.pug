@@ -34,19 +34,19 @@ block navbar
           a(href="{{ url_for('list_import_files') }}") Импорт
         li
           a(href="{{ url_for('export_yml') }}") Экспорт
-        li.dropdown
-          a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Сервис <span class="caret"></span>
-          ul.dropdown-menu
-            li
-              a(href="{{ url_for('reindex') }}") Переиндексировать
-            li
-              a(id="group-edit" href="{{ url_for('edit_all') }}") Групповое изменение
-            li
-              | {% if session.get('filter', dict()).get('case') is number %}
-              a(href="{{ url_for('missing', book_id=session.get('filter', dict()).get('case')) }}") Найти пропущенные
-              | {%else %}
-              a(href="{{ url_for('missing') }}") Найти пропущенные
-              | {% endif %}
+    li.dropdown
+      a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Сервис <span class="caret"></span>
+      ul.dropdown-menu
+        li
+          a(href="{{ url_for('reindex') }}") Переиндексировать
+        li
+          a(id="group-edit" href="{{ url_for('edit_all') }}") Групповое изменение
+        li
+          | {% if session.get('filter', dict()).get('case') is number %}
+          a(href="{{ url_for('missing', book_id=session.get('filter', dict()).get('case')) }}") Найти пропущенные
+          | {%else %}
+          a(href="{{ url_for('missing') }}") Найти пропущенные
+          | {% endif %}
 
 block style
   link(href="{{ url_for('static', filename='css/main.css') }}", rel="stylesheet")
