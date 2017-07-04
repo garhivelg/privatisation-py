@@ -10,7 +10,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def run_app(debug=False):
+def create_app(debug=False):
     app = Flask(__name__)
     app.config.from_object('config')
 
@@ -25,7 +25,7 @@ def run_app(debug=False):
         maxBytes=log_config.get("MAX_BYTES"),
         backupCount=log_config.get("BACKUP_COUNT"),
     )
-    formatter = logging.Formatter(log_config.get("FORMAT"))    
+    formatter = logging.Formatter(log_config.get("FORMAT"))
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
 
@@ -33,7 +33,7 @@ def run_app(debug=False):
 
 
 debug = os.environ.get('FLASK_DEBUG', False)
-app, db = run_app(debug=debug)
+app, db = create_app(debug=debug)
 
 
 from priv import *

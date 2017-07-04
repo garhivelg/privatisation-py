@@ -74,4 +74,6 @@ target/
 
 /bin/browser
 /imports
-/bower_components
+
+bower_components
+node_modules
