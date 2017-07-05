@@ -6,7 +6,7 @@
 
     $(function() {
       $('#full_addr').bind('change', function() {
-        $.post('{{ url_for("parse_addr") }}', {
+        $.post('/parse/addr', {
           addr: $('input[name="full_addr"]').val()
         }, function(data) {
           $("#addr_type").val(data.addr_type).change();
@@ -21,7 +21,7 @@
     // Owner
     $(function() {
       $('#full_owner').bind('change', function() {
-        $.post('{{ url_for("parse_owner") }}', {
+        $.post('/parse/owner', {
           owner: $('input[name="full_owner"]').val()
         }, function(data) {
           $("#owner").val(data.owner);
