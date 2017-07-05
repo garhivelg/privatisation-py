@@ -79,6 +79,8 @@ def create_app(debug=False):
 # app, db = create_app(debug=debug)
 
 config_name = os.getenv('FLASK_CONFIG')
+if config_name is None:
+    config_name = 'production'
 app = create_app(config_name)
 
 
