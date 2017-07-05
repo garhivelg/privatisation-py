@@ -98,36 +98,7 @@ block body
     block content
 
 block script
-  script(src="{{ url_for('static', filename='js/index.js') }}")
   script(src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}")
+  script(src="{{ url_for('static', filename='js/index.js') }}")
   | {% block script %}
-  script(type="text/javascript").
-    $(function() {
-      $('#filterClick').bind('click', function() {
-        $('#filter').toggle();
-      });
-    });
-
-    $(function() {
-      $('#full_addr').bind('change', function() {
-        $.post('{{ url_for("parse_addr") }}', {
-          addr: $('input[name="full_addr"]').val()
-        }, function(data) {
-          $("#addr_type").val(data.addr_type).change();
-          $("#addr_name").val(data.addr_name);
-          $("#addr_build").val(data.addr_build);
-          $("#addr_flat").val(data.addr_flat);
-        }, "json");
-        return false;
-      });
-    });
-
-    $('.autocomplete').autocomplete({
-      serviceUrl: '/list/streetnames.json',
-      onSelect: function (suggestion) {
-        $("#city_id").val(suggestion.data.city_id).change();
-        $("#addr_type").val(suggestion.data.addr_type);
-        $("#addr_name").val(suggestion.data.addr_name);
-      }
-    });
   | {% endblock %}
