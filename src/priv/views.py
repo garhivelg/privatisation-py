@@ -9,6 +9,40 @@ from backup import backup
 from werkzeug.datastructures import MultiDict
 
 
+def apply_order(order_dir=None):
+    app.logger.debug("order_dir %s", order_dir)
+    from priv.models import ORDER_BY
+    order_id = request.args.get('order', None)
+    order_desc = order_dir == 'desc'
+    if order_id is not None:
+        app.logger.debug("order_dir is not None %s", order_dir)
+        session["order"] = order_id
+        order_dir = 'default'
+    if order_dir is not None:
+        session["order_desc"] = order_desc
+    order_id = session.get("order")
+    app.logger.debug(session.get("order_desc"))
+    if session.get("order_desc"):
+        order_dir = 'desc'
+    else:
+        order_dir = 'asc'
+    app.logger.debug("order_dir %s", order_dir)
+
+    links = dict()
+    for k in ORDER_BY.keys():
+        v = "asc"
+        if k == order_id:
+            if not order_desc:
+                v = "desc"
+        links[k] = url_for('list_records', order=k, dir=v)
+
+    order = ORDER_BY.get(order_id, {
+        "title": "",
+        "order": {order_dir: [None]}
+    })
+    return links, order, order_dir
+
+
 @app.route("/")
 def index():
     return redirect(url_for("list_records"))
@@ -19,32 +53,11 @@ def list_records():
     app.logger.debug("Saved at %s", session.get("saved"))
     session["saved"] = backup(session.get("saved"))
 
-    from priv.models import ORDER_BY
-    order_id = request.args.get('order', None)
     order_dir = request.args.get('dir', None)
-    order_desc = order_dir == 'desc'
-    if order_id is not None:
-        session["order"] = order_id
-        order_dir = 'default'
-    if order_dir is not None:
-        session["order_desc"] = order_desc
-    order_id = session.get("order")
-    if session.get("order_desc"):
-        order_dir = 'desc'
-    else:
-        order_dir = 'asc'
-
-    links = dict()
-    for k in ORDER_BY.keys():
-        v = "asc"
-        if k == order_id:
-            if not order_desc:
-                v = "desc"
-        links[k] = url_for('list_records', order=k, dir=v)
-
-    order = ORDER_BY.get(order_id, {"title": "", "order": {order_dir: [None]}})
-    page = request.args.get('page', 1)
+    links, order, order_dir = apply_order(order_dir)
     g.order = order["title"]
+
+    page = request.args.get('page', 1)
 
     from priv.models import Record
     q = Record.query
@@ -429,6 +442,26 @@ def export_yml():
     return response
 
 
+def read_lst(filename):
+    from priv.models import Record
+    with open(filename + '.lst', 'r', encoding='cp1251') as f:
+        while True:
+            reg_id = f.readline()
+            if not reg_id:
+                break
+            file_id = '../imports/' + f.readline()
+            print(file_id)
+            r = Record.query.filter_by(reg_id=reg_id).first()
+            if not r:
+                continue
+            if not file_id:
+                continue
+            with open(file_id, 'r', encoding='cp1251') as comment_file:
+                r.comment = comment_file.read()
+            print(r.comment)
+            db.session.add(r)
+
+
 def load_from_file(filename):
     import logging
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
@@ -528,22 +561,7 @@ def load_from_file(filename):
                     break
     db.session.commit()
 
-    with open(filename + '.lst', 'r', encoding='cp1251') as f:
-        while True:
-            reg_id = f.readline()
-            if not reg_id:
-                break
-            file_id = '../imports/' + f.readline()
-            print(file_id)
-            r = Record.query.filter_by(reg_id=reg_id).first()
-            if not r:
-                continue
-            if not file_id:
-                continue
-            with open(file_id, 'r', encoding='cp1251') as comment_file:
-                r.comment = comment_file.read()
-            print(r.comment)
-            db.session.add(r)
+    read_lst(filename)
     db.session.commit()
     return True
 
