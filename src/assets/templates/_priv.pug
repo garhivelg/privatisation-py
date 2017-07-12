@@ -31,6 +31,8 @@ block navbar
       a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false") Совмещение <span class="caret"></span>
       ul.dropdown-menu
         li
+          a(href="{{ url_for('count_import_files') }}") Проверить импорт
+        li
           a(href="{{ url_for('list_import_files') }}") Импорт
         li
           a(href="{{ url_for('export_yml') }}") Экспорт

@@ -466,8 +466,24 @@ def load_from_file(filename):
     import logging
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
+    from case.models import Case
     from priv.models import Record
     from priv.models.lookup import get_book, get_street, set_city
+    book_id = session.get('filter', dict()).get('case')
+    try:
+        book_id = int(book_id)
+    except:
+        book_id = None
+
+    app.logger.debug(book_id)
+    app.logger.debug(session)
+    if book_id is None:
+        selected_books = [book.id for book in Case.query.all()]
+    else:
+        selected_books = [book_id, ]
+
+    app.logger.debug(selected_books)
+
     with open(filename, 'r', encoding='cp1251') as f:
         d = []
         while True:
@@ -553,17 +569,73 @@ def load_from_file(filename):
                 ],
             ])
 
-            r.normalize()
-            print("Запись №{} успешно импортирована".format(r.reg_id))
-            db.session.add(r)
+            app.logger.debug("%s vs %s", r.book_id, selected_books)
+            if r.book_id in selected_books:
+                r.normalize()
+                print("Запись №{} успешно импортирована".format(r.reg_id))
+                db.session.add(r)
+            else:
+                app.logger.debug("Запись №%s из книги %s пропускается", r.reg_id, r.book_id)
 
             if not l:
                     break
     db.session.commit()
 
-    read_lst(filename)
+    try:
+        read_lst(filename)
+    except FileNotFoundError:
+        pass
+
     db.session.commit()
     return True
+
+
+def read_record(f):
+    r = dict()
+    r['book_id'] = int(f.readline())
+    r['reg_id'] = f.readline().rstrip()
+
+    r['addr_type'] = f.readline()
+    r['addr_name'] = f.readline().rstrip()
+    r['addr_build'] = f.readline().rstrip()
+    r['addr_flat'] = f.readline().rstrip()
+
+    r['owner'] = f.readline().rstrip()
+    r['owner_init'] = f.readline().rstrip()
+    r['base_id'] = f.readline().rstrip()
+
+    from datetime import datetime
+    base_date_str = f.readline().rstrip()
+    reg_date_str = f.readline().rstrip()
+    r['base_date'] = datetime.strptime(base_date_str, '%d.%m.%y')
+    r['reg_date'] = datetime.strptime(reg_date_str, '%d.%m.%y')
+    return r
+
+
+def count_in_file(filename):
+    import logging
+    logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+
+    books = dict()
+    d = []
+    with open(filename, 'r', encoding='cp1251') as f:
+        while True:
+            tmp = f.readline()
+            if not tmp:
+                break
+            record_id = int(tmp)
+            r = read_record(f)
+            l = f.readline()
+
+            book_id = r.get('book_id', 0)
+            books[book_id] = books.get(book_id, 0) + 1
+
+            app.logger.debug("Запись №{} успешно прочитана".format(r.get('reg_id')))
+
+            if not l:
+                    break
+
+    return books
 
 
 @app.route("/import/files")
@@ -581,7 +653,30 @@ def list_import_files():
         # records.append(file)
         if file.endswith(".dat"):
             records.append([file, url_for('list_import_files') + "?file=" + file])
-    return render_template("list.html", items=records)
+    return render_template("priv/list_data.html", items=records)
+
+
+@app.route("/import/count/files")
+def count_import_files():
+    import os
+    imports = '../imports'
+    f = []
+    filename = request.args.get('file', None)
+    if filename:
+        books = count_in_file(os.path.join(imports, filename))
+
+        from case.models import Case
+        items = [[
+            "%d \"%s\" (записей: %s)" % (k, Case.query.get(k), v),
+            url_for('list_records', book_id=k),
+        ] for k, v in books.items()]
+        return render_template("priv/list_data.html", items=items)
+
+    records = []
+    for file in os.listdir(imports):
+        if file.endswith(".dat"):
+            records.append([file, url_for('count_import_files') + "?file=" + file])
+    return render_template("priv/list_data.html", items=records)
 
 
 @app.route("/parse/addr", methods=["POST", ])
