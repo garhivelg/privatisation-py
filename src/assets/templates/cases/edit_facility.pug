@@ -3,43 +3,7 @@ extends ../_priv.pug
 block content
   .row
     .col-md-6
-      form(method="post", action="{{ url_for('edit_facility', facility_id=facility.id) }}")
-        | {{ form.hidden_tag() }}
-        p {{ form.title.label }} {{ form.title(class="form-control") }}
-        p.sized-field
-          | {{ form.description.label }}
-          | {{ form.description(rows=5, cols=40, class="form-control") }}
-        p
-          input(type="submit", class="btn btn-success", value="Сохранить")
+      include _facility_form.pug
     .col-md-6
-      h3 Дела:
-      .btn-toolbar
-        a(href="{{ url_for('edit_case', facility_id=facility.id) }}", class="btn btn-default") <span class="glyphicon glyphicon-plus"></span> Добавить</a>
-        | {% if items.pages %}
-        ul(class="pagination pagination-sm")
-          li(class="{% if not items.has_prev %}disabled{% endif %}")
-            a(href="?page={{ items.prev_num }}")
-              span(class="glyphicon glyphicon-menu-left")
-          | {%- for page in items.iter_pages() %}
-          | {% if page %}
-          li(class="{% if page == items.page %}active{% endif %}")
-            a(href="?page={{ page }}") {{ page }}
-          | {% else %}
-          li
-            span(class=ellipsis) …
-          | {% endif %}
-          | {%- endfor %}
-          li(class="{% if not items.has_next %}disabled{% endif %}")
-            a(href="?page={{ items.next_num }}")
-              span(class="glyphicon glyphicon-menu-right")
-        | {% endif %}
-      | {% if items.items %}
-      ul
-        | {% for i in items.items %}
-        li 
-          a(href="{{ url_for('edit_case', case_id=i.id) }}") {{ i }}
-        | {% endfor %}
-      | {% else %}
-      strong К этому предприятия не привязано ни одного дела
-      | {% endif %}
-
+      include _children.pug
+      +children('Дела:', items, "{{ url_for('edit_case', case_id=i.id) }}", "{{ url_for('edit_case', facility_id=facility.id) }}", "К этому предприятия не привязано ни одного дела")

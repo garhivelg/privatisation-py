@@ -1,0 +1,8 @@
+form(method="post", action="{{ url_for('edit_facility', facility_id=facility.id) }}")
+  | {{ form.hidden_tag() }}
+  p {{ form.title.label }} {{ form.title(class="form-control") }}
+  p.sized-field
+    | {{ form.description.label }}
+    | {{ form.description(rows=5, cols=40, class="form-control") }}
+  p
+    input(type="submit", class="btn btn-success", value="Сохранить")
