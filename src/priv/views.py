@@ -543,8 +543,14 @@ def load_from_file(filename):
             from datetime import datetime
             base_date_str = f.readline().rstrip()
             reg_date_str = f.readline().rstrip()
-            r.base_date = datetime.strptime(base_date_str, '%d.%m.%y')
-            r.reg_date = datetime.strptime(reg_date_str, '%d.%m.%y')
+            try:
+                r.base_date = datetime.strptime(base_date_str, '%d.%m.%y')
+            except ValueError:
+                pass
+            try:
+                r.reg_date = datetime.strptime(reg_date_str, '%d.%m.%y')
+            except ValueError:
+                pass
             l = f.readline()
 
             d.append([

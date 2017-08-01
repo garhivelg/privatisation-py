@@ -43,7 +43,7 @@ def upgrade():
                 'register_id': 1,
                 'book_id': i + 1,
                 'book_num': i + 1,
-            } for i in range(20)
+            } for i in range(25)
         ]
     )
 
