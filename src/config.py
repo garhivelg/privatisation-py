@@ -6,16 +6,10 @@ class Config(object):
     """
     Common configuration
     """
-    # basedir = os.getcwd()
-    # BASE_DIR = os.path.abspath(os.path.curdir)
-    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    BASE_DIR = os.path.abspath(os.getcwd())
+    # BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     # TEMPLATE_FOLDER = os.path.join(BASE_DIR, "templates")
     # STATIC_FOLDER = os.path.join(BASE_DIR, "static")
-
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/privatisation.db'
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db/privatisation.db')
-    # SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
     SECRET_KEY = "some key"
     SESSION_TYPE = "filesystem"
@@ -35,6 +29,11 @@ class Config(object):
     BACKUP_PATH = os.path.join(DB_PATH, "backup")
     DB_FILENAME = "privatisation.db"
     BACKUP_FILENAME = "privatisation-%s.db"
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = "sqlite:////%s/%s" % (DB_PATH, DB_FILENAME)
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db/privatisation.db')
+    # SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
 class DevelopmentConfig(Config):

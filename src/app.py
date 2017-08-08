@@ -24,8 +24,9 @@ def create_app(debug=False):
     # app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
     # app.config.from_pyfile('config.py')
-    # app.template_folder = app.config.get('TEMPLATE_FOLDER', '')
-    # app.static_folder = app.config.get('STATIC_FOLDER', '')
+    BASE_DIR = app.config.get('BASE_DIR', '../')
+    app.template_folder = app.config.get('TEMPLATE_FOLDER', 'templates')
+    app.static_folder = app.config.get('STATIC_FOLDER', 'static')
 
     # bootstrap = Bootstrap(app)
     session = Session(app)

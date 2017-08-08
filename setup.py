@@ -5,7 +5,8 @@ https://github.com/pypa/sampleproject
 """
 
 # Always prefer setuptools over distutils
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from cx_Freeze import setup, Executable
 # To use a consistent encoding
 from codecs import open
 from os import path
@@ -28,6 +29,27 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
+build_exe_options = {
+    # "icon": r"assets/favicon/favicon.ico",
+    "includes": [
+        "config",
+        "sqlalchemy.sql.default_comparator",
+        "faker.providers",
+        "jinja2.ext",
+    ],
+    "include_files": [
+        "src/static",
+        "src/templates",
+        "db",
+        "imports",
+        "log",
+    ],
+    # "path": [
+    #     path.dirname(__file__),
+    # ],
+}
+
+base = None
 setup(
     name='privatisation',
     version=version,
@@ -35,6 +57,11 @@ setup(
     description='Privatisation database for archive',
     long_description=long_description,
     url='https://github.com/d2emon/privatisation-py',
+    executables = [Executable(
+        "src/run_server.py",
+        base=base,
+        icon=r"src/assets/favicon/favicon.ico",
+    )],
 
     # Author details
     author='Dmitry Kutsenko',
@@ -105,5 +132,9 @@ setup(
         'console_scripts': [
             'server=app:run',
         ],
+    },
+
+    options = {
+        "build_exe": build_exe_options,
     },
 )

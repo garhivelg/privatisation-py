@@ -9,24 +9,32 @@ STREETNAMES = []
 
 
 def load():
+    from os import path
+    from app import app
+    DB_PATH = app.config.get('DB_PATH', '..')
+
     global CITIES
-    with open("../db/cities.txt", encoding="utf-8") as f:
+    with open(path.join(DB_PATH, "cities.txt"), encoding="utf-8") as f:
         CITIES = f.read().splitlines()
 
     global STREETS
-    with open("../db/streets.txt", encoding="utf-8") as f:
+    with open(path.join(DB_PATH, "streets.txt"), encoding="utf-8") as f:
         STREETS = f.read().splitlines()
 
     global STREETNAMES
-    with open("../db/streetnames.txt", encoding="utf-8") as f:
+    with open(path.join(DB_PATH, "streetnames.txt"), encoding="utf-8") as f:
         STREETNAMES = f.read().splitlines()
 
 
 def set_street(street_name=""):
+    from os import path
+    from app import app
+    DB_PATH = app.config.get('DB_PATH', '..')
+
     global STREETS
     if street_name not in STREETS:
         STREETS.append(street_name)
-        with open("../db/streets.txt", "w", encoding="utf-8") as f:
+        with open(path.join(DB_PATH, "streets.txt"), "w", encoding="utf-8") as f:
             for s in STREETS:
                 f.write("{}\n".format(s))
 
@@ -56,10 +64,14 @@ def street_name(street):
 
 
 def set_city(city_name=""):
+    from os import path
+    from app import app
+    DB_PATH = app.config.get('DB_PATH', '..')
+
     global CITIES
     if city_name not in CITIES:
         CITIES.append(city_name)
-        with open("../db/cities.txt", "w", encoding="utf-8") as f:
+        with open(path.join(DB_PATH, "cities.txt"), "w", encoding="utf-8") as f:
             for c in CITIES:
                 f.write("{}\n".format(c))
 
