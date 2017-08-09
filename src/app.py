@@ -5,6 +5,7 @@ from flask import Flask
 # from flask_bootstrap import Bootstrap
 # from flask_login import LoginManager
 # from flask_migrate import Migrate
+from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 
@@ -83,10 +84,12 @@ config_name = os.getenv('FLASK_CONFIG')
 if config_name is None:
     config_name = 'production'
 app = create_app(config_name)
+manager = Manager(app)
 
 
 from priv import *
 from case import *
+from priv.commands import *
 
 
 if __name__ == "__main__":

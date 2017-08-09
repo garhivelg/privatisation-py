@@ -176,6 +176,30 @@ class Record(db.Model):
             "comment":  self.comment,
         }
 
+    def import_yml(self, data=dict()):
+        book = data.get('book', dict())
+        addr = data.get('addr', dict())
+        owner = data.get('owner', dict())
+        book_id = book.get('id')
+        if book_id:
+            self.book_id = book_id
+        self.reg_num = data.get('reg_num')
+        self.reg_id = data.get('reg_id')
+
+        self.city_id = addr.get('city', dict()).get('id')
+        self.addr_type = addr.get('street', dict()).get('type_id')
+        self.addr_name = addr.get('street', dict()).get('name')
+        self.addr_build = addr.get('addr_build')
+        self.addr_flat = addr.get('addr_flat')
+
+        self.owner_init = owner.get('owner_init')
+        self.owner = owner.get('owner')
+
+        self.base_id = data.get('base_id')
+        self.base_date = data.get('base_date')
+        self.reg_date = data.get('reg_date')
+        self.comment = data.get('comment')
+
 
 class Sort:
     title = ""
