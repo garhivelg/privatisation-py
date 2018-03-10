@@ -100,7 +100,11 @@ def list_records():
 
     app.logger.debug(str(q))
     count = q.count()
-    records = q.paginate(int(page), 50)
+    try:
+        page = int(page)
+    except ValueError:
+        page = 1
+    records = q.paginate(page, 50)
     return render_template("priv/list.html", records=records, page=page, links=links, search=search, count=count)
 
 
