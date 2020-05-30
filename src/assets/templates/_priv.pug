@@ -45,6 +45,19 @@ block navbar
           a(id="group-edit" href="{{ url_for('edit_all') }}") Групповое изменение
         li
           a(href="{{ url_for('missing') }}") Найти пропущенные
+    | {% if g.user %}
+    li.dropdown
+      a(href="#", class="dropdown-toggle", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false")  {{ g.user.title }}<span class="caret"></span>
+      ul.dropdown-menu
+        | {% if g.user.is_admin %}
+        li
+          a(href="{{ url_for('list_users') }}") Пользователи
+        li
+          a(href="{{ url_for('add_user') }}") Зарегистрировать
+        | {% endif %}
+        li
+          a(href="{{ url_for('logout') }}") Выход
+    | {% endif %}
 
 block style
   link(href="{{ url_for('static', filename='css/main.css') }}", rel="stylesheet")

@@ -94,13 +94,14 @@ def before_request():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get(user_id)
+    return User.query.get(user_id)
 
 
 from priv import *
 from auth import *
 from case import *
 from priv.commands import *
+from auth.commands import *
 
 
 if __name__ == "__main__":

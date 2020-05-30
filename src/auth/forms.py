@@ -1,30 +1,26 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, PasswordField
-from wtforms.validators import DataRequired, Length, Optional
-from wtforms.fields.html5 import DateField
-from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from wtforms_alchemy import model_form_factory
-
-# from .models import Record
-# from .models.lookup import CITIES, STREETS
-from case.models import Case
-
-from app import db
+from wtforms import StringField, BooleanField, PasswordField, SelectField
+from wtforms.validators import DataRequired, EqualTo
+from .models import ROLE_USER, ROLE_ADMIN
 
 
-BaseModelForm = model_form_factory(FlaskForm)
-
-
-class ModelForm(BaseModelForm):
-    @classmethod
-    def get_session(cls):
-        return db.session
-
-
-class LoginForm(ModelForm):
-    login = StringField("Имя пользователя", validators=[DataRequired()])
-    password = PasswordField("Пароль", validators=[DataRequired()])
+class LoginForm(FlaskForm):
+    login = StringField("Имя пользователя", validators=[DataRequired(message="Поле обязательно для заполнения")])
+    password = PasswordField("Пароль", validators=[DataRequired(message="Поле обязательно для заполнения")])
     remember_me = BooleanField("Запомнить меня", default=False)
 
-    # class Meta:
-    #     model = Record
+
+class UserForm(FlaskForm):
+    login = StringField("Имя пользователя", validators=[DataRequired(message="Поле обязательно для заполнения")])
+    name = StringField("Имя")
+    surname = StringField("Фамилия")
+    password = PasswordField("Пароль")
+    verify_password = PasswordField("Повторите Пароль", validators=[EqualTo('password', message="Пароли не совпадают")])
+    role = SelectField(
+        "Права Доступа",
+        choices=[
+            (ROLE_USER, "Пользователь"),
+            (ROLE_ADMIN, "Администратор"),
+        ],
+        coerce=int,
+    )

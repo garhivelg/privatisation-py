@@ -1,0 +1,82 @@
+extends ../_priv.pug
+
+block content
+  | {% if count %}
+  .row
+    .col-md-6
+      div
+        <strong>Найдено:</strong> {{ count }} пользователей
+    .col-md-6
+      | {% if users.pages %}
+      form(action="/record", method="GET", class="page-select")
+        span.input-group
+          input(type="text", size="5", name="page", class="form-control", placeholder="Введите номер страницы, чтобы перейти")
+          span.input-group-btn
+            input(type="submit", value="Перейти", class="btn")
+      | {% endif %}
+  | {% if users.pages %}
+  ul.pagination
+    li(class="{% if not users.has_prev %}disabled{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ users.prev_num }}")
+        span(class="glyphicon glyphicon-menu-left")
+    | {%- for page in users.iter_pages() %}
+    | {% if page %}
+    li(class="{% if page == users.page %}active{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ page }}") {{ page }}
+    | {% else %}
+    li
+      span.ellipsis …
+    | {% endif %}
+    | {%- endfor %}
+    li(class="{% if not users.has_next %}disabled{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ users.next_num }}")
+        span(class="glyphicon glyphicon-menu-right")
+  | {% endif %}
+  table(class="records table")
+    thead
+      tr
+        th
+          | Пользователь
+        th
+          | Логин
+        th
+          | Пользователь
+        th
+          | Права доступа
+        th &nbsp;
+    tbody
+      | {% for r in users.items %}
+      tr
+        td
+          | {{ r.title }}
+        td
+          | {{ r.login }}
+        td
+          | {% if r.is_admin %}Администратор{% else %}Пользователь{% endif %}
+        td
+          a(href="{{ url_for('edit_user', user_id=r.id) }}")
+            span(class="glyphicon glyphicon-edit")
+          a(href="{{ url_for('del_user', user_id=r.id) }}")
+            span(class="glyphicon glyphicon-remove")
+      | {% endfor %}
+  | {% else %}
+  h3 По вашему запросу ничего не найдено
+  | {% endif %}
+  | {% if users.pages %}
+  ul.pagination
+    li(class="{% if not users.has_prev %}disabled{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ users.prev_num }}")
+        span(class="glyphicon glyphicon-menu-left")
+    | {%- for page in users.iter_pages() %}
+    | {% if page %}
+    li(class="{% if page == users.page %}active{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ page }}") {{ page }}
+    | {% else %}
+    li
+      span.ellipsis …
+    | {% endif %}
+    | {%- endfor %}
+    li(class="{% if not users.has_next %}disabled{% endif %}")
+      a(href="{{ url_for('list_users') }}?page={{ users.next_num }}")
+        span(class="glyphicon glyphicon-menu-right")
+  | {% endif %}

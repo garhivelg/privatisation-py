@@ -7,10 +7,10 @@ block body
         .col-lg-12
           .intro-message
             h1 Приватизация
-            h3 The best company in the world!
+            h3 Реестр приватизированного жилья
             hr.intro-divider
             | {% if user and user.is_authenticated %}
-            | {{ user }}
+            | Вы вошли как {{ user.title }}.
             | {% else %}
             | Вы не авторизованы. <a href="{{ url_for('login') }}">Авторизуйтесь</a> для продолжения работы.
             | {% endif %}

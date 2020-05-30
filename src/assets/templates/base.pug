@@ -58,6 +58,16 @@ html
                   | {%else %}
                   a(href="{{ url_for('missing') }}") Найти пропущенные
                   | {% endif %}
+            | {% if g.user and g.user.is_admin %}
+            li
+              a(href="{{ url_for('list_users') }}") Пользователи
+            li
+              a(href="{{ url_for('add_user') }}") Зарегистрировать
+            | {% endif %}
+            | {% if g.user %}
+            li
+              a {{ g.user.title }}
+            | {% endif %}
 
     | {% with messages = get_flashed_messages() %}
     | {% for message in messages %}
