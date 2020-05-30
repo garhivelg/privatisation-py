@@ -8,9 +8,11 @@ block body
           .intro-message
             h1 Приватизация
             h3 Реестр приватизированного жилья
+            img(src="/static/images/logo.jpg", height="200")
             hr.intro-divider
             | {% if user and user.is_authenticated %}
-            | Вы вошли как {{ user.title }}.
+            h4 Вы вошли как {{ user.title }}.
             | {% else %}
-            | Вы не авторизованы. <a href="{{ url_for('login') }}">Авторизуйтесь</a> для продолжения работы.
+            h4 Вы не авторизованы. <a href="{{ url_for('login') }}">Авторизуйтесь</a> для продолжения работы.
             | {% endif %}
+            h5 {{ date.strftime('%d.%m.%Y %H:%M:%S') }}

@@ -3,6 +3,7 @@
 from flask import g, request, render_template, redirect, session, flash, jsonify
 from flask.helpers import url_for
 from flask_login import login_required
+from datetime import datetime
 from app import app, db
 from priv.models.utils import add_filters, update_records
 from backup import backup
@@ -46,7 +47,7 @@ def apply_order(order_dir=None):
 
 @app.route("/")
 def index():
-    return render_template("priv/index.html", user=g.user)
+    return render_template("priv/index.html", user=g.user, date=datetime.now())
 
 
 @app.route("/record", methods=["GET", "POST"])
@@ -272,6 +273,9 @@ def edit_all():
 @app.route("/random/<int:records>")
 @login_required
 def generate_random(records=1):
+    if not g.user or not g.user.is_authenticated or not g.user.is_admin:
+        return redirect(url_for('index'))
+
     from priv.models import Record
 
     for i in range(records):

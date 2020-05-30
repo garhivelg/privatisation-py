@@ -54,6 +54,9 @@ def list_users():
 @app.route("/user/<int:user_id>")
 @login_required
 def edit_user(user_id):
+    if not g.user or not g.user.is_authenticated or not g.user.is_admin:
+        return redirect(url_for('index'))
+
     user = User.query.get(user_id)
     if user is None:
         flash("Пользователь не найден")
@@ -71,6 +74,9 @@ def edit_user(user_id):
 @app.route("/user/add")
 @login_required
 def add_user():
+    if not g.user or not g.user.is_authenticated or not g.user.is_admin:
+        return redirect(url_for('index'))
+
     user = User()
     form = UserForm(obj=user)
     return render_template(
@@ -85,11 +91,12 @@ def add_user():
 @app.route("/user/save/<int:user_id>", methods=["POST", ])
 @login_required
 def save_user(user_id=0):
+    if not g.user or not g.user.is_authenticated or not g.user.is_admin:
+        return redirect(url_for('index'))
+
     form = UserForm(request.form)
     if form.validate():
-        print(user_id)
         user = User.query.get(user_id) or User()
-        print(user)
 
         user.login = form.login.data
         user.name = form.name.data
@@ -121,6 +128,9 @@ def save_user(user_id=0):
 @app.route("/user/del/<int:user_id>")
 @login_required
 def del_user(user_id=0):
+    if not g.user or not g.user.is_authenticated or not g.user.is_admin:
+        return redirect(url_for('index'))
+
     user = User.query.get(user_id)
 
     if user is not None:
