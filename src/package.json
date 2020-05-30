@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "gulp": "gulp",
     "preinstall": "git pull",
     "install": "pip install -r ../requirements.txt && bower install",
     "prestart": "alembic upgrade head && gulp",

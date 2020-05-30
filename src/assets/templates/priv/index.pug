@@ -1,0 +1,16 @@
+extends ../base.pug
+
+block body
+  .intro-header
+    .container
+      .row
+        .col-lg-12
+          .intro-message
+            h1 Приватизация
+            h3 The best company in the world!
+            hr.intro-divider
+            | {% if user and user.is_authenticated %}
+            | {{ user }}
+            | {% else %}
+            | Вы не авторизованы. <a href="{{ url_for('login') }}">Авторизуйтесь</a> для продолжения работы.
+            | {% endif %}

@@ -1,0 +1,26 @@
+extends ../base.pug
+
+block body
+  div(class="container text-center")
+    .row
+      .col-md-6
+        form(class="form-signin" method="post", action="{{ action }}")
+          | {{ form.hidden_tag() }}
+          h1(class="h3 mb-3 font-weight-normal")
+            | {{ title }}
+          | {{ form.login.label(class="sr-only") }}
+          | {{ form.login(class="form-control", placeholder="Имя пользователя", required="", autofocus="") }}
+          | {{ form.password.label(class="sr-only") }}
+          | {{ form.password(class="form-control", placeholder="Пароль", required="") }}
+          div(class="checkbox mb-3")
+            label
+              | {{ form.remember_me() }} Запомнить меня
+          | {% if error in form.errors.login %}
+          div
+            | {% for error in form.errors.login %}
+            span(style="color: red;")
+              | [{{ error }}]
+            | {% endfor %}
+          | {% endif %}
+          button(type="submit", class="btn btn-lg btn-primary btn-block")
+            | Войти

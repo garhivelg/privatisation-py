@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 from flask import g, request, render_template, redirect, session, flash, jsonify
 from flask.helpers import url_for
+from flask_login import login_required
 from app import app, db
 from priv.models.utils import add_filters, update_records
 from backup import backup
@@ -45,10 +46,11 @@ def apply_order(order_dir=None):
 
 @app.route("/")
 def index():
-    return redirect(url_for("list_records"))
+    return render_template("priv/index.html", user=g.user)
 
 
 @app.route("/record", methods=["GET", "POST"])
+@login_required
 def list_records():
     app.logger.debug("Saved at %s", session.get("saved"))
     session["saved"] = backup(session.get("saved"))
@@ -109,6 +111,7 @@ def list_records():
 
 
 @app.route("/record/<int:record_id>")
+@login_required
 def edit_record(record_id):
     from .models import Record
     from .forms import RecordForm
@@ -135,6 +138,7 @@ def edit_record(record_id):
 
 
 @app.route("/record/add")
+@login_required
 def add_record():
     book_id = session.get("book_id", 0)
     app.logger.debug("SESSION[book_id]=%s", session.get("book_id"))
@@ -172,6 +176,7 @@ def add_record():
 
 @app.route("/record/save", methods=["POST", ])
 @app.route("/record/save/<int:record_id>", methods=["POST", ])
+@login_required
 def save_record(record_id=0):
     from .forms import RecordForm
     form = RecordForm(request.form)
@@ -207,6 +212,7 @@ def save_record(record_id=0):
 
 
 @app.route("/record/del/<int:record_id>")
+@login_required
 def del_record(record_id=0):
     from priv.models import Record
     record = Record.query.get(record_id)
@@ -221,6 +227,7 @@ def del_record(record_id=0):
 
 
 @app.route("/record/all", methods=["GET", "POST"])
+@login_required
 def edit_all():
     from .models import Record
     from .forms import RecordForm
@@ -263,6 +270,7 @@ def edit_all():
 
 @app.route("/random")
 @app.route("/random/<int:records>")
+@login_required
 def generate_random(records=1):
     from priv.models import Record
 

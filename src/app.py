@@ -3,7 +3,7 @@
 from flask import Flask
 # from flask import Flask, render_template
 # from flask_bootstrap import Bootstrap
-# from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 # from flask_migrate import Migrate
 from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
@@ -17,7 +17,7 @@ from logging.handlers import RotatingFileHandler
 
 
 db = SQLAlchemy()
-# login_manager = LoginManager()
+login_manager = LoginManager()
 
 
 def create_app(debug=False):
@@ -34,9 +34,9 @@ def create_app(debug=False):
 
     db.init_app(app)
 
-    # login_manager.init_app(app)
+    login_manager.init_app(app)
     # login_manager.login_message = "You must be logged in to access this page."
-    # login_manager.login_view = "auth.login"
+    login_manager.login_view = "login"
 
     # migrate = Migrate(app, db)
 
@@ -87,7 +87,18 @@ app = create_app(config_name)
 manager = Manager(app)
 
 
+@app.before_request
+def before_request():
+    g.user = current_user
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.get(user_id)
+
+
 from priv import *
+from auth import *
 from case import *
 from priv.commands import *
 
