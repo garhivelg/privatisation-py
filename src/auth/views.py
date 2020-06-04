@@ -7,6 +7,9 @@ from .models import User
 
 @app.route("/login",  methods=["GET", "POST"])
 def login():
+    """
+    Вход в систему
+    """
     if g.user is not None and g.user.is_authenticated:
         return redirect("/record")
     form = LoginForm()
@@ -27,6 +30,9 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
+    """
+    Выход из системы
+    """
     logout_user()
     return redirect(url_for('login'))
 
@@ -34,6 +40,9 @@ def logout():
 @app.route("/users", methods=["GET", "POST"])
 @login_required
 def list_users():
+    """
+    Показать список пользователей
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 
@@ -54,6 +63,9 @@ def list_users():
 @app.route("/user/<int:user_id>")
 @login_required
 def edit_user(user_id):
+    """
+    Редактировать пользователя
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 
@@ -74,6 +86,9 @@ def edit_user(user_id):
 @app.route("/user/add")
 @login_required
 def add_user():
+    """
+    Добавить нового пользователя
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 
@@ -91,6 +106,9 @@ def add_user():
 @app.route("/user/save/<int:user_id>", methods=["POST", ])
 @login_required
 def save_user(user_id=0):
+    """
+    Сохранить пользователя
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 
@@ -128,6 +146,9 @@ def save_user(user_id=0):
 @app.route("/user/del/<int:user_id>")
 @login_required
 def del_user(user_id=0):
+    """
+    Удалить пользователя
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 

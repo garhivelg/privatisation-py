@@ -12,6 +12,9 @@ from werkzeug.datastructures import MultiDict
 
 
 def apply_order(order_dir=None):
+    """
+    Применить сортировку к записям
+    """
     app.logger.debug("order_dir %s", order_dir)
     from priv.models import ORDER_BY
     order_id = request.args.get('order', None)
@@ -47,12 +50,18 @@ def apply_order(order_dir=None):
 
 @app.route("/")
 def index():
+    """
+    Главная страница
+    """
     return render_template("priv/index.html", user=g.user, date=datetime.now())
 
 
 @app.route("/record", methods=["GET", "POST"])
 @login_required
 def list_records():
+    """
+    Список приватизационных записей
+    """
     app.logger.debug("Saved at %s", session.get("saved"))
     session["saved"] = backup(session.get("saved"))
 
@@ -114,6 +123,9 @@ def list_records():
 @app.route("/record/<int:record_id>")
 @login_required
 def edit_record(record_id):
+    """
+    Редактировать приватизационную запись
+    """
     from .models import Record
     from .forms import RecordForm
     record = Record.query.get(record_id)
@@ -141,6 +153,9 @@ def edit_record(record_id):
 @app.route("/record/add")
 @login_required
 def add_record():
+    """
+    Добавить приватизационную запись
+    """
     book_id = session.get("book_id", 0)
     app.logger.debug("SESSION[book_id]=%s", session.get("book_id"))
     app.logger.debug("book_id=%s", book_id)
@@ -179,6 +194,9 @@ def add_record():
 @app.route("/record/save/<int:record_id>", methods=["POST", ])
 @login_required
 def save_record(record_id=0):
+    """
+    Созранить приватизационную запись
+    """
     from .forms import RecordForm
     form = RecordForm(request.form)
 
@@ -215,6 +233,9 @@ def save_record(record_id=0):
 @app.route("/record/del/<int:record_id>")
 @login_required
 def del_record(record_id=0):
+    """
+    Удалить приватизационную запись
+    """
     from priv.models import Record
     record = Record.query.get(record_id)
 
@@ -230,6 +251,9 @@ def del_record(record_id=0):
 @app.route("/record/all", methods=["GET", "POST"])
 @login_required
 def edit_all():
+    """
+    Массовое редактирование приватизационных записей
+    """
     from .models import Record
     from .forms import RecordForm
     save_form = RecordForm(request.form)
@@ -273,6 +297,9 @@ def edit_all():
 @app.route("/random/<int:records>")
 @login_required
 def generate_random(records=1):
+    """
+    Генерировать случайные записи
+    """
     if not g.user or not g.user.is_authenticated or not g.user.is_admin:
         return redirect(url_for('index'))
 
@@ -289,6 +316,9 @@ def generate_random(records=1):
 
 @app.route("/list/books")
 def list_books():
+    """
+    Список приватизационных дел
+    """
     from priv.models.lookup import BOOKS
     items = [(-1, "Все"), ] + list(enumerate(BOOKS))
     return render_template("priv/list_data.html", items=[
@@ -298,6 +328,9 @@ def list_books():
 
 @app.route("/list/streets")
 def list_streets():
+    """
+    Список типов адресных объектов
+    """
     from priv.models.lookup import STREETS, street_name
     items = [(-1, "Все"), ] + list(enumerate(STREETS))
     return render_template("priv/list_data.html", items=[
@@ -307,6 +340,9 @@ def list_streets():
 
 @app.route("/list/cities")
 def list_cities():
+    """
+    Список населенных пунктов
+    """
     from priv.models.lookup import CITIES
     items = [(-1, "Все"), ] + list(enumerate(CITIES))
     return render_template("priv/list_data.html", items=[
@@ -316,6 +352,9 @@ def list_cities():
 
 @app.route("/list/streetnames")
 def list_street_names():
+    """
+    Список адресных объектов
+    """
     from .forms import RecordForm
     from .models import Record
     from .models.lookup import get_city, get_street
@@ -357,6 +396,9 @@ def list_street_names():
 
 @app.route("/list/streetnames.json")
 def list_street_names_json():
+    """
+    Список адресных объектов в виде JSON
+    """
     from .models.lookup import STREETNAMES, parse_street
     query = request.args.get('query', '')
     suggest = []
@@ -377,6 +419,9 @@ def list_street_names_json():
 @app.route("/reindex")
 @login_required
 def reindex(records=1):
+    """
+    Нормализовать записи
+    """
     from priv.models import Record
 
     records = Record.query.all()
@@ -392,6 +437,9 @@ def reindex(records=1):
 @app.route("/missing/<int:book_id>")
 @login_required
 def missing(book_id=None):
+    """
+    Найти пропущенные / дублирующиеся записи
+    """
     from case.models import Case
     from priv.models import Record
 
@@ -447,6 +495,9 @@ def missing(book_id=None):
 @app.route("/export")
 @login_required
 def export_yml():
+    """
+    Экспортировать данные в YAML
+    """
     from priv.models import Record
     import yaml
     records = Record.query.order_by(Record.book_id.asc(), Record.reg_num.asc()).all()
@@ -462,6 +513,9 @@ def export_yml():
 
 
 def read_lst(filename):
+    """
+    Прочитать комментарии к приватизационным записям из файла
+    """
     from priv.models import Record
     with open(filename + '.lst', 'r', encoding='cp1251') as f:
         while True:
@@ -482,6 +536,9 @@ def read_lst(filename):
 
 
 def load_from_file(filename):
+    """
+    Импортирует приватизационные записи из файла
+    """
     import logging
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
@@ -616,6 +673,9 @@ def load_from_file(filename):
 
 
 def read_record(f):
+    """
+    Прочитать приватизационную запись из файла
+    """
     r = dict()
     r['book_id'] = int(f.readline())
     r['reg_id'] = f.readline().rstrip()
@@ -638,6 +698,9 @@ def read_record(f):
 
 
 def count_in_file(filename):
+    """
+    Подсчитать количество приватизационных записей в файле
+    """
     import logging
     logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
 
@@ -666,6 +729,9 @@ def count_in_file(filename):
 @app.route("/import/files")
 @login_required
 def list_import_files():
+    """
+    Список файлов для импорта
+    """
     import os
     imports = '../imports'
     f = []
@@ -685,6 +751,9 @@ def list_import_files():
 @app.route("/import/count/files")
 @login_required
 def count_import_files():
+    """
+    Подсчет количества записей в файле импорта
+    """
     import os
     imports = '../imports'
     f = []
@@ -708,6 +777,9 @@ def count_import_files():
 
 @app.route("/parse/addr", methods=["POST", ])
 def parse_addr():
+    """
+    Разобрать адрес на составные части и вернуть в виде JSON
+    """
     addr = request.form.get('addr', "")
 
     from .models.lookup import parse_street
@@ -716,6 +788,9 @@ def parse_addr():
 
 @app.route("/parse/owner", methods=["POST", ])
 def parse_owner():
+    """
+    Разобрать ФИО на составные части и вернуть в виде JSON
+    """
     owner = request.form.get('owner', "")
     import re
     parser = re.compile(r"(.*)\s+(\w\.\s*\w\.)")

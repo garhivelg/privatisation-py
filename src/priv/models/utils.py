@@ -2,6 +2,9 @@ from app import app
 
 
 def add_filters(query, fields, no_street=False):
+    """
+    Добавить фильтр к запросу
+    """
     app.logger.debug(fields)
     from . import Record, Case
     for k, v in fields.items():
@@ -27,6 +30,9 @@ def add_filters(query, fields, no_street=False):
 
 
 def update_records(query, fields):
+    """
+    Обновляет все записи в запросе
+    """
     from . import Record
     updates = dict()
     for k, v in fields.items():

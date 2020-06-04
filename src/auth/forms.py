@@ -5,12 +5,18 @@ from .models import ROLE_USER, ROLE_ADMIN
 
 
 class LoginForm(FlaskForm):
+    """
+    Форма входа в систему
+    """
     login = StringField("Имя пользователя", validators=[DataRequired(message="Поле обязательно для заполнения")])
     password = PasswordField("Пароль", validators=[DataRequired(message="Поле обязательно для заполнения")])
     remember_me = BooleanField("Запомнить меня", default=False)
 
 
 class UserForm(FlaskForm):
+    """
+    Форма редактирования пользователя
+    """
     login = StringField("Имя пользователя", validators=[DataRequired(message="Поле обязательно для заполнения")])
     name = StringField("Имя")
     surname = StringField("Фамилия")

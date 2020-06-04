@@ -6,6 +6,9 @@ from case.models.case import *
 
 
 class Record(db.Model):
+    """
+    Модель приватизационной записи
+    """
     id = db.Column(db.Integer, primary_key=True)
     # book_id = db.Column(db.Integer)
     book_id = db.Column(db.Integer, db.ForeignKey("case.id"))
@@ -36,9 +39,15 @@ class Record(db.Model):
     case = db.relationship("Case")
 
     def get_book(self):
+        """
+        Приватизационное дело
+        """
         return self.case
 
     def get_reg(self):
+        """
+        Регистрационный № в виде текста
+        """
         if self.case:
             book_id = self.case.book_num
         else:
@@ -49,6 +58,9 @@ class Record(db.Model):
         )
 
     def get_reg_int(self):
+        """
+        Регистрационный № в виде числа
+        """
         parts = self.reg_id.split("/")
         if len(parts) != 2:
             return 1
@@ -59,6 +71,9 @@ class Record(db.Model):
         return res
 
     def get_city(self):
+        """
+        Населенный пункт
+        """
         try:
             city_id = int(self.city_id)
         except (TypeError, ValueError):
@@ -69,6 +84,9 @@ class Record(db.Model):
         return get_city(city_id)
 
     def get_addr(self, full=True):
+        """
+        Адрес
+        """
         if not self.addr_name:
             return "Адрес не указан"
 
@@ -92,6 +110,9 @@ class Record(db.Model):
         return addr
 
     def get_owner(self):
+        """
+        Владелец
+        """
         if not self.owner:
             return "Неизвестен"
 
@@ -101,6 +122,9 @@ class Record(db.Model):
         )
 
     def generate_random(self):
+        """
+        Заполнить запись случайными данными
+        """
         from .lookup import BOOKS, CITIES, STREETS
         import random
         # self.book_id = random.randrange(len(BOOKS))
@@ -134,11 +158,17 @@ class Record(db.Model):
         self.normalize()
 
     def normalize(self):
+        """
+        Нормализация записи
+        """
         if self.reg_num is None:
             if self.reg_id:
                 self.reg_num = int(''.join(c for c in self.reg_id if c.isdigit()))
 
     def export(self):
+        """
+        Экспорт записи
+        """
         if self.case:
             book_id = self.case.id
         else:
@@ -177,6 +207,9 @@ class Record(db.Model):
         }
 
     def import_yml(self, data=dict()):
+        """
+        Импорт записи
+        """
         book = data.get('book', dict())
         addr = data.get('addr', dict())
         owner = data.get('owner', dict())
@@ -202,9 +235,15 @@ class Record(db.Model):
 
 
 class Sort:
+    """
+    Способ сортировки
+    """
     title = ""
 
     def sort(self, query):
+        """
+        Добавить сортировку к запросу
+        """
         query.order_by(None)
 
 

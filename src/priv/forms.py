@@ -22,6 +22,9 @@ class ModelForm(BaseModelForm):
 
 
 class RecordForm(ModelForm):
+    """
+    Форма редактирования приватизационной записи
+    """
     case = QuerySelectField(
         "Дело №",
         query_factory=lambda: Case.query.all(),
@@ -44,6 +47,9 @@ class RecordForm(ModelForm):
 
 
 class FilterForm(FlaskForm):
+    """
+    Форма фильтра записей
+    """
     case = QuerySelectField(
         "Дело №",
         query_factory=lambda: Case.query.all(),

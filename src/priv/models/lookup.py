@@ -9,6 +9,9 @@ STREETNAMES = []
 
 
 def load():
+    """
+    Загрузить данные из файлов
+    """
     from os import path
     from app import app
     DB_PATH = app.config.get('DB_PATH', '..')
@@ -27,6 +30,9 @@ def load():
 
 
 def set_street(street_name=""):
+    """
+    Добавить улицу в список если ее там нет
+    """
     from os import path
     from app import app
     DB_PATH = app.config.get('DB_PATH', '..')
@@ -42,6 +48,9 @@ def set_street(street_name=""):
 
 
 def get_street(street_id=None):
+    """
+    Найти улицу по идентификатору
+    """
     if street_id not in range(1, len(STREETS)):
         street_id = 0
     try:
@@ -51,6 +60,9 @@ def get_street(street_id=None):
 
 
 def find_street(street):
+    """
+    Найти идентификатор улицы по имени
+    """
     try:
         return STREETS.index(street)
     except ValueError:
@@ -58,12 +70,18 @@ def find_street(street):
 
 
 def street_name(street):
+    """
+    Нормализовать название улицы
+    """
     if not street:
         return "-"
     return street
 
 
 def set_city(city_name=""):
+    """
+    Добавить населенный пункт в список если его там нет
+    """
     from os import path
     from app import app
     DB_PATH = app.config.get('DB_PATH', '..')
@@ -79,6 +97,9 @@ def set_city(city_name=""):
 
 
 def find_city(city):
+    """
+    Найти идентификатор населенного пункта по имени
+    """
     try:
         return CITIES.index(city)
     except ValueError:
@@ -86,6 +107,9 @@ def find_city(city):
 
 
 def get_city(city_id=None):
+    """
+    Найти населенный пункт по идентификатору
+    """
     if city_id not in range(len(CITIES)):
         city_id = 0
     try:
@@ -95,12 +119,18 @@ def get_city(city_id=None):
 
 
 def get_book(book_id=None):
+    """
+    Найти номер регистрационного дела по идентификатору
+    """
     if book_id not in range(1, len(BOOKS) + 1):
         book_id = 0
     return BOOKS[book_id]
 
 
 def parse_street(s="", full=False):
+    """
+    Разбить адрес на составные части
+    """
     import re
     parser = re.compile(r"(?:(.*),)?\s*(\w*\.)\s*(.*)")
     matches = parser.match(s)

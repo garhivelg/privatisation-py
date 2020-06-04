@@ -21,6 +21,11 @@ login_manager = LoginManager()
 
 
 def create_app(debug=False):
+    """
+    Создаем экземпляр Flask
+    :param debug: включить режим отладки
+    :return: экземпляр Flask
+    """
     app = Flask(__name__)
     # app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
@@ -64,14 +69,29 @@ def create_app(debug=False):
 
     @app.errorhandler(403)
     def forbidden(error):
+        """
+        Показать страницу с сообщением об ошибке 404
+        :param error: текст ошибки
+        :return:
+        """
         return render_template('errors/403.html', title='Forbidden'), 403
 
     @app.errorhandler(404)
     def page_not_found(error):
+        """
+        Показать страницу с сообщением об ошибке 403
+        :param error: текст ошибки
+        :return:
+        """
         return render_template('errors/404.html', title='Page Not Found'), 404
 
     @app.errorhandler(500)
     def internal_server_error(error):
+        """
+        Показать страницу с сообщением об ошибке 500
+        :param error: текст ошибки
+        :return:
+        """
         return render_template('errors/500.html', title='Server Error'), 500
 
     return app
@@ -97,12 +117,20 @@ from auth.commands import *
 
 @app.before_request
 def before_request():
+    """
+    Загружаем счетчики и пользователя в глобальный объект
+    :return:
+    """
     g.counter = update_counter()
     g.user = current_user
 
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    Загружаем пользователя из БД
+    :return: учетная запись пользователя
+    """
     return User.query.get(user_id)
 
 

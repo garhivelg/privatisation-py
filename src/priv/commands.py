@@ -7,7 +7,9 @@ from .models import Record
 
 @manager.command
 def export(output=None, book_id=None):
-    "Export data"
+    """
+    Export data
+    """
     if book_id is None:
         query = Record.query
     else:
@@ -28,7 +30,9 @@ def export(output=None, book_id=None):
 
 @manager.command
 def import_yml(input=None):
-    "Import data"
+    """
+    Import data
+    """
     if input is None:
         print("No data to import")
         return
