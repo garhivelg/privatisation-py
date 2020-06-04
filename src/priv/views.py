@@ -375,6 +375,7 @@ def list_street_names_json():
 
 
 @app.route("/reindex")
+@login_required
 def reindex(records=1):
     from priv.models import Record
 
@@ -389,6 +390,7 @@ def reindex(records=1):
 
 @app.route("/missing")
 @app.route("/missing/<int:book_id>")
+@login_required
 def missing(book_id=None):
     from case.models import Case
     from priv.models import Record
@@ -443,6 +445,7 @@ def missing(book_id=None):
 
 
 @app.route("/export")
+@login_required
 def export_yml():
     from priv.models import Record
     import yaml
@@ -661,6 +664,7 @@ def count_in_file(filename):
 
 
 @app.route("/import/files")
+@login_required
 def list_import_files():
     import os
     imports = '../imports'
@@ -679,6 +683,7 @@ def list_import_files():
 
 
 @app.route("/import/count/files")
+@login_required
 def count_import_files():
     import os
     imports = '../imports'

@@ -31,7 +31,7 @@ class RecordForm(ModelForm):
                           choices=[(-1, "Все"), ] + list(enumerate(CITIES)),
                           coerce=int,
                           )
-    addr_type = SelectField("Вид улицы",
+    addr_type = SelectField("Тип адресного объекта",
                             choices=[(-1, "Все"), ] + list(enumerate(STREETS)),
                             coerce=int,
                             )
@@ -56,11 +56,11 @@ class FilterForm(FlaskForm):
                           choices=[(-1, "Все"), ] + list(enumerate(CITIES)),
                           coerce=int,
                           )
-    addr_type = SelectField("Вид улицы",
+    addr_type = SelectField("Тип адресного объекта",
                             choices=[(-1, "Все"), ] + list(enumerate(STREETS)),
                             coerce=int,
                             )
-    addr_name = StringField("Название улицы", validators=[Length(max=64), ])
+    addr_name = StringField("Название адресного объекта", validators=[Length(max=64), ])
     addr_build = StringField("Дом", validators=[Length(max=8), ])
     addr_flat = StringField("Квартира", validators=[Length(max=16), ])
 

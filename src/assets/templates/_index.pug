@@ -46,8 +46,11 @@ html
         block body
           block content
             | {% block content %}{% endblock %}
-    
-    script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
+
+      div(class="row")
+        | Уникальных посетителей: {{ g.counter }}
+
+  script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
     script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
     block script
       | {% block script %}{% endblock %}

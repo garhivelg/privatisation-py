@@ -128,8 +128,10 @@ html
 
             | {% block content %}
             | {% endblock %}
+      div(class="row")
+        | Уникальных посетителей: {{ g.counter }}
 
-    script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
+  script(src="{{ url_for('static', filename='js/jquery.min.js') }}")
     script(src="{{ url_for('static', filename='js/jquery.autocomplete.min.js') }}")
     script(src="{{ url_for('static', filename='js/bootstrap.min.js') }}")
     | {% block script %}

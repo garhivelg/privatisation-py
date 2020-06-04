@@ -87,21 +87,23 @@ app = create_app(config_name)
 manager = Manager(app)
 
 
+from priv import *
+from auth import *
+from case import *
+from counter import *
+from priv.commands import *
+from auth.commands import *
+
+
 @app.before_request
 def before_request():
+    g.counter = update_counter()
     g.user = current_user
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
-
-
-from priv import *
-from auth import *
-from case import *
-from priv.commands import *
-from auth.commands import *
 
 
 if __name__ == "__main__":

@@ -77,3 +77,4 @@ target/
 
 bower_components
 node_modules
+/src/counters.txt
